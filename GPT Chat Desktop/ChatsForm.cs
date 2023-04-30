@@ -113,9 +113,12 @@ public partial class ChatsForm : Form // TODO: GUI'en streamer ikke texten i chu
         {
             if (args.KeyCode == Keys.Enter && !string.IsNullOrWhiteSpace(inputBox.Text))
             {
+                AppendTextToFastColoredTextBox(fastColoredTextBox, "Human:\n" + inputBox.Text + "\n\n" + "Ai: ");
+
                 SendPromptClicked(inputBox.Text);
                 args.Handled = true;
                 args.SuppressKeyPress = true;
+
                 inputBox.Text = string.Empty;
             }
         };
@@ -128,7 +131,10 @@ public partial class ChatsForm : Form // TODO: GUI'en streamer ikke texten i chu
         {
             if (!string.IsNullOrWhiteSpace(inputBox.Text))
             {
+                AppendTextToFastColoredTextBox(fastColoredTextBox, "Human: " + inputBox.Text + "\n\n" + "Ai: ");
                 SendPromptClicked(inputBox.Text);
+
+
                 inputBox.Text = string.Empty;
             }
         };
