@@ -1,0 +1,135 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="pythonnet" Version="3.0.1" />
+	</ItemGroup>
+
+	<!--Because GPT Api Client is a Python project, a normal project reference, like above, would not work. The folder (excluding some files and a folder) is copied like this instead.
+	.env contains and __pycache__ might include private information.-->
+	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+		<Content Include="..\GPT Api Client\**\*.*">
+			<Link>GPT Api Client\%(RecursiveDir)%(Filename)%(Extension)</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<!--.env files are excluded in Release.-->
+	<ItemGroup Condition="'$(Configuration)' == 'Release'">
+		<Content Include="..\GPT Api Client\**\*.*" Exclude="..\GPT Api Client\**\.env;..\GPT Api Client\**\__pycache__\**\*.*">
+			<Link>GPT Api Client\%(RecursiveDir)%(Filename)%(Extension)</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\libcrypto-1_1.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\libffi-8.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\libssl-1_1.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\LICENSE.txt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\pyexpat.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\python.cat">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\python.exe">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\python3.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\python311.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\python311.zip">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\python311._pth">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\pythonw.exe">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\select.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\sqlite3.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\unicodedata.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\vcruntime140.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\vcruntime140_1.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\winsound.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\_asyncio.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\_bz2.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\_ctypes.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\_decimal.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\_elementtree.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\_hashlib.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\_lzma.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\_msi.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\_multiprocessing.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\_overlapped.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\_queue.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\_socket.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\_sqlite3.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\_ssl.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\_uuid.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="PythonRuntime\python-3.11.0-embed-amd64\_zoneinfo.pyd">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+</Project>
