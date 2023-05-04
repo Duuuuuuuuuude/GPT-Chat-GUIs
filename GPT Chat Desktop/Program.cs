@@ -1,18 +1,18 @@
-using Middleware;
+using Microsoft.Web.WebView2.Core;
 
-namespace GPT_Chat_Desktop
+namespace GPT_Chat_Desktop;
+
+internal static class Program
 {
-    internal static class Program
+    /// <summary>
+    ///  The main entry point for the application.
+    /// </summary>
+    [STAThread]
+    static void Main()
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
-        {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
+        // To customize application configuration such as set high DPI settings or default font,
+        // see https://aka.ms/applicationconfiguration.
+        ApplicationConfiguration.Initialize();
 
         if (IsWebView2RuntimeInstalled())
         {
@@ -42,4 +42,5 @@ namespace GPT_Chat_Desktop
             return false;
         }
     }
+
 }

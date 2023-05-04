@@ -1,30 +1,19 @@
-﻿using FastColoredTextBoxNS;
-using Middleware;
+﻿using Middleware;
 using System.Collections;
-
 
 namespace GPT_Chat_Desktop;
 
-public partial class ChatsForm : Form // TODO: GUI'en streamer ikke texten i chunks, men alt på en gang. Brug async/await for at undgå at GUI'en fryser for hver Api Response.
+public partial class
+    ChatsForm : Form
 {
-    private readonly Type _chatType;
-    private readonly Dictionary<TabPage, IGPTChat> _chatInstances;
+    private readonly IGPTChat _chatInstance;
 
-    public ChatsForm(Type chatType)
+    public ChatsForm()
     {
         // TODO: Load chat history.
         InitializeComponent();
 
-        _chatInstances = new Dictionary<TabPage, IGPTChat>();
-
-        if (typeof(IGPTChat).IsAssignableFrom(chatType))
-        {
-            _chatType = chatType;
-        }
-        else
-        {
-            throw new ArgumentException("Invalid type. Must be a subclass of IChatGPT.", nameof(chatType));
-        }
+        _chatInstance = new Chat();
 
         NewTabClicked();
     }
@@ -60,29 +49,23 @@ public partial class ChatsForm : Form // TODO: GUI'en streamer ikke texten i chu
     }
 
     private async void TxtBoxInput_KeyDown_Async(object sender, KeyEventArgs e)
+    {
+        if (e.KeyCode == Keys.Enter)
         {
-            if (args.KeyCode == Keys.Enter && !string.IsNullOrWhiteSpace(inputBox.Text))
-            {
-                AppendTextToFastColoredTextBox(fastColoredTextBox, "Human:\n" + inputBox.Text + "\n\n" + "Ai: ");
+            // Prevent the Enter key from creating a new line in the TextBox
+            e.SuppressKeyPress = true;
 
             await SendMessageAsync();
-            }
-        };
-        tabPage.Controls.Add(inputBox);
+        }
+    }
+    #endregion
 
-        var sendButton = new Button();
-        sendButton.Text = "Send";
-        sendButton.Dock = DockStyle.Bottom;
-        sendButton.Click += (sender, args) =>
-        {
-            if (!string.IsNullOrWhiteSpace(inputBox.Text))
-            {
+    #region Button functionality
+    private void NewTabClicked()
+    {
         var newTabPage = new TabPage("Chat " + (GetNextTabNumber() + 1));
 
-                inputBox.Text = string.Empty;
-            }
-        };
-        tabPage.Controls.Add(sendButton);
+        //_chatInstances.Add(newTabPage, GetNewChatInstance()); // TODO: Det ser ikke ud til at være muligt at oprette flere Chats på denne måde. Det giver problemer på linje 30 i 'PythonEnvironmentSetup'. Overvejer at lave om på Chat.py, og gøre det muligt at have flere conversations der.
     }
 
     /// <summary>
@@ -113,7 +96,6 @@ public partial class ChatsForm : Form // TODO: GUI'en streamer ikke texten i chu
                     {
                         highestNumber = 0;
                     }
-
                 }
             }
         }
@@ -122,7 +104,6 @@ public partial class ChatsForm : Form // TODO: GUI'en streamer ikke texten i chu
         {
             highestNumber = tabCtrlChats.TabCount;
         }
-
         return highestNumber;
     }
 
@@ -133,7 +114,7 @@ public partial class ChatsForm : Form // TODO: GUI'en streamer ikke texten i chu
     }
 
     private async Task SendMessageAsync()
-        // TODO: highlight.js og alt styling i chat.html virker ikke.
+    // TODO: highlight.js og alt styling i chat.html virker ikke.
     {
         string message = txtBoxInput.Text;
         txtBoxInput.Clear();
@@ -144,14 +125,14 @@ public partial class ChatsForm : Form // TODO: GUI'en streamer ikke texten i chu
 
         bool isFirstChunk = true;
         await foreach (var chatResult in _chatInstance.AddToConversationAsync(message))
-            {
+        {
             //string escapedReply = System.Security.SecurityElement.Escape(chatResult.ContentChunk.TrimEnd());
             //string replyScript = $"appendMessage('{escapedReply}', {false.ToString().ToLower()}, {isFirstChunk.ToString().ToLower()});";
             string replyScript = $"appendMessage('{chatResult.ContentChunk}', {false.ToString().ToLower()}, {isFirstChunk.ToString().ToLower()});";
             webView2Chat1.CoreWebView2.ExecuteScriptAsync(replyScript);
             isFirstChunk = false;
         }
-        }
+    }
 
     #endregion
 }

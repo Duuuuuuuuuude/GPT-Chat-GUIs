@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Middleware", "Middleware\Mi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TryMiddleware", "TryMiddleware\TryMiddleware.csproj", "{3A0153EA-CB1E-4AB3-AF5C-27BC8D9750E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPT Chat Desktop", "GPT Chat Desktop\GPT Chat Desktop.csproj", "{94679CD2-1A91-4893-B407-48AE8A5C8698}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GPT Chat Desktop", "GPT Chat Desktop\GPT Chat Desktop.csproj", "{94679CD2-1A91-4893-B407-48AE8A5C8698}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
