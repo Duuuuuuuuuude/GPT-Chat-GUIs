@@ -29,54 +29,8 @@ public partial class ChatsForm : Form // TODO: GUI'en streamer ikke texten i chu
         NewTabClicked();
     }
 
-    private IGPTChat GetNewChatInstance()
-    {
-        return (IGPTChat)Activator.CreateInstance(_chatType);
-    }
+    #region Event handlers
 
-    #region Syntax highlighting
-    private void AppendTextToFastColoredTextBox(FastColoredTextBox fctb, string newText)
-    {
-        fctb.BeginUpdate();
-        int prevTextLength = fctb.TextLength;
-        fctb.AppendText(newText);
-        fctb.EndUpdate();
-
-        // Update syntax highlighting for the appended text
-        Place startPlace = fctb.PositionToPlace(prevTextLength);
-        Place endPlace = fctb.PositionToPlace(fctb.TextLength);
-        var appendedRange = new FastColoredTextBoxNS.Range(fctb, startPlace, endPlace);
-        fctb.OnTextChanged(appendedRange);
-    }
-
-    private void ConfigureSyntaxHighlighting(FastColoredTextBox fctb, string language)
-    {
-        // Clear existing styles
-        fctb.Range.ClearStyle(StyleIndex.All);
-
-        // Set up syntax highlighting for the detected language
-        switch (language)
-        {
-            case "csharp":
-                fctb.Language = Language.CSharp;
-                break;
-            case "HTML":
-                fctb.Language = Language.HTML;
-                break;
-            // Add more cases for other languages
-            default:
-                fctb.Language = Language.Custom;
-                break;
-        }
-    }
-
-    private string DetectLanguage(string inputText)
-    { // TODO: Skal implementeres rigtigt.
-        return "custom";
-    }
-    #endregion
-
-    #region Button event handlers
     private void BtnNewTab_Click(object sender, EventArgs e)
     {
         NewTabClicked();
@@ -86,7 +40,6 @@ public partial class ChatsForm : Form // TODO: GUI'en streamer ikke texten i chu
     {
         CloseSelectedTabClicked();
     }
-    #endregion
 
     private async void ChatsForm_Load(object sender, EventArgs e)
     {
