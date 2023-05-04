@@ -1,4 +1,6 @@
 ﻿using Python.Runtime;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Middleware;
 
@@ -9,22 +11,22 @@ internal sealed class PythonEnvironmentSetup : IDisposable
         #region Python Paths
         string rootDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
-        string embeddedPythonAbsolutePath = Path.Combine(rootDirectory, "PythonRuntime", "python-3.11.0-embed-amd64");
-        string embeddedPythonRelativePath = Path.GetRelativePath(rootDirectory, embeddedPythonAbsolutePath);
+        string embeddedPythonAbsoluteShortPath = GetShortPath(Path.Combine(rootDirectory, "PythonRuntime", "python-3.11.0-embed-amd64"));
+        //string embeddedPythonRelativePath = Path.GetRelativePath(rootDirectory, embeddedPythonAbsolutePath);
         //string embeddedPythonRelativePath = embeddedPythonAbsolutePath;
 
-        string virtualPythonEnvironmentAbsolutePath = Path.Combine(rootDirectory, "GPT Api Client", "openai GPT (Python 3.11 (64-bit))");
-        string virtualPythonEnvironmentRelativPath = Path.GetRelativePath(rootDirectory, virtualPythonEnvironmentAbsolutePath);
+        string virtualPythonEnvironmentAbsoluteShortPath = GetShortPath(Path.Combine(rootDirectory, "GPT Api Client", "openai (Python 3.11 (64-bit))"));
+        //string virtualPythonEnvironmentRelativPath = Path.GetRelativePath(rootDirectory, virtualPythonEnvironmentAbsolutePath);
         //string virtualPythonEnvironmentRelativPath = virtualPythonEnvironmentAbsolutePath;
         #endregion
 
         #region Set the runtime environment variables
-        Environment.SetEnvironmentVariable("PATH", Environment.GetEnvironmentVariable("PATH") + ";" + embeddedPythonRelativePath);
+        Environment.SetEnvironmentVariable("PATH", Environment.GetEnvironmentVariable("PATH") + ";" + embeddedPythonAbsoluteShortPath);
         Environment.SetEnvironmentVariable("PYTHONNET_PYTHON_RUNTIME", "python311");
-        Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", Path.Combine(embeddedPythonRelativePath, "python311.dll"));
-        Environment.SetEnvironmentVariable("PYTHONNET_PYTHON", Path.Combine(embeddedPythonRelativePath, "python.exe"));
-        Environment.SetEnvironmentVariable("PYTHONPATH", $"{Path.Combine(embeddedPythonRelativePath, "python311")};" +
-                                                         $"{Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "GPT Api Client", "openai GPT (Python 3.11 (64-bit))", "Lib")}");
+        Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", Path.Combine(embeddedPythonAbsoluteShortPath, "python311.dll"));
+        Environment.SetEnvironmentVariable("PYTHONNET_PYTHON", Path.Combine(embeddedPythonAbsoluteShortPath, "python.exe"));
+        Environment.SetEnvironmentVariable("PYTHONPATH", $"{Path.Combine(embeddedPythonAbsoluteShortPath, "python311")};" +
+                                                         $"{Path.Combine(rootDirectory, "GPT Api Client", "openai (Python 3.11 (64-bit))", "Lib")}");
         #endregion
         // Initialize the Python runtime
         PythonEngine.Initialize();
@@ -40,7 +42,7 @@ internal sealed class PythonEnvironmentSetup : IDisposable
             sys.path.append(chatModulePath);
 
             //// Path for third party packages from the virtual Python Environment.
-            string thirdPartyPythonLib = Path.Combine(virtualPythonEnvironmentRelativPath, "Lib", "site-packages");
+            string thirdPartyPythonLib = Path.Combine(virtualPythonEnvironmentAbsoluteShortPath, "Lib", "site-packages");
             sys.path.append(thirdPartyPythonLib);
             #endregion
         }
@@ -51,4 +53,53 @@ internal sealed class PythonEnvironmentSetup : IDisposable
         // Shutdown the Python runtime
         PythonEngine.Shutdown();
     }
+
+    /// <summary>
+    /// Returns a short form Windows path (using ~8 char segment lengths)
+    /// that can help with long filenames.
+    /// </summary>
+    /// <remarks>
+    /// IMPORTANT: File has to exist when this function is called otherwise
+    /// `null` is returned.
+    ///
+    /// Path has to be fully qualified (no relative paths)
+    /// 
+    /// Max shortened file size is MAX_PATH (260) characters
+    /// </remarks>
+    /// <param name="path">Long Path syntax</param>
+    /// <returns>Shortened 8.3 syntax or null on failure</returns>
+    public static string GetShortPath(string path)
+    {
+        if (string.IsNullOrEmpty(path))
+            return null;
+
+        // allow for extended path syntax
+        bool addExtended = false;
+        if (path.Length >= 255 && !path.StartsWith(@"\\?\"))
+        {
+            path = @"\\?\" + path;
+            addExtended = true;
+        }
+
+        var shortPath = new StringBuilder(1024);
+        int res = GetShortPathName(path, shortPath, 1024);
+        if (res < 1)
+            return null;
+
+        path = shortPath.ToString();
+
+        if (addExtended)
+            path = path.Substring(4);
+
+        return path;
+    }
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+    private static extern int GetShortPathName(
+        [MarshalAs(UnmanagedType.LPTStr)]
+        string path,
+        [MarshalAs(UnmanagedType.LPTStr)]
+        StringBuilder shortPath,
+        int shortPathLength
+    );
 }

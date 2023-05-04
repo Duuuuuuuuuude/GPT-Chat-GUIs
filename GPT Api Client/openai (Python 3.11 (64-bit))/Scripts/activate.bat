@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\Martin Koldste\OneDrive\Programmering_Personlig\Repos\Visual Studio\GitHub Repositories\GPT Chat-GUIs\GPT Api Client\openai GPT (Python 3.11 (64-bit))
+set VIRTUAL_ENV=C:\Users\Martin Koldste\OneDrive\Programmering_Personlig\Repos\Visual Studio\GitHub Repos\GPT Chat-GUIs\GPT Api Client\openai (Python 3.11 (64-bit))
 
 if not defined PROMPT set PROMPT=$P$G
 
@@ -16,7 +16,7 @@ if defined _OLD_VIRTUAL_PROMPT set PROMPT=%_OLD_VIRTUAL_PROMPT%
 if defined _OLD_VIRTUAL_PYTHONHOME set PYTHONHOME=%_OLD_VIRTUAL_PYTHONHOME%
 
 set _OLD_VIRTUAL_PROMPT=%PROMPT%
-set PROMPT=(openai GPT (Python 3.11 (64-bit))) %PROMPT%
+set PROMPT=(openai (Python 3.11 (64-bit))) %PROMPT%
 
 if defined PYTHONHOME set _OLD_VIRTUAL_PYTHONHOME=%PYTHONHOME%
 set PYTHONHOME=
@@ -25,7 +25,7 @@ if defined _OLD_VIRTUAL_PATH set PATH=%_OLD_VIRTUAL_PATH%
 if not defined _OLD_VIRTUAL_PATH set _OLD_VIRTUAL_PATH=%PATH%
 
 set PATH=%VIRTUAL_ENV%\Scripts;%PATH%
-set VIRTUAL_ENV_PROMPT=(openai GPT (Python 3.11 (64-bit))) 
+set VIRTUAL_ENV_PROMPT=(openai (Python 3.11 (64-bit))) 
 
 :END
 if defined _OLD_CODEPAGE (
