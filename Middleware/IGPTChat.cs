@@ -2,6 +2,6 @@
 {
     public interface IGPTChat
     {
-        IEnumerable<ChatResult> AddToConversation(string prompt);
+        IAsyncEnumerable<ChatResult> AddToConversationAsync(string prompt);
     }
 }

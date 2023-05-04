@@ -1,4 +1,5 @@
 ﻿using Python.Runtime;
+using System.Threading.Channels;
 
 namespace Middleware
 {
@@ -14,13 +15,15 @@ namespace Middleware
             using (Py.GIL())
             {
                 // Import the Chat module and create an instance
+
+
                 dynamic chatModule = Py.Import("Chat");
                 _chatInstance = chatModule.Chat();
             }
         }
 
         // TODO: Make the Python Code as
-        public IEnumerable<ChatResult> AddToConversation(string prompt)
+        public async IAsyncEnumerable<ChatResult> AddToConversationAsync(string prompt)
         {
             dynamic? conversationGenerator = null;
             try
@@ -43,10 +46,19 @@ namespace Middleware
                     Console.WriteLine(traceback.format_exc());
                 }
             }
-            return ProcessConversation(conversationGenerator);
+
+            var channel = Channel.CreateUnbounded<ChatResult>();
+            _ = Task.Run(() => ProcessConversationAsync(channel.Writer, conversationGenerator));
+
+            await foreach (var chatResult in channel.Reader.ReadAllAsync())
+            {
+                yield return chatResult;
+            }
+
+            //return ProcessConversationAsync(conversationGenerator);
         }
 
-        private static IEnumerable<ChatResult> ProcessConversation(dynamic conversationGenerator)
+        private static async Task ProcessConversationAsync(ChannelWriter<ChatResult> channelWriter, dynamic conversationGenerator)
         {
             using (Py.GIL())
             {
@@ -74,17 +86,26 @@ namespace Middleware
                         tokenCostFullConversation = tempTokenCostFullConversation;
                     }
 
-                    yield return new ChatResult
+                    await channelWriter.WriteAsync(new ChatResult
                     {
                         ContentChunk = contentChunk,
                         FinishReason = finishReason,
                         CreatedLocalDateTime = createdLocalDateTime,
                         TokenCostLatestMessage = tokenCostLatestMessage,
-                        TokenCostFullConversation = tokenCostFullConversation
-                    };
+                    });
                 }
             }
+            channelWriter.Complete();
         }
+
+        //    yield return new ChatResult
+        //{
+        //    ContentChunk = contentChunk,
+        //    FinishReason = finishReason,
+        //    CreatedLocalDateTime = createdLocalDateTime,
+        //    TokenCostLatestMessage = tokenCostLatestMessage,
+        //    TokenCostFullConversation = tokenCostFullConversation
+        //};
 
         public void Dispose()
         {

@@ -4,17 +4,17 @@ namespace TryMiddleware
 {
     class Program
     {
-        public static void Main()
+        public static async Task Main()
         {
             try
             {
                 using (Chat chat = new())
                 {
-                    IEnumerable<ChatResult> chatResults = chat.AddToConversation("Count to a 20 and seperate each digit by a comma.");
+                    IAsyncEnumerable<ChatResult> chatResults = chat.AddToConversationAsync("Count to a 20 and seperate each digit by a comma.");
 
                     ChatResult? lastResult = null;
 
-                    foreach (ChatResult result in chatResults)
+                    await foreach (ChatResult result in chatResults)
                     {
                         Console.Write(result.ContentChunk);
                         lastResult = result;

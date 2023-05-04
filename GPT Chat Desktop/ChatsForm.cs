@@ -101,26 +101,18 @@ public partial class ChatsForm : Form // TODO: GUI'en streamer ikke texten i chu
 #endif
     }
 
-    private void InitializeTabPage(TabPage tabPage)
+    private async void btnSendMessage_Click_Async(object sender, EventArgs e)
     {
-        FastColoredTextBox fastColoredTextBox = new FastColoredTextBox();
-        fastColoredTextBox.Language = Language.Custom;
-        fastColoredTextBox.Dock = DockStyle.Fill;
-        tabPage.Controls.Add(fastColoredTextBox);
+        await SendMessageAsync();
+    }
 
-        var inputBox = new TextBox();
-        inputBox.Dock = DockStyle.Bottom;
-        inputBox.KeyDown += (sender, args) =>
+    private async void TxtBoxInput_KeyDown_Async(object sender, KeyEventArgs e)
         {
             if (args.KeyCode == Keys.Enter && !string.IsNullOrWhiteSpace(inputBox.Text))
             {
                 AppendTextToFastColoredTextBox(fastColoredTextBox, "Human:\n" + inputBox.Text + "\n\n" + "Ai: ");
 
-                SendPromptClicked(inputBox.Text);
-                args.Handled = true;
-                args.SuppressKeyPress = true;
-
-                inputBox.Text = string.Empty;
+            await SendMessageAsync();
             }
         };
         tabPage.Controls.Add(inputBox);
@@ -187,7 +179,7 @@ public partial class ChatsForm : Form // TODO: GUI'en streamer ikke texten i chu
         tabCtrlChats.Controls.Remove(tabCtrlChats.SelectedTab);
     }
 
-    public void SendPromptClicked(string prompt)
+    private async Task SendMessageAsync()
         // TODO: highlight.js og alt styling i chat.html virker ikke.
     {
         string message = txtBoxInput.Text;
@@ -197,11 +189,8 @@ public partial class ChatsForm : Form // TODO: GUI'en streamer ikke texten i chu
         string script = $"appendMessage('{message}', {true.ToString().ToLower()}, {true.ToString().ToLower()});";
         webView2Chat1.CoreWebView2.ExecuteScriptAsync(script);
 
-        // Find the FastColoredTextBox within the selected TabPage
-        FastColoredTextBox fastColoredTextBox = null;
-        foreach (Control control in selectedTab.Controls)
-        {
-            if (control is FastColoredTextBox)
+        bool isFirstChunk = true;
+        await foreach (var chatResult in _chatInstance.AddToConversationAsync(message))
             {
             //string escapedReply = System.Security.SecurityElement.Escape(chatResult.ContentChunk.TrimEnd());
             //string replyScript = $"appendMessage('{escapedReply}', {false.ToString().ToLower()}, {isFirstChunk.ToString().ToLower()});";
