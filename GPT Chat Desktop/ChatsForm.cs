@@ -88,16 +88,17 @@ public partial class ChatsForm : Form // TODO: GUI'en streamer ikke texten i chu
     }
     #endregion
 
-    #region Button functionality
-    private void NewTabClicked()
+    private async void ChatsForm_Load(object sender, EventArgs e)
     {
-        var newTabPage = new TabPage("Chat " + (GetNextTabNumber() + 1));
+        await webView2Chat1.EnsureCoreWebView2Async(null);
 
-        _chatInstances.Add(newTabPage, GetNewChatInstance());
+        // Load the chat.html file into the WebView2 control
+        webView2Chat1.CoreWebView2.Navigate(new Uri(Path.GetFullPath("chat.html")).ToString());
 
-        tabCtrlChats.Controls.Add(newTabPage);
-
-        InitializeTabPage(newTabPage);
+        // Opens the WebView2 Developer Tools window.
+#if DEBUG
+        webView2Chat1.CoreWebView2.OpenDevToolsWindow();
+#endif
     }
 
     private void InitializeTabPage(TabPage tabPage)
@@ -131,9 +132,7 @@ public partial class ChatsForm : Form // TODO: GUI'en streamer ikke texten i chu
         {
             if (!string.IsNullOrWhiteSpace(inputBox.Text))
             {
-                AppendTextToFastColoredTextBox(fastColoredTextBox, "Human: " + inputBox.Text + "\n\n" + "Ai: ");
-                SendPromptClicked(inputBox.Text);
-
+        var newTabPage = new TabPage("Chat " + (GetNextTabNumber() + 1));
 
                 inputBox.Text = string.Empty;
             }
@@ -189,9 +188,14 @@ public partial class ChatsForm : Form // TODO: GUI'en streamer ikke texten i chu
     }
 
     public void SendPromptClicked(string prompt)
+        // TODO: highlight.js og alt styling i chat.html virker ikke.
     {
-        var selectedTab = tabCtrlChats.SelectedTab;
-        var chatInstance = _chatInstances[selectedTab];
+        string message = txtBoxInput.Text;
+        txtBoxInput.Clear();
+        //string escapedMessage = System.Security.SecurityElement.Escape(message);
+        //string script = $"appendMessage('{escapedMessage}', {true.ToString().ToLower()}, {true.ToString().ToLower()});";
+        string script = $"appendMessage('{message}', {true.ToString().ToLower()}, {true.ToString().ToLower()});";
+        webView2Chat1.CoreWebView2.ExecuteScriptAsync(script);
 
         // Find the FastColoredTextBox within the selected TabPage
         FastColoredTextBox fastColoredTextBox = null;
@@ -199,38 +203,13 @@ public partial class ChatsForm : Form // TODO: GUI'en streamer ikke texten i chu
         {
             if (control is FastColoredTextBox)
             {
-                fastColoredTextBox = control as FastColoredTextBox;
-                break;
-            }
+            //string escapedReply = System.Security.SecurityElement.Escape(chatResult.ContentChunk.TrimEnd());
+            //string replyScript = $"appendMessage('{escapedReply}', {false.ToString().ToLower()}, {isFirstChunk.ToString().ToLower()});";
+            string replyScript = $"appendMessage('{chatResult.ContentChunk}', {false.ToString().ToLower()}, {isFirstChunk.ToString().ToLower()});";
+            webView2Chat1.CoreWebView2.ExecuteScriptAsync(replyScript);
+            isFirstChunk = false;
+        }
         }
 
-
-        ChatResult lastChatResult = null;
-
-        AppendTextToFastColoredTextBox(fastColoredTextBox, "\n");
-
-        foreach (var chatResult in chatInstance.AddToConversation(prompt))
-        {
-            string newText = chatResult.ContentChunk;
-
-            AppendTextToFastColoredTextBox(fastColoredTextBox, newText);
-
-            string language = DetectLanguage(fastColoredTextBox.Text);
-
-            ConfigureSyntaxHighlighting(fastColoredTextBox, language);
-
-            lastChatResult = chatResult;
-        }
-
-        var createdLocalDateTime = lastChatResult.CreatedLocalDateTime.ToString("F");
-        var tokenCostLatestMessage = lastChatResult.TokenCostLatestMessage;
-        var tokenCostFullConversation = lastChatResult.TokenCostFullConversation;
-
-        AppendTextToFastColoredTextBox(fastColoredTextBox, $"\n\nCreated (Local Time): {createdLocalDateTime}\n" +
-                                                           $"Token Cost Latest Message: {tokenCostLatestMessage}\n" +
-                                                           $"Token Cost Full Conversation: {tokenCostFullConversation}\n");
-
-
-    }
     #endregion
 }

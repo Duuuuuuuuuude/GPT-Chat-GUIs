@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>Chat</title>
+
+    <!--https://highlightjs.org/download/-->
+    <link rel="stylesheet" href="assets/css/default.min.css">
+    <script src="assets/js/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <!--<script>
+        window.onload = function () {
+            hljs.highlightAll();
+        };
+    </script>-->
+
+    <style>
+        /* Add your custom styles here */
+    </style>
+</head>
+<body>
+    <div id='chat'></div>
+    <script>
+        let pre;
+        let code;
+        
+        function appendMessage(content, isSender, isFirstChunk) {
+
+            if (isFirstChunk) {
+                pre = document.createElement('pre');
+                pre.style.textAlign = isSender ? 'right' : 'left';
+
+                code = document.createElement('code');
+                pre.appendChild(code);
+
+                const chat = document.getElementById('chat');
+                chat.appendChild(pre);
+            }
+
+            code.textContent += content;
+
+            hljs.highlightElement(code);
+        }
+    </script>
+</body>
+</html>

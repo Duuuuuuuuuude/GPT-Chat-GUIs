@@ -7,14 +7,33 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <StartupObject>GPT_Chat_Desktop.Program</StartupObject>
   </PropertyGroup>
 
+	<PropertyGroup>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+	</PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="FastColoredTextBox.Net5" Version="2.16.26" />
+    <PackageReference Include="Highlight.js" Version="1.0.4" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1722.45" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Middleware\Middleware.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="assets\css\default.min.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\js\highlight.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="chat.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

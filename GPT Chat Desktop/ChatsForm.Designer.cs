@@ -32,10 +32,22 @@
             BtnCloseSelectedTab = new Button();
             BtnNewTab = new Button();
             tabCtrlChats = new TabControl();
+            tabPageChat1 = new TabPage();
+            splitContainerChat1 = new SplitContainer();
+            webView2Chat1 = new Microsoft.Web.WebView2.WinForms.WebView2();
+            txtBoxInput = new TextBox();
+            btnSendMessage = new Button();
             ((System.ComponentModel.ISupportInitialize)splitContainerContentAndSettings).BeginInit();
             splitContainerContentAndSettings.Panel1.SuspendLayout();
             splitContainerContentAndSettings.Panel2.SuspendLayout();
             splitContainerContentAndSettings.SuspendLayout();
+            tabCtrlChats.SuspendLayout();
+            tabPageChat1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainerChat1).BeginInit();
+            splitContainerChat1.Panel1.SuspendLayout();
+            splitContainerChat1.Panel2.SuspendLayout();
+            splitContainerChat1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)webView2Chat1).BeginInit();
             SuspendLayout();
             // 
             // splitContainerContentAndSettings
@@ -78,12 +90,77 @@
             // 
             // tabCtrlChats
             // 
+            tabCtrlChats.Controls.Add(tabPageChat1);
             tabCtrlChats.Dock = DockStyle.Fill;
             tabCtrlChats.Location = new Point(0, 0);
             tabCtrlChats.Name = "tabCtrlChats";
             tabCtrlChats.SelectedIndex = 0;
             tabCtrlChats.Size = new Size(530, 450);
             tabCtrlChats.TabIndex = 0;
+            // 
+            // tabPageChat1
+            // 
+            tabPageChat1.Controls.Add(splitContainerChat1);
+            tabPageChat1.Location = new Point(4, 29);
+            tabPageChat1.Name = "tabPageChat1";
+            tabPageChat1.Padding = new Padding(3);
+            tabPageChat1.Size = new Size(522, 417);
+            tabPageChat1.TabIndex = 0;
+            tabPageChat1.Text = "Chat 1";
+            tabPageChat1.UseVisualStyleBackColor = true;
+            // 
+            // splitContainerChat1
+            // 
+            splitContainerChat1.Dock = DockStyle.Fill;
+            splitContainerChat1.Location = new Point(3, 3);
+            splitContainerChat1.Name = "splitContainerChat1";
+            splitContainerChat1.Orientation = Orientation.Horizontal;
+            // 
+            // splitContainerChat1.Panel1
+            // 
+            splitContainerChat1.Panel1.Controls.Add(webView2Chat1);
+            // 
+            // splitContainerChat1.Panel2
+            // 
+            splitContainerChat1.Panel2.Controls.Add(txtBoxInput);
+            splitContainerChat1.Panel2.Controls.Add(btnSendMessage);
+            splitContainerChat1.Size = new Size(516, 411);
+            splitContainerChat1.SplitterDistance = 370;
+            splitContainerChat1.TabIndex = 0;
+            // 
+            // webView2Chat1
+            // 
+            webView2Chat1.AllowExternalDrop = true;
+            webView2Chat1.CreationProperties = null;
+            webView2Chat1.DefaultBackgroundColor = Color.White;
+            webView2Chat1.Dock = DockStyle.Fill;
+            webView2Chat1.Location = new Point(0, 0);
+            webView2Chat1.Name = "webView2Chat1";
+            webView2Chat1.Size = new Size(516, 370);
+            webView2Chat1.TabIndex = 0;
+            webView2Chat1.ZoomFactor = 1D;
+            // 
+            // txtBoxInput
+            // 
+            txtBoxInput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            txtBoxInput.Location = new Point(3, 5);
+            txtBoxInput.MaxLength = 0;
+            txtBoxInput.Multiline = true;
+            txtBoxInput.Name = "txtBoxInput";
+            txtBoxInput.Size = new Size(407, 27);
+            txtBoxInput.TabIndex = 1;
+            txtBoxInput.KeyDown += TxtBoxInput_KeyDown_Async;
+            // 
+            // btnSendMessage
+            // 
+            btnSendMessage.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            btnSendMessage.Location = new Point(416, 4);
+            btnSendMessage.Name = "btnSendMessage";
+            btnSendMessage.Size = new Size(94, 29);
+            btnSendMessage.TabIndex = 0;
+            btnSendMessage.Text = "&Send";
+            btnSendMessage.UseVisualStyleBackColor = true;
+            btnSendMessage.Click += btnSendMessage_Click_Async;
             // 
             // ChatsForm
             // 
@@ -93,10 +170,19 @@
             Controls.Add(splitContainerContentAndSettings);
             Name = "ChatsForm";
             Text = "GPT Chats";
+            Load += ChatsForm_Load;
             splitContainerContentAndSettings.Panel1.ResumeLayout(false);
             splitContainerContentAndSettings.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainerContentAndSettings).EndInit();
             splitContainerContentAndSettings.ResumeLayout(false);
+            tabCtrlChats.ResumeLayout(false);
+            tabPageChat1.ResumeLayout(false);
+            splitContainerChat1.Panel1.ResumeLayout(false);
+            splitContainerChat1.Panel2.ResumeLayout(false);
+            splitContainerChat1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainerChat1).EndInit();
+            splitContainerChat1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)webView2Chat1).EndInit();
             ResumeLayout(false);
         }
 
@@ -106,5 +192,10 @@
         private Button BtnCloseSelectedTab;
         private Button BtnNewTab;
         private TabControl tabCtrlChats;
+        private TabPage tabPageChat1;
+        private SplitContainer splitContainerChat1;
+        private TextBox txtBoxInput;
+        private Button btnSendMessage;
+        private Microsoft.Web.WebView2.WinForms.WebView2 webView2Chat1;
     }
 }
