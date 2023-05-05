@@ -133,6 +133,18 @@ public partial class
     #region Other event handlers
 
     #endregion
+
+    #region Event handlers for checkboxes
+    private void chkShowOrganization_CheckedChanged(object sender, EventArgs e)
+    {
+        txtOpenAiOrganization.UseSystemPasswordChar = !chkShowOrganization.Checked;
+    }
+
+    private void chkShowKey_CheckedChanged(object sender, EventArgs e)
+    {
+        txtOpenAiKey.UseSystemPasswordChar = !chkShowKey.Checked;
+    }
+    #endregion
     #endregion
 
     #region Button functionality
@@ -313,6 +325,4 @@ public partial class
     {
         lblTokenCostFullConversation.Text = "&Token Cost Full Conversation: " + tokenCostFullConversation;
     }
-
-
 }

@@ -49,8 +49,6 @@ namespace Middleware
             {
                 yield return chatResult;
             }
-
-            //return ProcessConversationAsync(conversationGenerator);
         }
 
         private static async Task ProcessConversationAsync(ChannelWriter<ChatResult> channelWriter, dynamic conversationGenerator)
