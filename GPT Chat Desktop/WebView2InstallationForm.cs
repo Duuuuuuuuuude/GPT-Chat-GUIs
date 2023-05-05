@@ -1,7 +1,5 @@
 ﻿// WebView2InstallationForm.cs
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Net;
 using System.Security.Principal;
 
 namespace GPT_Chat_Desktop
@@ -11,24 +9,18 @@ namespace GPT_Chat_Desktop
         private const string BootstrapperUrl = "https://go.microsoft.com/fwlink/p/?LinkId=2124703";
         private static readonly string BootstrapperPath = Path.Combine(Path.GetTempPath(), "MicrosoftEdgeWebview2Setup.exe");
 
-        private Label installationStatusLabel;
-
         public WebView2InstallationForm()
         {
             InitializeComponent();
 
-            // Add a label to show installation status
-            installationStatusLabel = new Label { Text = "Installing WebView2 Runtime...", Dock = DockStyle.Fill };
-            Controls.Add(installationStatusLabel);
-
-            Load += WebView2InstallationForm_Load;
+            Load += async (sender, e) => await WebView2InstallationForm_LoadAsync(sender, e);
         }
 
-        private void WebView2InstallationForm_Load(object sender, EventArgs e)
+        private async Task WebView2InstallationForm_LoadAsync(object sender, EventArgs e)
         {
             if (IsUserAdministrator())
             {
-                EnsureWebView2Runtime();
+                await DownloadWebView2RuntimeAsync();
             }
             else
             {
@@ -38,43 +30,64 @@ namespace GPT_Chat_Desktop
             }
         }
 
-        private void EnsureWebView2Runtime()
+        private async Task DownloadWebView2RuntimeAsync()
         {
-            // WebView2 Runtime not installed, download and install it silently
-            using (WebClient webClient = new WebClient())
+            try
             {
-                webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
-                webClient.DownloadFileAsync(new Uri(BootstrapperUrl), BootstrapperPath);
+                lblinstallationStatus.Text = "Downloading WebView2 Runtime...";
+
+                // WebView2 Runtime not installed, download and install it silently
+                using (HttpClient httpClient = new HttpClient())
+                {
+                    var response = await httpClient.GetAsync(BootstrapperUrl);
+                    response.EnsureSuccessStatusCode();
+
+                    using (var fileStream = new FileStream(BootstrapperPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        await response.Content.CopyToAsync(fileStream);
+                    }
+                }
+
+                WebClient_DownloadFileCompleted(true, null);
             }
+            catch (HttpRequestException e)
+            {
+                WebClient_DownloadFileCompleted(false, e.Message);
+            }
+
+
         }
 
-        private void WebClient_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+
+        private void WebClient_DownloadFileCompleted(bool success, string errorMessage)
         {
-            if (e.Error != null)
+            if (!success)
             {
-                MessageBox.Show("Error downloading WebView2 Bootstrapper: " + e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                lblinstallationStatus.Text = "Failed to downloading WebView2 Runtime...";
+                MessageBox.Show("Error downloading WebView2 Bootstrapper: " + errorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DialogResult = DialogResult.Cancel;
+                return;
+            }
+
+            ProcessStartInfo psi = new ProcessStartInfo(BootstrapperPath)
+            {
+                UseShellExecute = true,
+                Verb = "runas",
+                Arguments = "/silent /install"
+            };
+
+            try
+            {
+                Process.Start(psi);
+                DialogResult = DialogResult.OK;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error running WebView2 Bootstrapper: " + ex.Message, "Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 DialogResult = DialogResult.Cancel;
             }
-            else
-            {
-                ProcessStartInfo psi = new ProcessStartInfo(BootstrapperPath)
-                {
-                    UseShellExecute = true,
-                    Verb = "runas",
-                    Arguments = "/silent /install"
-                };
 
-                try
-                {
-                    Process.Start(psi);
-                    DialogResult = DialogResult.OK;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error running WebView2 Bootstrapper: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    DialogResult = DialogResult.Cancel;
-                }
-            }
             Close();
         }
 

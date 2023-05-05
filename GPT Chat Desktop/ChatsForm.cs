@@ -7,18 +7,21 @@ public partial class
     ChatsForm : Form
 {
     private readonly IGPTChat _chatInstance;
+    private IUserSettingsGlobal _userSettingsGlobalInstance;
 
-    public ChatsForm()
+    public ChatsForm(IGPTChat chat, IUserSettingsGlobal userSettingsGlobal)
     {
         // TODO: Load chat history.
         InitializeComponent();
 
-        _chatInstance = new Chat();
+        _chatInstance = chat;
+        _userSettingsGlobalInstance = userSettingsGlobal;
 
         NewTabClicked();
     }
-    #region Event handlers
 
+    #region Event handlers
+    #region Button event handlers
     private void BtnNewTab_Click(object sender, EventArgs e)
     {
         NewTabClicked();
@@ -40,6 +43,7 @@ public partial class
 #if DEBUG
         webView2Chat1.CoreWebView2.OpenDevToolsWindow();
 #endif
+        InitializeTextBoxes();
     }
 
     private async void btnSendMessage_Click_Async(object sender, EventArgs e)
@@ -57,6 +61,78 @@ public partial class
             await SendAndReceiveMessageAsync();
         }
     }
+    #endregion
+
+    #region TextBox event handlers
+    private void txtOpenAiOrganization_TextChanged(object sender, EventArgs e)
+    {
+        TxtOpenAiOrganizationChanged();
+    }
+
+    private void txtOpenAiKey_TextChanged(object sender, EventArgs e)
+    {
+        TxtOpenAiKeyChanged();
+    }
+
+    private void txtUsername_TextChanged(object sender, EventArgs e)
+    {
+        TxtUsernameChanged();
+    }
+
+    private void txtModelId_TextChanged(object sender, EventArgs e)
+    {
+        TxtModelIdChanged();
+    }
+
+    private void txtMaxResponseTokens_TextChanged(object sender, EventArgs e)
+    {
+        TxtMaxResponseTokensChanged();
+    }
+
+    private void txtTokenLimit_TextChanged(object sender, EventArgs e)
+    {
+        TxtTokenLimitChanged();
+    }
+
+    private void txtTemperature_TextChanged(object sender, EventArgs e)
+    {
+        TxtTemperatureChanged();
+    }
+
+    private void txtTopP_TextChanged(object sender, EventArgs e)
+    {
+        TxtTopPChanged();
+    }
+
+    private void txtN_TextChanged(object sender, EventArgs e)
+    {
+        TxtNChanged();
+    }
+
+    private void txtFrequencyPenalty_TextChanged(object sender, EventArgs e)
+    {
+        TxtFrequencyPenaltyChanged();
+    }
+
+    private void txtPresencePenalty_TextChanged(object sender, EventArgs e)
+    {
+        TxtPresencePenaltyChanged();
+    }
+
+    private void txtStop_TextChanged(object sender, EventArgs e)
+    {
+        TxtStopChanged();
+    }
+
+    private void txtLogitBias_TextChanged(object sender, EventArgs e)
+    {
+        TxtLogitBiasChanged();
+    }
+    #endregion
+
+    #region Other event handlers
+
+    #endregion
     #endregion
 
     #region Button functionality
@@ -146,6 +222,88 @@ public partial class
     }
     #endregion
 
+    #region Textbox changed
+    private void TxtOpenAiOrganizationChanged()
+    {
+        _userSettingsGlobalInstance.SetOpenAiOrganizationGlobal(txtOpenAiOrganization.Text);
+    }
+
+    private void TxtOpenAiKeyChanged()
+    {
+        _userSettingsGlobalInstance.SetOpenAiApiKeyGlobal(txtOpenAiKey.Text);
+    }
+
+    private void TxtUsernameChanged()
+    {
+        _userSettingsGlobalInstance.SetOpenAiApiUserNameGlobal(txtUsername.Text);
+    }
+
+    private void TxtModelIdChanged()
+    {
+        _userSettingsGlobalInstance.SetModelIdGlobal(txtModelId.Text);
+    }
+
+    private void TxtMaxResponseTokensChanged()
+    {
+        _userSettingsGlobalInstance.SetMaxResponseTokensGlobal(int.Parse(txtMaxResponseTokens.Text)); // TODO: Brug regex til at slette forkerte inputs.
+    }
+
+    private void TxtTokenLimitChanged()
+    {
+        _userSettingsGlobalInstance.SetTokenLimitGlobal(int.Parse(txtTokenLimit.Text)); // TODO: Brug regex til at slette forkerte inputs.
+    }
+
+    private void TxtTemperatureChanged()
+    {
+        _userSettingsGlobalInstance.SetTemperatureGlobal(int.Parse(txtTemperature.Text)); // TODO: Brug regex til at slette forkerte inputs.
+    }
+
+    private void TxtTopPChanged()
+    {
+        _userSettingsGlobalInstance.SetTopP(int.Parse(txtTopP.Text)); // TODO: Brug regex til at slette forkerte inputs.
+    }
+    private void TxtNChanged()
+    {
+        _userSettingsGlobalInstance.SetNGlobal(int.Parse(txtN.Text)); // TODO: Brug regex til at slette forkerte inputs.
+    }
+
+    private void TxtFrequencyPenaltyChanged()
+    {
+        _userSettingsGlobalInstance.SetFrequencyPenalty(int.Parse(txtFrequencyPenalty.Text)); // TODO: Brug regex til at slette forkerte inputs.
+    }
+
+    private void TxtPresencePenaltyChanged()
+    {
+        _userSettingsGlobalInstance.SetPresencePenaltyGlobal(int.Parse(txtPresencePenalty.Text)); // TODO: Brug regex til at slette forkerte inputs.
+    }
+
+    private void TxtStopChanged()
+    {
+        _userSettingsGlobalInstance.SetStopGlobal(txtStop.Text);
+    }
+    private void TxtLogitBiasChanged()
+    {
+        _userSettingsGlobalInstance.SetLogitBias(txtLogitBias.Text);
+    }
+    #endregion
+
+    private void InitializeTextBoxes()
+    {
+        txtOpenAiOrganization.Text = _userSettingsGlobalInstance.GetOpenAiOrganizationGlobal();
+        txtOpenAiKey.Text = _userSettingsGlobalInstance.GetOpenAiApiKeyGlobal();
+        txtUsername.Text = _userSettingsGlobalInstance.GetOpenAiApiUserNameGlobal();
+        txtModelId.Text = _userSettingsGlobalInstance.GetModelIdGlobal();
+        txtMaxResponseTokens.Text = _userSettingsGlobalInstance.GetMaxResponseTokensGlobal();
+        txtTokenLimit.Text = _userSettingsGlobalInstance.GetTokenLimitGlobal().ToString();
+        txtTemperature.Text = _userSettingsGlobalInstance.GetTemperatureGlobal().ToString();
+        txtTopP.Text = _userSettingsGlobalInstance.GetTopPGlobal().ToString();
+        txtN.Text = _userSettingsGlobalInstance.GetNGlobal().ToString();
+        txtFrequencyPenalty.Text = _userSettingsGlobalInstance.GetFrequencyPenaltyGlobal().ToString();
+        txtPresencePenalty.Text = _userSettingsGlobalInstance.GetPresencePenaltyGlobal().ToString();
+        txtStop.Text = _userSettingsGlobalInstance.GetStopGlobal();
+        txtLogitBias.Text = _userSettingsGlobalInstance.GetLogitBiasGlobal();
+    }
+
     private void SetFinishReason(string finishReason)
     {
         lblFinishReason.Text = "&Finish Reason: " + finishReason;
@@ -155,4 +313,6 @@ public partial class
     {
         lblTokenCostFullConversation.Text = "&Token Cost Full Conversation: " + tokenCostFullConversation;
     }
+
+
 }

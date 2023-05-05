@@ -2,7 +2,6 @@ from os import environ as env
 import openai
 import tiktoken
 from Persistent_Data.User_Settings_Global import User_Settings_Global
-import json
 
 class Chat:
 
@@ -55,7 +54,7 @@ class Chat:
 
                 print(created_local_time)
 
-                yield content, finish_reason, created_local_time, None, None
+                yield content, finish_reason, created_local_time, None, None # TODO: Returner en klasse i stedet.
 
             #if i == 0:
             #    role = chunk['choices'][0]['delta']['role']

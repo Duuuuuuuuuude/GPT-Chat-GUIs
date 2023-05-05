@@ -6,17 +6,12 @@ namespace Middleware
     public sealed class Chat : IDisposable, IGPTChat
     {
         private readonly dynamic _chatInstance;
-        private readonly PythonEnvironmentSetup _pythonEnvironmentSetup;
 
         public Chat()
         {
-            _pythonEnvironmentSetup = new PythonEnvironmentSetup();
-
             using (Py.GIL())
             {
                 // Import the Chat module and create an instance
-
-
                 dynamic chatModule = Py.Import("Chat");
                 _chatInstance = chatModule.Chat();
             }
@@ -30,7 +25,7 @@ namespace Middleware
             {
                 using (Py.GIL())
                 {
-                    // TODO: Første chunk af hver response er ligepludselig forsvundet. Problemet opstår også når koden kaldes direkte udenom Pythonnet.
+                    // TODO: Første chunk af hver response er nogengange væk. Problemet opstår også når koden kaldes direkte udenom Pythonnet.
                     conversationGenerator = _chatInstance.add_to_conversation(prompt);
                 }
             }

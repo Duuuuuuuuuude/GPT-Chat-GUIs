@@ -28,12 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "WebView2InstallationForm";
+            lblinstallationStatus = new Label();
+            SuspendLayout();
+            // 
+            // lblinstallationStatus
+            // 
+            lblinstallationStatus.AutoSize = true;
+            lblinstallationStatus.Location = new Point(436, 320);
+            lblinstallationStatus.Name = "lblinstallationStatus";
+            lblinstallationStatus.Size = new Size(50, 20);
+            lblinstallationStatus.TabIndex = 0;
+            lblinstallationStatus.Text = "label1";
+            // 
+            // WebView2InstallationForm
+            // 
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(800, 450);
+            Controls.Add(lblinstallationStatus);
+            Name = "WebView2InstallationForm";
+            Text = "WebView2InstallationForm";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
+
+        private Label lblinstallationStatus;
     }
 }

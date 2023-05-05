@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 import configparser
+from os import environ as env
 
 
 class User_Settings_Global:
@@ -88,6 +89,10 @@ class User_Settings_Global:
         # Update the os.environ object with the new value
         os.environ[key] = value
 
+    @staticmethod
+    def get_user_settings(key):
+        return env[key]
+        
     # @staticmethod
     # def clear_user_settings():
     #    """ Clear the Persistent_Data/User_Settings_Global.ini file except for the sections. The default settings and comments are kept. """
