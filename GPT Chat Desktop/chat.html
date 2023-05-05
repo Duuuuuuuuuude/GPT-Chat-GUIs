@@ -42,12 +42,27 @@
 
         .sent-message-wrapper {
             text-align: right;
+            margin-bottom: 5px;
+        }
+
+        .received-message-wrapper {
+            text-align: left;
         }
 
         .metadata {
             font-size: 12px;
             color: #777;
             font-style: italic;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .sent-message-wrapper .metadata {
+            text-align: right;
+        }
+
+        .received-message-wrapper .metadata {
+            text-align: left;
         }
     </style>
 </head>
@@ -92,10 +107,8 @@
             tokenCostLatestMessageElement.textContent = 'Token cost (prompt + completion) ' + tokenCostLatestMessage;
 
             // Append
-            if (messageContainer) {
-                const lineBreakElement = document.createElement('br');
-                messageContainer.appendChild(lineBreakElement);
-                messageContainer.appendChild(tokenCostLatestMessageElement);
+            if (messageWrapper) {
+                messageWrapper.appendChild(tokenCostLatestMessageElement);
             }
         }
 
@@ -106,8 +119,8 @@
             timestampElement.textContent = formatTimestamp(datetimeOffsetString);
 
             // Append
-            if (messageContainer) {
-                messageContainer.appendChild(timestampElement);
+            if (messageWrapper) {
+                messageWrapper.appendChild(timestampElement);
             }
         }
 
