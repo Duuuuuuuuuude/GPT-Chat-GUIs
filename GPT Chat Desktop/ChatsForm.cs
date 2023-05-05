@@ -17,7 +17,6 @@ public partial class
 
         NewTabClicked();
     }
-
     #region Event handlers
 
     private void BtnNewTab_Click(object sender, EventArgs e)
@@ -45,7 +44,7 @@ public partial class
 
     private async void btnSendMessage_Click_Async(object sender, EventArgs e)
     {
-        await SendMessageAsync();
+        await SendAndReceiveMessageAsync();
     }
 
     private async void TxtBoxInput_KeyDown_Async(object sender, KeyEventArgs e)
@@ -55,7 +54,7 @@ public partial class
             // Prevent the Enter key from creating a new line in the TextBox
             e.SuppressKeyPress = true;
 
-            await SendMessageAsync();
+            await SendAndReceiveMessageAsync();
         }
     }
     #endregion
@@ -113,26 +112,47 @@ public partial class
         tabCtrlChats.Controls.Remove(tabCtrlChats.SelectedTab);
     }
 
-    private async Task SendMessageAsync()
+    private async Task SendAndReceiveMessageAsync()
     // TODO: highlight.js og alt styling i chat.html virker ikke.
     {
         string message = txtBoxInput.Text;
         txtBoxInput.Clear();
-        //string escapedMessage = System.Security.SecurityElement.Escape(message);
-        //string script = $"appendMessage('{escapedMessage}', {true.ToString().ToLower()}, {true.ToString().ToLower()});";
-        string script = $"appendMessage('{message}', {true.ToString().ToLower()}, {true.ToString().ToLower()});";
-        webView2Chat1.CoreWebView2.ExecuteScriptAsync(script);
 
+        //string escapedMessage = System.Security.SecurityElement.Escape(message);
+        string script = $"appendMessage('{message}', true, true);";
+        await webView2Chat1.CoreWebView2.ExecuteScriptAsync(script).ConfigureAwait(true);
+
+        string metadataRequestScript = $"addTimestampToLatestMessage('{DateTimeOffset.Now}')";
+        await webView2Chat1.CoreWebView2.ExecuteScriptAsync(metadataRequestScript).ConfigureAwait(true);
+
+        ChatResult? lastChatResult = null;
         bool isFirstChunk = true;
         await foreach (var chatResult in _chatInstance.AddToConversationAsync(message))
         {
             //string escapedReply = System.Security.SecurityElement.Escape(chatResult.ContentChunk.TrimEnd());
-            //string replyScript = $"appendMessage('{escapedReply}', {false.ToString().ToLower()}, {isFirstChunk.ToString().ToLower()});";
-            string replyScript = $"appendMessage('{chatResult.ContentChunk}', {false.ToString().ToLower()}, {isFirstChunk.ToString().ToLower()});";
-            webView2Chat1.CoreWebView2.ExecuteScriptAsync(replyScript);
+            string replyScript = $"appendMessage('{chatResult.ContentChunk}', false, {isFirstChunk.ToString().ToLower()})";
             isFirstChunk = false;
+            await webView2Chat1.CoreWebView2.ExecuteScriptAsync(replyScript).ConfigureAwait(true);
+
+            lastChatResult = chatResult;
+
+            SetFinishReason(chatResult.FinishReason);
         }
+
+        string metadataReplyScript = $"addMetaDataTolatestMessage('{lastChatResult.TokenCostLatestMessage}', '{lastChatResult.CreatedLocalDateTime}')";
+        await webView2Chat1.CoreWebView2.ExecuteScriptAsync(metadataReplyScript).ConfigureAwait(true);
+
+        SetTokenCostFullConversation(lastChatResult.TokenCostFullConversation.ToString());
+    }
+    #endregion
+
+    private void SetFinishReason(string finishReason)
+    {
+        lblFinishReason.Text = "&Finish Reason: " + finishReason;
     }
 
-    #endregion
+    private void SetTokenCostFullConversation(string tokenCostFullConversation)
+    {
+        lblTokenCostFullConversation.Text = "&Token Cost Full Conversation: " + tokenCostFullConversation;
+    }
 }

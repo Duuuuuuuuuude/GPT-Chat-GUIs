@@ -5,10 +5,12 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <title>Chat</title>
 
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+
     <!--https://highlightjs.org/download/-->
-    <link rel="stylesheet" href="assets/css/default.min.css">
-    <script src="assets/js/highlight.min.js"></script>
-    <script>hljs.highlightAll();</script>
+    <!--<link rel="stylesheet" href="assets/css/default.min.css">-->
+    <!--<script src="assets/js/highlight.min.js"></script>-->
+    <!--<script>hljs.highlightAll();</script>-->
     <!--<script>
         window.onload = function () {
             hljs.highlightAll();
@@ -16,31 +18,111 @@
     </script>-->
 
     <style>
-        /* Add your custom styles here */
+        p {
+            margin: 0;
+            padding: 0px 0px 5px 0px;
+        }
+
+        .sent-message,
+        .received-message {
+            display: inline-block;
+            border-radius: 10px;
+            padding: 7px 10px 3px 10px;
+            word-wrap: break-word;
+            margin-top: 7px;
+        }
+
+        .sent-message {
+            background-color: #f0f0f0;
+        }
+
+        .received-message {
+            background-color: #d0f0d0;
+        }
+
+        .sent-message-wrapper {
+            text-align: right;
+        }
+
+        .metadata {
+            font-size: 12px;
+            color: #777;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
-    <div id='chat'></div>
+    <div id="chat"></div>
     <script>
-        let pre;
-        let code;
-        
+        let currentMessage = '';
+        let messageWrapper;
+
+        const chat = document.getElementById('chat');
+        const md = window.markdownit();
+
         function appendMessage(content, isSender, isFirstChunk) {
-
             if (isFirstChunk) {
-                pre = document.createElement('pre');
-                pre.style.textAlign = isSender ? 'right' : 'left';
+                // Clear the accumulated content for a new message
+                currentMessage = '';
 
-                code = document.createElement('code');
-                pre.appendChild(code);
+                // Create a new wrapper for the new message
+                messageWrapper = document.createElement('div');
+                messageWrapper.className = isSender ? 'sent-message-wrapper' : 'received-message-wrapper';
+                chat.appendChild(messageWrapper);
 
-                const chat = document.getElementById('chat');
-                chat.appendChild(pre);
+                // Create a new container for the new message
+                messageContainer = document.createElement('div');
+                messageContainer.className = isSender ? 'sent-message' : 'received-message';
+                messageWrapper.appendChild(messageContainer);
             }
 
-            code.textContent += content;
+            // Accumulate the content
+            currentMessage += content;
 
-            hljs.highlightElement(code);
+            const markedDownContent = md.render(currentMessage);
+            messageContainer.innerHTML = markedDownContent;
+        }
+
+        function addMetaDataTolatestMessage(tokenCostLatestMessage, datetimeOffsetString) {
+            addTimestampToLatestMessage(datetimeOffsetString);
+
+            // Token cost latest message
+            const tokenCostLatestMessageElement = document.createElement('span');
+            tokenCostLatestMessageElement.className = 'metadata';
+            tokenCostLatestMessageElement.textContent = 'Token cost (prompt + completion) ' + tokenCostLatestMessage;
+
+            // Append
+            if (messageContainer) {
+                const lineBreakElement = document.createElement('br');
+                messageContainer.appendChild(lineBreakElement);
+                messageContainer.appendChild(tokenCostLatestMessageElement);
+            }
+        }
+
+        function addTimestampToLatestMessage(datetimeOffsetString) {
+            // Timestamp
+            const timestampElement = document.createElement('span');
+            timestampElement.className = 'metadata';
+            timestampElement.textContent = formatTimestamp(datetimeOffsetString);
+
+            // Append
+            if (messageContainer) {
+                messageContainer.appendChild(timestampElement);
+            }
+        }
+
+        function formatTimestamp(datetimeOffsetString) {
+            const date = new Date(datetimeOffsetString);
+
+            const day = String(date.getDay()).padStart(2, '0');
+            const month = String(date.getMonth()).padStart(2, '0');
+            const year = String(date.getFullYear()).padStart(2, '0');
+
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+
+            return `${day}/${month}/${year} - ${hours}:${minutes}:${seconds}`;
         }
     </script>
 </body>

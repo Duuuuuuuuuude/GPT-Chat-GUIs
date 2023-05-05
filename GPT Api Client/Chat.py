@@ -53,6 +53,8 @@ class Chat:
                 finish_reason = chunk['choices'][0]['finish_reason']
                 created_local_time = chunk['created']
 
+                print(created_local_time)
+
                 yield content, finish_reason, created_local_time, None, None
 
             #if i == 0:

@@ -92,7 +92,8 @@ namespace Middleware
                         FinishReason = finishReason,
                         CreatedLocalDateTime = createdLocalDateTime,
                         TokenCostLatestMessage = tokenCostLatestMessage,
-                    });
+                        TokenCostFullConversation = tokenCostFullConversation,
+                    }).ConfigureAwait(false);
                 }
             }
             channelWriter.Complete();

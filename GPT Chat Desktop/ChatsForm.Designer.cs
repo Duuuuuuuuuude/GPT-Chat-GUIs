@@ -31,6 +31,8 @@ namespace GPT_Chat_Desktop
         private void InitializeComponent()
         {
             splitContainerContentAndSettings = new SplitContainer();
+            lblTokenCostFullConversation = new Label();
+            lblFinishReason = new Label();
             BtnCloseSelectedTab = new Button();
             BtnNewTab = new Button();
             tabCtrlChats = new TabControl();
@@ -60,6 +62,8 @@ namespace GPT_Chat_Desktop
             // 
             // splitContainerContentAndSettings.Panel1
             // 
+            splitContainerContentAndSettings.Panel1.Controls.Add(lblTokenCostFullConversation);
+            splitContainerContentAndSettings.Panel1.Controls.Add(lblFinishReason);
             splitContainerContentAndSettings.Panel1.Controls.Add(BtnCloseSelectedTab);
             splitContainerContentAndSettings.Panel1.Controls.Add(BtnNewTab);
             // 
@@ -70,9 +74,27 @@ namespace GPT_Chat_Desktop
             splitContainerContentAndSettings.SplitterDistance = 200;
             splitContainerContentAndSettings.TabIndex = 0;
             // 
+            // lblTokenCostFullConversation
+            // 
+            lblTokenCostFullConversation.AutoSize = true;
+            lblTokenCostFullConversation.Location = new Point(12, 99);
+            lblTokenCostFullConversation.Name = "lblTokenCostFullConversation";
+            lblTokenCostFullConversation.Size = new Size(160, 20);
+            lblTokenCostFullConversation.TabIndex = 3;
+            lblTokenCostFullConversation.Text = "&Token Cost This Chat: 0";
+            // 
+            // lblFinishReason
+            // 
+            lblFinishReason.AutoSize = true;
+            lblFinishReason.Location = new Point(12, 79);
+            lblFinishReason.Name = "lblFinishReason";
+            lblFinishReason.Size = new Size(105, 20);
+            lblFinishReason.TabIndex = 2;
+            lblFinishReason.Text = "Finish Reason: ";
+            // 
             // BtnCloseSelectedTab
             // 
-            BtnCloseSelectedTab.Location = new Point(41, 81);
+            BtnCloseSelectedTab.Location = new Point(12, 47);
             BtnCloseSelectedTab.Name = "BtnCloseSelectedTab";
             BtnCloseSelectedTab.Size = new Size(123, 29);
             BtnCloseSelectedTab.TabIndex = 1;
@@ -82,7 +104,7 @@ namespace GPT_Chat_Desktop
             // 
             // BtnNewTab
             // 
-            BtnNewTab.Location = new Point(70, 32);
+            BtnNewTab.Location = new Point(12, 12);
             BtnNewTab.Name = "BtnNewTab";
             BtnNewTab.Size = new Size(94, 29);
             BtnNewTab.TabIndex = 0;
@@ -149,7 +171,7 @@ namespace GPT_Chat_Desktop
             txtBoxInput.MaxLength = 0;
             txtBoxInput.Multiline = true;
             txtBoxInput.Name = "txtBoxInput";
-            txtBoxInput.Size = new Size(473, 0);
+            txtBoxInput.Size = new Size(473, 29);
             txtBoxInput.TabIndex = 1;
             txtBoxInput.KeyDown += TxtBoxInput_KeyDown_Async;
             // 
@@ -158,7 +180,7 @@ namespace GPT_Chat_Desktop
             btnSendMessage.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             btnSendMessage.Location = new Point(482, 4);
             btnSendMessage.Name = "btnSendMessage";
-            btnSendMessage.Size = new Size(94, 0);
+            btnSendMessage.Size = new Size(94, 29);
             btnSendMessage.TabIndex = 0;
             btnSendMessage.Text = "&Send";
             btnSendMessage.UseVisualStyleBackColor = true;
@@ -174,6 +196,7 @@ namespace GPT_Chat_Desktop
             Text = "GPT Chats";
             Load += ChatsForm_Load;
             splitContainerContentAndSettings.Panel1.ResumeLayout(false);
+            splitContainerContentAndSettings.Panel1.PerformLayout();
             splitContainerContentAndSettings.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainerContentAndSettings).EndInit();
             splitContainerContentAndSettings.ResumeLayout(false);
@@ -199,5 +222,7 @@ namespace GPT_Chat_Desktop
         private TextBox txtBoxInput;
         private Button btnSendMessage;
         private Microsoft.Web.WebView2.WinForms.WebView2 webView2Chat1;
+        private Label lblFinishReason;
+        private Label lblTokenCostFullConversation;
     }
 }
