@@ -1,4 +1,5 @@
 using Microsoft.Web.WebView2.Core;
+using Middleware;
 
 namespace GPT_Chat_Desktop;
 
@@ -16,7 +17,11 @@ internal static class Program
 
         if (IsWebView2RuntimeInstalled())
         {
-            Application.Run(new ChatsForm());
+            using (PythonEnvironmentSetup.PythonEnvironmentSetupSingletonInstance)
+            {
+                Application.Run(new ChatsForm(new Chat(), new UserSettingsGlobal()));
+            }
+
         }
         else
         {
@@ -24,7 +29,10 @@ internal static class Program
             {
                 if (installationForm.ShowDialog() == DialogResult.OK)
                 {
-                    Application.Run(new ChatsForm());
+                    using (PythonEnvironmentSetup.PythonEnvironmentSetupSingletonInstance)
+                    {
+                        Application.Run(new ChatsForm(new Chat(), new UserSettingsGlobal()));
+                    }
                 }
             }
         }

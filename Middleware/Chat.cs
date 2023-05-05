@@ -3,7 +3,7 @@ using System.Threading.Channels;
 
 namespace Middleware
 {
-    public sealed class Chat : IDisposable, IGPTChat
+    public sealed class Chat : IGPTChat
     {
         private readonly dynamic _chatInstance;
 
@@ -102,10 +102,5 @@ namespace Middleware
         //    TokenCostLatestMessage = tokenCostLatestMessage,
         //    TokenCostFullConversation = tokenCostFullConversation
         //};
-
-        public void Dispose()
-        {
-            _pythonEnvironmentSetup.Dispose();
-        }
     }
 }

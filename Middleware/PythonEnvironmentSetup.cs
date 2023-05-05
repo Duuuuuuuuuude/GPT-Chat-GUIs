@@ -4,9 +4,30 @@ using System.Text;
 
 namespace Middleware;
 
-internal sealed class PythonEnvironmentSetup : IDisposable
+/// <summary>
+/// This class is responsible for setting up the Python environment and should be called before any Python code is executed.
+///
+/// Should be disposed when the application not used anymore.
+/// 
+/// <example>
+///     <code>
+///     using (PythonEnvironmentSetup.getPythonEnvironmentSetupInstance())
+///     {
+///         new ChatsForm(new Chat();
+///         new UserSettingsGlobal();
+///     }
+///     </code>
+/// </example>
+/// 
+/// </summary>
+public sealed class PythonEnvironmentSetup : IDisposable
 {
-    internal PythonEnvironmentSetup()
+    /// <summary>
+    /// Singleton
+    /// </summary>
+    public static readonly PythonEnvironmentSetup PythonEnvironmentSetupSingletonInstance = new();
+
+    private PythonEnvironmentSetup()
     {
         #region Python Paths
         string rootDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -68,7 +89,7 @@ internal sealed class PythonEnvironmentSetup : IDisposable
     /// </remarks>
     /// <param name="path">Long Path syntax</param>
     /// <returns>Shortened 8.3 syntax or null on failure</returns>
-    public static string GetShortPath(string path)
+    private static string GetShortPath(string path)
     {
         if (string.IsNullOrEmpty(path))
             return null;
