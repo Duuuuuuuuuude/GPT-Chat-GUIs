@@ -9,6 +9,7 @@ public partial class
 {
     private readonly IGPTChat _chatInstance;
     private IUserSettingsGlobal _userSettingsGlobalInstance;
+    private bool _isReplying = false;
 
     public ChatsForm(IGPTChat chat, IUserSettingsGlobal userSettingsGlobal)
     {
@@ -63,8 +64,10 @@ public partial class
         {
             // Prevent the Enter key from creating a new line in the TextBox
             e.SuppressKeyPress = true;
-
-            await SendAndReceiveMessageAsync();
+            if (!_isReplying)
+            {
+                await SendAndReceiveMessageAsync();
+            }
         }
     }
     #endregion
@@ -209,6 +212,8 @@ public partial class
     private async Task SendAndReceiveMessageAsync()
     // TODO: highlight.js og alt styling i chat.html virker ikke.
     {
+        SetReplyingStatus(true);
+
         string message = txtBoxInput.Text;
         txtBoxInput.Clear();
 
@@ -246,6 +251,9 @@ public partial class
         // TODO: Nogen gange kaldes addMetaDataTolatestMessage to gange pr. besked.
         string metadataReplyScript = $"addMetaDataTolatestMessage('{lastChatResult.TokenCostLatestMessage}', '{lastChatResult.CreatedLocalDateTime}')";
         await webView2Chat1.CoreWebView2.ExecuteScriptAsync(metadataReplyScript).ConfigureAwait(true);
+
+
+        SetReplyingStatus(false);
 
         SetTokenCostFullConversation(lastChatResult.TokenCostFullConversation.ToString());
     }
@@ -315,6 +323,12 @@ public partial class
         _userSettingsGlobalInstance.SetLogitBias(txtLogitBias.Text);
     }
     #endregion
+
+    private void SetReplyingStatus(bool replying)
+    {
+        _isReplying = replying;
+        btnSendMessage.Enabled = !replying;
+    }
 
     private void InitializeTextBoxes()
     {
