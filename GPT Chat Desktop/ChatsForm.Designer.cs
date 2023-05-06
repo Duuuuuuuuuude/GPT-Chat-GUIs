@@ -157,6 +157,7 @@ namespace GPT_Chat_Desktop
             // txtLogitBias
             // 
             txtLogitBias.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtLogitBias.BackColor = Color.FromArgb(224, 224, 224);
             txtLogitBias.Location = new Point(13, 761);
             txtLogitBias.Name = "txtLogitBias";
             txtLogitBias.Size = new Size(286, 27);
@@ -176,6 +177,7 @@ namespace GPT_Chat_Desktop
             // txtStop
             // 
             txtStop.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtStop.BackColor = Color.FromArgb(224, 224, 224);
             txtStop.Location = new Point(12, 708);
             txtStop.Name = "txtStop";
             txtStop.Size = new Size(287, 27);
@@ -195,6 +197,7 @@ namespace GPT_Chat_Desktop
             // txtPresencePenalty
             // 
             txtPresencePenalty.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtPresencePenalty.BackColor = Color.FromArgb(224, 224, 224);
             txtPresencePenalty.Location = new Point(12, 655);
             txtPresencePenalty.Name = "txtPresencePenalty";
             txtPresencePenalty.Size = new Size(287, 27);
@@ -214,6 +217,7 @@ namespace GPT_Chat_Desktop
             // txtFrequencyPenalty
             // 
             txtFrequencyPenalty.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtFrequencyPenalty.BackColor = Color.FromArgb(224, 224, 224);
             txtFrequencyPenalty.Location = new Point(12, 602);
             txtFrequencyPenalty.Name = "txtFrequencyPenalty";
             txtFrequencyPenalty.Size = new Size(287, 27);
@@ -233,6 +237,7 @@ namespace GPT_Chat_Desktop
             // txtN
             // 
             txtN.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtN.BackColor = Color.FromArgb(224, 224, 224);
             txtN.Location = new Point(12, 549);
             txtN.Name = "txtN";
             txtN.Size = new Size(287, 27);
@@ -252,6 +257,7 @@ namespace GPT_Chat_Desktop
             // txtTopP
             // 
             txtTopP.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtTopP.BackColor = Color.FromArgb(224, 224, 224);
             txtTopP.Location = new Point(12, 496);
             txtTopP.Name = "txtTopP";
             txtTopP.Size = new Size(287, 27);
@@ -271,6 +277,7 @@ namespace GPT_Chat_Desktop
             // txtTemperature
             // 
             txtTemperature.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtTemperature.BackColor = Color.FromArgb(224, 224, 224);
             txtTemperature.Location = new Point(12, 443);
             txtTemperature.Name = "txtTemperature";
             txtTemperature.Size = new Size(287, 27);
@@ -290,6 +297,7 @@ namespace GPT_Chat_Desktop
             // txtTokenLimit
             // 
             txtTokenLimit.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtTokenLimit.BackColor = Color.FromArgb(224, 224, 224);
             txtTokenLimit.Location = new Point(12, 390);
             txtTokenLimit.Name = "txtTokenLimit";
             txtTokenLimit.Size = new Size(287, 27);
@@ -309,6 +317,7 @@ namespace GPT_Chat_Desktop
             // txtMaxResponseTokens
             // 
             txtMaxResponseTokens.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtMaxResponseTokens.BackColor = Color.FromArgb(224, 224, 224);
             txtMaxResponseTokens.Location = new Point(12, 337);
             txtMaxResponseTokens.Name = "txtMaxResponseTokens";
             txtMaxResponseTokens.Size = new Size(287, 27);
@@ -328,6 +337,7 @@ namespace GPT_Chat_Desktop
             // txtModelId
             // 
             txtModelId.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtModelId.BackColor = Color.FromArgb(224, 224, 224);
             txtModelId.Location = new Point(12, 284);
             txtModelId.Name = "txtModelId";
             txtModelId.Size = new Size(287, 27);
@@ -347,6 +357,7 @@ namespace GPT_Chat_Desktop
             // txtUsername
             // 
             txtUsername.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtUsername.BackColor = Color.FromArgb(224, 224, 224);
             txtUsername.Location = new Point(12, 231);
             txtUsername.Name = "txtUsername";
             txtUsername.Size = new Size(287, 27);
@@ -366,6 +377,7 @@ namespace GPT_Chat_Desktop
             // txtOpenAiKey
             // 
             txtOpenAiKey.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtOpenAiKey.BackColor = Color.FromArgb(224, 224, 224);
             txtOpenAiKey.Location = new Point(12, 178);
             txtOpenAiKey.Name = "txtOpenAiKey";
             txtOpenAiKey.Size = new Size(287, 27);
@@ -386,6 +398,7 @@ namespace GPT_Chat_Desktop
             // txtOpenAiOrganization
             // 
             txtOpenAiOrganization.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtOpenAiOrganization.BackColor = Color.FromArgb(224, 224, 224);
             txtOpenAiOrganization.Location = new Point(12, 125);
             txtOpenAiOrganization.Name = "txtOpenAiOrganization";
             txtOpenAiOrganization.Size = new Size(287, 27);
