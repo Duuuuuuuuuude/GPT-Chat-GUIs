@@ -133,6 +133,7 @@ namespace GPT_Chat_Desktop
             // chkShowKey
             // 
             chkShowKey.AutoSize = true;
+            chkShowKey.ForeColor = Color.White;
             chkShowKey.Location = new Point(105, 154);
             chkShowKey.Name = "chkShowKey";
             chkShowKey.Size = new Size(95, 24);
@@ -144,6 +145,7 @@ namespace GPT_Chat_Desktop
             // chkShowOrganization
             // 
             chkShowOrganization.AutoSize = true;
+            chkShowOrganization.ForeColor = Color.White;
             chkShowOrganization.Location = new Point(165, 101);
             chkShowOrganization.Name = "chkShowOrganization";
             chkShowOrganization.Size = new Size(157, 24);
@@ -164,6 +166,7 @@ namespace GPT_Chat_Desktop
             // lblLogitBias
             // 
             lblLogitBias.AutoSize = true;
+            lblLogitBias.ForeColor = Color.White;
             lblLogitBias.Location = new Point(13, 738);
             lblLogitBias.Name = "lblLogitBias";
             lblLogitBias.Size = new Size(74, 20);
@@ -182,6 +185,7 @@ namespace GPT_Chat_Desktop
             // lblStop
             // 
             lblStop.AutoSize = true;
+            lblStop.ForeColor = Color.White;
             lblStop.Location = new Point(13, 686);
             lblStop.Name = "lblStop";
             lblStop.Size = new Size(40, 20);
@@ -200,6 +204,7 @@ namespace GPT_Chat_Desktop
             // lblPresencePenalty
             // 
             lblPresencePenalty.AutoSize = true;
+            lblPresencePenalty.ForeColor = Color.White;
             lblPresencePenalty.Location = new Point(13, 632);
             lblPresencePenalty.Name = "lblPresencePenalty";
             lblPresencePenalty.Size = new Size(118, 20);
@@ -218,6 +223,7 @@ namespace GPT_Chat_Desktop
             // lblFrequencyPenalty
             // 
             lblFrequencyPenalty.AutoSize = true;
+            lblFrequencyPenalty.ForeColor = Color.White;
             lblFrequencyPenalty.Location = new Point(13, 580);
             lblFrequencyPenalty.Name = "lblFrequencyPenalty";
             lblFrequencyPenalty.Size = new Size(127, 20);
@@ -236,6 +242,7 @@ namespace GPT_Chat_Desktop
             // lblN
             // 
             lblN.AutoSize = true;
+            lblN.ForeColor = Color.White;
             lblN.Location = new Point(13, 527);
             lblN.Name = "lblN";
             lblN.Size = new Size(20, 20);
@@ -254,6 +261,7 @@ namespace GPT_Chat_Desktop
             // lblTopP
             // 
             lblTopP.AutoSize = true;
+            lblTopP.ForeColor = Color.White;
             lblTopP.Location = new Point(13, 474);
             lblTopP.Name = "lblTopP";
             lblTopP.Size = new Size(46, 20);
@@ -272,6 +280,7 @@ namespace GPT_Chat_Desktop
             // lblTemperature
             // 
             lblTemperature.AutoSize = true;
+            lblTemperature.ForeColor = Color.White;
             lblTemperature.Location = new Point(12, 420);
             lblTemperature.Name = "lblTemperature";
             lblTemperature.Size = new Size(93, 20);
@@ -290,6 +299,7 @@ namespace GPT_Chat_Desktop
             // lblTokenLimit
             // 
             lblTokenLimit.AutoSize = true;
+            lblTokenLimit.ForeColor = Color.White;
             lblTokenLimit.Location = new Point(12, 367);
             lblTokenLimit.Name = "lblTokenLimit";
             lblTokenLimit.Size = new Size(85, 20);
@@ -308,6 +318,7 @@ namespace GPT_Chat_Desktop
             // lblMaxResponseTokens
             // 
             lblMaxResponseTokens.AutoSize = true;
+            lblMaxResponseTokens.ForeColor = Color.White;
             lblMaxResponseTokens.Location = new Point(12, 314);
             lblMaxResponseTokens.Name = "lblMaxResponseTokens";
             lblMaxResponseTokens.Size = new Size(153, 20);
@@ -326,6 +337,7 @@ namespace GPT_Chat_Desktop
             // lblModelId
             // 
             lblModelId.AutoSize = true;
+            lblModelId.ForeColor = Color.White;
             lblModelId.Location = new Point(12, 261);
             lblModelId.Name = "lblModelId";
             lblModelId.Size = new Size(69, 20);
@@ -344,6 +356,7 @@ namespace GPT_Chat_Desktop
             // lblUserName
             // 
             lblUserName.AutoSize = true;
+            lblUserName.ForeColor = Color.White;
             lblUserName.Location = new Point(12, 208);
             lblUserName.Name = "lblUserName";
             lblUserName.Size = new Size(75, 20);
@@ -363,6 +376,7 @@ namespace GPT_Chat_Desktop
             // lblOpenAiKey
             // 
             lblOpenAiKey.AutoSize = true;
+            lblOpenAiKey.ForeColor = Color.White;
             lblOpenAiKey.Location = new Point(12, 155);
             lblOpenAiKey.Name = "lblOpenAiKey";
             lblOpenAiKey.Size = new Size(87, 20);
@@ -382,6 +396,7 @@ namespace GPT_Chat_Desktop
             // lblOpenAiOrganization
             // 
             lblOpenAiOrganization.AutoSize = true;
+            lblOpenAiOrganization.ForeColor = Color.White;
             lblOpenAiOrganization.Location = new Point(12, 102);
             lblOpenAiOrganization.Name = "lblOpenAiOrganization";
             lblOpenAiOrganization.Size = new Size(149, 20);
@@ -391,6 +406,7 @@ namespace GPT_Chat_Desktop
             // lblTokenCostFullConversation
             // 
             lblTokenCostFullConversation.AutoSize = true;
+            lblTokenCostFullConversation.ForeColor = Color.White;
             lblTokenCostFullConversation.Location = new Point(13, 32);
             lblTokenCostFullConversation.Name = "lblTokenCostFullConversation";
             lblTokenCostFullConversation.Size = new Size(160, 20);
@@ -400,6 +416,7 @@ namespace GPT_Chat_Desktop
             // lblFinishReason
             // 
             lblFinishReason.AutoSize = true;
+            lblFinishReason.ForeColor = Color.White;
             lblFinishReason.Location = new Point(12, 9);
             lblFinishReason.Name = "lblFinishReason";
             lblFinishReason.Size = new Size(105, 20);
@@ -408,24 +425,26 @@ namespace GPT_Chat_Desktop
             // 
             // BtnCloseSelectedTab
             // 
-            BtnCloseSelectedTab.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            BtnCloseSelectedTab.BackColor = Color.Gray;
+            BtnCloseSelectedTab.ForeColor = Color.White;
             BtnCloseSelectedTab.Location = new Point(13, 55);
             BtnCloseSelectedTab.Name = "BtnCloseSelectedTab";
             BtnCloseSelectedTab.Size = new Size(123, 29);
             BtnCloseSelectedTab.TabIndex = 1;
             BtnCloseSelectedTab.Text = "&Close Selected Tab";
-            BtnCloseSelectedTab.UseVisualStyleBackColor = true;
+            BtnCloseSelectedTab.UseVisualStyleBackColor = false;
             BtnCloseSelectedTab.Click += BtnCloseTab_Click;
             // 
             // BtnNewTab
             // 
-            BtnNewTab.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            BtnNewTab.BackColor = Color.Gray;
+            BtnNewTab.ForeColor = Color.White;
             BtnNewTab.Location = new Point(165, 55);
             BtnNewTab.Name = "BtnNewTab";
             BtnNewTab.Size = new Size(94, 29);
             BtnNewTab.TabIndex = 0;
             BtnNewTab.Text = "&New Tab";
-            BtnNewTab.UseVisualStyleBackColor = true;
+            BtnNewTab.UseVisualStyleBackColor = false;
             BtnNewTab.Click += BtnNewTab_Click;
             // 
             // tabCtrlChats
@@ -440,6 +459,7 @@ namespace GPT_Chat_Desktop
             // 
             // tabPageChat1
             // 
+            tabPageChat1.BackColor = Color.FromArgb(34, 34, 34);
             tabPageChat1.Controls.Add(splitContainerChat1);
             tabPageChat1.Location = new Point(4, 29);
             tabPageChat1.Name = "tabPageChat1";
@@ -447,7 +467,6 @@ namespace GPT_Chat_Desktop
             tabPageChat1.Size = new Size(911, 883);
             tabPageChat1.TabIndex = 0;
             tabPageChat1.Text = "Chat 1";
-            tabPageChat1.UseVisualStyleBackColor = true;
             // 
             // splitContainerChat1
             // 
@@ -465,7 +484,7 @@ namespace GPT_Chat_Desktop
             splitContainerChat1.Panel2.Controls.Add(txtBoxInput);
             splitContainerChat1.Panel2.Controls.Add(btnSendMessage);
             splitContainerChat1.Size = new Size(905, 877);
-            splitContainerChat1.SplitterDistance = 788;
+            splitContainerChat1.SplitterDistance = 820;
             splitContainerChat1.TabIndex = 0;
             // 
             // webView2Chat1
@@ -476,7 +495,7 @@ namespace GPT_Chat_Desktop
             webView2Chat1.Dock = DockStyle.Fill;
             webView2Chat1.Location = new Point(0, 0);
             webView2Chat1.Name = "webView2Chat1";
-            webView2Chat1.Size = new Size(905, 788);
+            webView2Chat1.Size = new Size(905, 820);
             webView2Chat1.TabIndex = 0;
             webView2Chat1.ZoomFactor = 1D;
             // 
@@ -487,7 +506,7 @@ namespace GPT_Chat_Desktop
             txtBoxInput.MaxLength = 0;
             txtBoxInput.Multiline = true;
             txtBoxInput.Name = "txtBoxInput";
-            txtBoxInput.Size = new Size(796, 77);
+            txtBoxInput.Size = new Size(796, 45);
             txtBoxInput.TabIndex = 1;
             txtBoxInput.KeyDown += TxtBoxInput_KeyDown_Async;
             // 
@@ -496,7 +515,7 @@ namespace GPT_Chat_Desktop
             btnSendMessage.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             btnSendMessage.Location = new Point(805, 4);
             btnSendMessage.Name = "btnSendMessage";
-            btnSendMessage.Size = new Size(94, 77);
+            btnSendMessage.Size = new Size(94, 45);
             btnSendMessage.TabIndex = 0;
             btnSendMessage.Text = "&Send";
             btnSendMessage.UseVisualStyleBackColor = true;
@@ -506,6 +525,7 @@ namespace GPT_Chat_Desktop
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(34, 34, 34);
             ClientSize = new Size(1230, 916);
             Controls.Add(splitContainerContentAndSettings);
             Name = "ChatsForm";

@@ -1,5 +1,6 @@
 ﻿using Middleware;
 using System.Collections;
+using System.Diagnostics;
 
 namespace GPT_Chat_Desktop;
 
@@ -44,6 +45,11 @@ public partial class
         webView2Chat1.CoreWebView2.OpenDevToolsWindow();
 #endif
         InitializeTextBoxes();
+    }
+
+    private void WebView2Chat1_NavigationCompleted(object? sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
+    {
+        throw new NotImplementedException();
     }
 
     private async void btnSendMessage_Click_Async(object sender, EventArgs e)
@@ -206,19 +212,26 @@ public partial class
         string message = txtBoxInput.Text;
         txtBoxInput.Clear();
 
-        //string escapedMessage = System.Security.SecurityElement.Escape(message);
-        string script = $"appendMessage('{message}', true, true);";
+        string messageBase64 = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(message)); // So it doesn't remove the new line characters.
+        string script = $"appendMessageChunkToChat('{messageBase64}', true, true);";
         await webView2Chat1.CoreWebView2.ExecuteScriptAsync(script).ConfigureAwait(true);
 
         string metadataRequestScript = $"addTimestampToLatestMessage('{DateTimeOffset.Now}')";
         await webView2Chat1.CoreWebView2.ExecuteScriptAsync(metadataRequestScript).ConfigureAwait(true);
 
+        string fullConversation = string.Empty;
+        string fullEscapedConversation = string.Empty;
+
         ChatResult? lastChatResult = null;
         bool isFirstChunk = true;
         await foreach (var chatResult in _chatInstance.AddToConversationAsync(message))
         {
-            //string escapedReply = System.Security.SecurityElement.Escape(chatResult.ContentChunk.TrimEnd());
-            string replyScript = $"appendMessage('{chatResult.ContentChunk}', false, {isFirstChunk.ToString().ToLower()})";
+            string contentChunkBase64 = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(chatResult.ContentChunk)); // So it doesn't remove the new line characters.
+            fullConversation += chatResult.ContentChunk;
+            fullEscapedConversation += contentChunkBase64;
+
+
+            string replyScript = $"appendMessageChunkToChat('{contentChunkBase64}', false, {isFirstChunk.ToString().ToLower()})";
             isFirstChunk = false;
             await webView2Chat1.CoreWebView2.ExecuteScriptAsync(replyScript).ConfigureAwait(true);
 
@@ -227,6 +240,10 @@ public partial class
             SetFinishReason(chatResult.FinishReason);
         }
 
+        Debug.WriteLine(fullConversation);
+        Debug.WriteLine(fullEscapedConversation);
+
+        // TODO: Nogen gange kaldes addMetaDataTolatestMessage to gange pr. besked.
         string metadataReplyScript = $"addMetaDataTolatestMessage('{lastChatResult.TokenCostLatestMessage}', '{lastChatResult.CreatedLocalDateTime}')";
         await webView2Chat1.CoreWebView2.ExecuteScriptAsync(metadataReplyScript).ConfigureAwait(true);
 

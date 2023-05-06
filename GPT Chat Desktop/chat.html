@@ -5,39 +5,49 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <title>Chat</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+    <!--Markdown-it-->
 
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>  <!--TODO: Download-->
+    <script src="lib/js/markdown/markdown-it.min.js"></script>
+    <script src="https://unpkg.com/markdown-it-table"></script> <!--TODO: Download-->
+    <script src="lib/js/markdown/"></script>
+
+    <!--highlight.js-->
     <!--https://highlightjs.org/download/-->
-    <!--<link rel="stylesheet" href="assets/css/default.min.css">-->
-    <!--<script src="assets/js/highlight.min.js"></script>-->
-    <!--<script>hljs.highlightAll();</script>-->
-    <!--<script>
-        window.onload = function () {
-            hljs.highlightAll();
-        };
-    </script>-->
+    <link rel="stylesheet" href="lib/css/highlightjs/material-darker.min.css">
+    <script src="lib/js/highlightjs/highlight.min.js"></script>
+
+    <script src="lib/js/highlightjs-line-numbers/highlightjs-line-numbers.min.js"></script>
 
     <style>
+        body {
+            background-color: #222;
+            color: #f1f1f1;
+        }
+
         p {
             margin: 0;
             padding: 0px 0px 5px 0px;
         }
 
+        /*Message styling*/
         .sent-message,
         .received-message {
             display: inline-block;
             border-radius: 10px;
             padding: 7px 10px 3px 10px;
-            word-wrap: break-word;
+            /*word-wrap: break-word;*/
             margin-top: 7px;
         }
 
         .sent-message {
-            background-color: #f0f0f0;
+            /*background-color: #f0f0f0;*/
         }
 
         .received-message {
-            background-color: #d0f0d0;
+            /*background-color: #212121;*/
+            caret-color: white;
+            color: white;
         }
 
         .sent-message-wrapper {
@@ -66,18 +76,171 @@
             text-align: left;
             padding: 0px 4px;
         }
+
+        /*table styling*/
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            border: 1px solid #555;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        tr {
+            transition: background-color 0.2s ease-in-out;
+        }
+
+            tr:hover {
+                background-color: #444;
+            }
+
+            tr:nth-child(odd) {
+                background-color: #333;
+            }
+
+            tr:nth-child(even) {
+                background-color: #2a2a2a;
+            }
+
+        th {
+            font-weight: bold;
+            background-color: #1e1e1e;
+            padding: 8px;
+            text-align: left;
+            border-bottom: 2px solid #555;
+            color: #f1f1f1;
+        }
+
+        td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #555;
+            color: #f1f1f1;
+        }
+
+
+        /*th {
+            background-color: #777777;
+        }*/
+
+        /*Line numbers styling*/
+        .hljs-ln-numbers {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            text-align: center;
+            color: #ccc;
+            border-right: 1px solid rgba(204, 204, 204, 0.514);
+            vertical-align: top;
+            word-break: normal; /* Avoid a line break on large line numbers */
+        }
+
+        .hljs-ln td:nth-child(1) {
+            padding-right: 10px;
+        }
+
+        .hljs-ln td:nth-child(2) {
+            padding-left: 10px;
+        }
+
+        /*code table styling*/
+        .code-block table {
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .code-block table {
+            padding: 0;
+            margin: 0;
+            background-color: transparent;
+        }
+
+            .code-block table tr,
+            .code-block table th,
+            .code-block table td {
+                padding: 0;
+                margin: 0;
+                background-color: transparent;
+                border: none;
+            }
+
+        table, .code-block {
+            min-width: 50%; /* Adjust this value according to your preference */
+        }
     </style>
+
 </head>
 <body>
     <div id="chat"></div>
     <script>
         let currentMessage = '';
         let messageWrapper;
-
+        var messageContainer;
         const chat = document.getElementById('chat');
-        const md = window.markdownit();
 
-        function appendMessage(content, isSender, isFirstChunk) {
+        const md = window.markdownit({
+            // Defaults to false
+            // Enable HTML tags in source
+            html: false,
+
+            // Defaults to false
+            // Use '/' to close single tags (<br />).
+            // This is only for full CommonMark compatibility.
+            xhtmlOut: false,
+
+            // Defaults to false
+            // Convert '\n' in paragraphs into <br>
+            breaks: false,
+
+            // Defaults to 'language-'
+            // CSS language prefix for fenced blocks. Can be
+            // useful for external highlighters.
+            langPrefix: 'language-',
+
+            // Defaults to false
+            // Autoconvert URL-like text to links
+            linkify: true,
+
+            // Defaults to false
+            // Enable some language-neutral replacement + quotes beautification
+            // For the full list of replacements, see https://github.com/markdown-it/markdown-it/blob/master/lib/rules_core/replacements.js
+            typographer: true,
+
+            // Defaults to '“”‘’'
+            // Double + single quotes replacement pairs, when typographer enabled,
+            // and smartquotes on. Could be either a String or an Array.
+            // For example, you can use '«»„“' for Russian, '„“‚‘' for German,
+            // and ['«\xA0', '\xA0»', '‹\xA0', '\xA0›'] for French (including nbsp).
+            quotes: '“”‘’',
+
+            highlight: function (str, lang) {
+                let result;
+
+                if (lang && hljs.getLanguage(lang)) {
+                    try {
+                        result = hljs.highlight(str, { language: lang, ignoreIllegals: true }).value;
+                    } catch (__) {
+                        result = md.utils.escapeHtml(str);
+                    }
+                } else {
+                    result = md.utils.escapeHtml(str);
+                }
+                //return `<pre><code class="hljs" data-line-numbers>${result}</code></pre>`;
+                //return `<pre class="not-code-table"><code class="hljs" data-line-numbers>${result}</code></pre>`;
+                return `<div class="code-block"><pre><code class="hljs" data-line-numbers>${result}</code></pre></div>`;
+            }
+        });
+
+
+        function appendMessageChunkToChat(encodedContent, isSender, isFirstChunk) {
+            // Decode the Base64 encoded content. The content is encoded to avoid issues with new line characters
+            const content = atob(encodedContent);
+
+
             if (isFirstChunk) {
                 // Clear the accumulated content for a new message
                 currentMessage = '';
@@ -97,7 +260,13 @@
             currentMessage += content;
 
             const markedDownContent = md.render(currentMessage);
+
             messageContainer.innerHTML = markedDownContent;
+
+            const codeBlocks = messageContainer.querySelectorAll('pre > code.hljs[data-line-numbers]');
+            codeBlocks.forEach(codeBlock => {
+                hljs.lineNumbersBlock(codeBlock);
+            });
         }
 
         function addMetaDataTolatestMessage(tokenCostLatestMessage, datetimeOffsetString) {
@@ -106,7 +275,7 @@
             // Token cost latest message
             const tokenCostLatestMessageElement = document.createElement('span');
             tokenCostLatestMessageElement.className = 'metadata';
-            tokenCostLatestMessageElement.textContent = 'Token cost (prompt + completion) ' + tokenCostLatestMessage;
+            tokenCostLatestMessageElement.textContent = `Token cost (prompt + completion) ${tokenCostLatestMessage}`;
 
             // Append
             if (messageWrapper) {
