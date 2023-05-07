@@ -16,6 +16,10 @@ Things to be aware of, for now:
    
    ~~4) It is still running singlethreaded (For now), so GUI will freeze when it should print things out in chunks as they are returned from the Api.~~
  
+ Iteration 4
+ ![Skærmbillede 2023-05-06 183614](https://user-images.githubusercontent.com/85315025/236636486-f8b567d2-6f50-4378-ae93-44542b718cbe.png)
+
+ 
  Iteration 3
  ![Skærmbillede 2023-05-05 235818](https://user-images.githubusercontent.com/85315025/236575488-79ef2643-e2ba-4b41-b2f6-b0502aea83e6.png)
 
