@@ -1,13 +1,16 @@
 ﻿<!DOCTYPE html>
+<!--TODO: Plugins https://github.com/markdown-it/markdown-it-->
 <html>
 <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <title>Chat</title>
 
-    <!--Markdown-it-->
+    <!--ClipBoard-->
+<script src="lib/js/clipboard/clipboard.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>  <!--TODO: Download-->
+    <!--Markdown-it-->
+    <script src="lib/js/markdown/markdown-it.min.js"></script>
     <script src="lib/js/markdown/markdown-it.min.js"></script>
     <script src="https://unpkg.com/markdown-it-table"></script> <!--TODO: Download-->
     <script src="lib/js/markdown/"></script>
@@ -17,46 +20,45 @@
     <link rel="stylesheet" href="lib/css/highlightjs/material-darker.min.css">
     <script src="lib/js/highlightjs/highlight.min.js"></script>
 
+    <!--Highlight.js line numbers-->
     <script src="lib/js/highlightjs-line-numbers/highlightjs-line-numbers.min.js"></script>
 
     <style>
         body {
             background-color: #222;
             color: #f1f1f1;
+            margin-top: 17px;
+            margin-left: 12px;
+            margin-right: 12px;
         }
 
         p {
             margin: 0;
-            padding: 0px 0px 5px 0px;
+            /*margin: 10px 10px;*/
         }
 
         /*Message styling*/
         .sent-message,
         .received-message {
-            display: inline-block;
+            /*display: inline-block;*/
             border-radius: 10px;
-            padding: 7px 10px 3px 10px;
+            /*padding: 7px 10px 3px 10px;*/
             /*word-wrap: break-word;*/
-            margin-top: 7px;
-        }
-
-        .sent-message {
-            /*background-color: #f0f0f0;*/
-        }
-
-        .received-message {
-            /*background-color: #212121;*/
-            caret-color: white;
-            color: white;
+            /*margin-top: 7px;*/
+            font-size: 14px;
+            margin-bottom: 2px;
         }
 
         .sent-message-wrapper {
             text-align: right;
-            margin-bottom: 5px;
+            /*margin-bottom: 5px;*/
+            padding-left: 25%;
         }
 
         .received-message-wrapper {
             text-align: left;
+            padding-right: 25%;
+            margin-bottom: 10px;
         }
 
         .metadata {
@@ -64,26 +66,31 @@
             color: #777;
             font-style: italic;
             display: block;
-            margin-top: 2px;
+            /*margin-top: 2px;*/
+            margin-right: 3px;
+            margin-left: 3px;
         }
 
         .sent-message-wrapper .metadata {
             text-align: right;
-            padding: 0px 4px;
+            /*padding: 0px 4px;*/
         }
 
         .received-message-wrapper .metadata {
             text-align: left;
-            padding: 0px 4px;
+            /*padding: 0px 4px;*/
         }
 
         /*table styling*/
         table {
             border-collapse: collapse;
-            width: 100%;
+            width: auto;
             border: 1px solid #555;
-            margin-top: 10px;
-            margin-bottom: 10px;
+            /*margin-top: 10px;*/
+            /*margin-bottom: 10px;*/
+            white-space: nowrap;
+            max-width: 100%;
+            overflow: auto;
         }
 
         tr {
@@ -105,19 +112,18 @@
         th {
             font-weight: bold;
             background-color: #1e1e1e;
-            padding: 8px;
+            /*padding: 8px;*/
             text-align: left;
             border-bottom: 2px solid #555;
             color: #f1f1f1;
         }
 
         td {
-            padding: 8px;
+            /*padding: 8px;*/
             text-align: left;
             border-bottom: 1px solid #555;
             color: #f1f1f1;
         }
-
 
         /*th {
             background-color: #777777;
@@ -139,37 +145,91 @@
         }
 
         .hljs-ln td:nth-child(1) {
-            padding-right: 10px;
+            padding-right: 5px;
         }
 
         .hljs-ln td:nth-child(2) {
-            padding-left: 10px;
+            padding-left: 5px;
         }
 
-        /*code table styling*/
-        .code-block table {
-            border: none !important;
-            padding: 0 !important;
-            margin: 0 !important;
+        /*code table/block styling*/
+
+        pre {
+            margin-top: 0px;
+            margin-bottom: 0px;
         }
 
-        .code-block table {
-            padding: 0;
-            margin: 0;
-            background-color: transparent;
+        .code-block {
+            display: inline-block;
+            max-width: 100%;
         }
 
-            .code-block table tr,
-            .code-block table th,
-            .code-block table td {
-                padding: 0;
-                margin: 0;
-                background-color: transparent;
-                border: none;
+            .code-block pre {
+                display: inline-block;
             }
 
-        table, .code-block {
-            min-width: 50%; /* Adjust this value according to your preference */
+            .code-block table {
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .code-block table {
+                /*padding: 0;*/
+                /*margin: 0;*/
+                background-color: transparent;
+            }
+
+                .code-block table tr,
+                .code-block table th,
+                .code-block table td {
+                    /*padding: 0;*/
+                    /*margin: 0;*/
+                    background-color: transparent;
+                    border: none;
+                }
+
+        .copy-button {
+            font: inherit;
+            cursor: pointer;
+            outline: none;
+            background: none;
+            border: none;
+            /*display: inline;*/
+            color: white;
+            max-width: 14px;
+        }
+
+        .copy.button:focus {
+            outline: none;
+        }
+
+        .copy-button:active {
+            color: #ccc;
+        }
+
+        .text-button:hover {
+            text-decoration: underline;
+        }
+
+        .copy-button,
+        .language-label {
+            font-size: 14px;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 8px;
+            background-color: #1e1e1e;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+
+        .language-label {
+            color: white;
+            font-weight: bold;
         }
     </style>
 
@@ -181,6 +241,24 @@
         let messageWrapper;
         var messageContainer;
         const chat = document.getElementById('chat');
+
+        const clipboard = new ClipboardJS('.copy-button');
+
+        clipboard.on('success', function (e) {
+            e.trigger.textContent = 'Copied';
+            setTimeout(function () {
+                e.trigger.textContent = 'Copy code';
+            }, 2000);
+
+            e.clearSelection();
+        });
+
+        clipboard.on('error', function (e) {
+            e.trigger.textContent = 'Error';
+            setTimeout(function () {
+                e.trigger.textContent = 'Copy code';
+            }, 2000);
+        });
 
         const md = window.markdownit({
             // Defaults to false
@@ -217,29 +295,35 @@
             // and ['«\xA0', '\xA0»', '‹\xA0', '\xA0›'] for French (including nbsp).
             quotes: '“”‘’',
 
-            highlight: function (str, lang) {
+            highlight: function (code, lang) {
                 let result;
 
-                if (lang && hljs.getLanguage(lang)) {
-                    try {
-                        result = hljs.highlight(str, { language: lang, ignoreIllegals: true }).value;
-                    } catch (__) {
-                        result = md.utils.escapeHtml(str);
-                    }
-                } else {
-                    result = md.utils.escapeHtml(str);
+                try {
+                    result = hljs.highlightAuto(code, {});
+                } catch (__) {
+                    result = md.utils.escapeHtml(code);
                 }
-                //return `<pre><code class="hljs" data-line-numbers>${result}</code></pre>`;
-                //return `<pre class="not-code-table"><code class="hljs" data-line-numbers>${result}</code></pre>`;
-                return `<div class="code-block"><pre><code class="hljs" data-line-numbers>${result}</code></pre></div>`;
+
+                return `<div class="code-block">
+                                              <div class="code-header">
+                                                <span class="language-label">${result.language}</span>
+                                                <button class="copy-button" data-clipboard-target="pre" data-clipboard-action="copy">
+                                                  Copy code
+                                                </button>
+                                              </div>
+                                              <pre><code class="hljs" data-line-numbers>${result.value}</code></pre>
+                                            </div>`;
             }
         });
 
+        // Languages
+        languagesElement = document.createElement('div');
+        languagesElement.innerHTML = hljs.listLanguages();
+        chat.appendChild(languagesElement);
 
         function appendMessageChunkToChat(encodedContent, isSender, isFirstChunk) {
             // Decode the Base64 encoded content. The content is encoded to avoid issues with new line characters
             const content = atob(encodedContent);
-
 
             if (isFirstChunk) {
                 // Clear the accumulated content for a new message
@@ -249,11 +333,6 @@
                 messageWrapper = document.createElement('div');
                 messageWrapper.className = isSender ? 'sent-message-wrapper' : 'received-message-wrapper';
                 chat.appendChild(messageWrapper);
-
-                // Create a new container for the new message
-                messageContainer = document.createElement('div');
-                messageContainer.className = isSender ? 'sent-message' : 'received-message';
-                messageWrapper.appendChild(messageContainer);
             }
 
             // Accumulate the content
@@ -261,25 +340,50 @@
 
             const markedDownContent = md.render(currentMessage);
 
-            messageContainer.innerHTML = markedDownContent;
+            // Create a temporary container to hold the content
+            const tempContainer = document.createElement('div');
+            tempContainer.innerHTML = markedDownContent;
 
-            const codeBlocks = messageContainer.querySelectorAll('pre > code.hljs[data-line-numbers]');
+            // Clear the current message container
+            messageWrapper.innerHTML = '';
+
+            let currentItemContainer;
+
+            tempContainer.childNodes.forEach((node) => {
+                if (node.tagName === 'TABLE') {
+                    // If the current node is a table, wrap it with a container and append it to the messageWrapper
+                    currentItemContainer = document.createElement('div');
+                    currentItemContainer.className = isSender ? 'sent-message' : 'received-message';
+                    currentItemContainer.appendChild(node.cloneNode(true));
+                    messageWrapper.appendChild(currentItemContainer);
+                } else {
+                    // If the current node is not a table, create a new container, append the node, and add it to the messageWrapper
+                    currentItemContainer = document.createElement('div');
+                    currentItemContainer.className = isSender ? 'sent-message' : 'received-message';
+                    currentItemContainer.appendChild(node.cloneNode(true));
+                    messageWrapper.appendChild(currentItemContainer);
+                }
+            });
+
+            const codeBlocks = messageWrapper.querySelectorAll('pre > code.hljs[data-line-numbers]');
             codeBlocks.forEach(codeBlock => {
                 hljs.lineNumbersBlock(codeBlock);
             });
         }
 
-        function addMetaDataTolatestMessage(tokenCostLatestMessage, datetimeOffsetString) {
+        function addTimeAndTokenCostTolatestMessage(tokenCostLatestMessage, datetimeOffsetString) {
             addTimestampToLatestMessage(datetimeOffsetString);
+            addTokenCostToLatestMessage(tokenCostLatestMessage);
+        }
 
-            // Token cost latest message
-            const tokenCostLatestMessageElement = document.createElement('span');
-            tokenCostLatestMessageElement.className = 'metadata';
-            tokenCostLatestMessageElement.textContent = `Token cost (prompt + completion) ${tokenCostLatestMessage}`;
+        function addTokenCostToLatestMessage(tokenCostLatestMessage) {
+            const tokenCostElement = document.createElement('span');
+            tokenCostElement.className = 'metadata';
+            tokenCostElement.textContent = `Token cost (prompt + completion): ${tokenCostLatestMessage}`;
 
             // Append
             if (messageWrapper) {
-                messageWrapper.appendChild(tokenCostLatestMessageElement);
+                messageWrapper.appendChild(tokenCostElement);
             }
         }
 
@@ -306,7 +410,7 @@
             const minutes = String(date.getMinutes()).padStart(2, '0');
             const seconds = String(date.getSeconds()).padStart(2, '0');
 
-            return `${day}/${month}/${year} - ${hours}:${minutes}:${seconds}`;
+            return `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
         }
     </script>
 </body>

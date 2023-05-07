@@ -31,6 +31,7 @@ namespace GPT_Chat_Desktop
         private void InitializeComponent()
         {
             splitContainerContentAndSettings = new SplitContainer();
+            JavaMethod = new Button();
             chkShowKey = new CheckBox();
             chkShowOrganization = new CheckBox();
             txtLogitBias = new TextBox();
@@ -69,6 +70,7 @@ namespace GPT_Chat_Desktop
             webView2Chat1 = new Microsoft.Web.WebView2.WinForms.WebView2();
             txtBoxInput = new TextBox();
             btnSendMessage = new Button();
+            btnTable = new Button();
             ((System.ComponentModel.ISupportInitialize)splitContainerContentAndSettings).BeginInit();
             splitContainerContentAndSettings.Panel1.SuspendLayout();
             splitContainerContentAndSettings.Panel2.SuspendLayout();
@@ -90,6 +92,8 @@ namespace GPT_Chat_Desktop
             // 
             // splitContainerContentAndSettings.Panel1
             // 
+            splitContainerContentAndSettings.Panel1.Controls.Add(btnTable);
+            splitContainerContentAndSettings.Panel1.Controls.Add(JavaMethod);
             splitContainerContentAndSettings.Panel1.Controls.Add(chkShowKey);
             splitContainerContentAndSettings.Panel1.Controls.Add(chkShowOrganization);
             splitContainerContentAndSettings.Panel1.Controls.Add(txtLogitBias);
@@ -129,6 +133,16 @@ namespace GPT_Chat_Desktop
             splitContainerContentAndSettings.Size = new Size(1230, 916);
             splitContainerContentAndSettings.SplitterDistance = 307;
             splitContainerContentAndSettings.TabIndex = 0;
+            // 
+            // JavaMethod
+            // 
+            JavaMethod.Location = new Point(23, 812);
+            JavaMethod.Name = "JavaMethod";
+            JavaMethod.Size = new Size(117, 29);
+            JavaMethod.TabIndex = 32;
+            JavaMethod.Text = "&Java method";
+            JavaMethod.UseVisualStyleBackColor = true;
+            JavaMethod.Click += JavaMethod_ClickAsync;
             // 
             // chkShowKey
             // 
@@ -534,6 +548,16 @@ namespace GPT_Chat_Desktop
             btnSendMessage.UseVisualStyleBackColor = true;
             btnSendMessage.Click += btnSendMessage_Click_Async;
             // 
+            // btnTable
+            // 
+            btnTable.Location = new Point(23, 847);
+            btnTable.Name = "btnTable";
+            btnTable.Size = new Size(94, 29);
+            btnTable.TabIndex = 33;
+            btnTable.Text = "&Table";
+            btnTable.UseVisualStyleBackColor = true;
+            btnTable.Click += btnTable_Click;
+            // 
             // ChatsForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -613,5 +637,7 @@ namespace GPT_Chat_Desktop
         private TextBox textBox6;
         private CheckBox chkShowKey;
         private CheckBox chkShowOrganization;
+        private Button JavaMethod;
+        private Button btnTable;
     }
 }

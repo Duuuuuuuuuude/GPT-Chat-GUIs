@@ -164,45 +164,6 @@ public partial class
         //_chatInstances.Add(newTabPage, GetNewChatInstance()); // TODO: Det ser ikke ud til at være muligt at oprette flere Chats på denne måde. Det giver problemer på linje 30 i 'PythonEnvironmentSetup'. Overvejer at lave om på Chat.py, og gøre det muligt at have flere conversations der.
     }
 
-    /// <summary>
-    /// Finds the name of the chat with the highest number in the name
-    /// </summary>
-    /// <returns></returns>
-    private int GetNextTabNumber()
-    {
-        int highestNumber = 0;
-        IEnumerator tabs = tabCtrlChats.Controls.GetEnumerator();
-
-        while (tabs.MoveNext())
-        {
-            if (tabs.Current is TabPage tab)
-            {
-                if (tab.Text.StartsWith("Chat"))
-                {
-                    string[] split = tab.Text.Split(' ');
-
-                    if (int.TryParse(split[^1], out var number))
-                    {
-                        if (number > highestNumber)
-                        {
-                            highestNumber = number;
-                        }
-                    }
-                    else
-                    {
-                        highestNumber = 0;
-                    }
-                }
-            }
-        }
-
-        if (highestNumber == 0)
-        {
-            highestNumber = tabCtrlChats.TabCount;
-        }
-        return highestNumber;
-    }
-
     private void CloseSelectedTabClicked()
     {
         // TODO: Save chat history.
@@ -217,6 +178,7 @@ public partial class
         string message = txtBoxInput.Text;
         txtBoxInput.Clear();
 
+        //string messageEscaped = HttpUtility.HtmlEncode(message);
         string messageBase64 = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(message)); // So it doesn't remove the new line characters.
         string script = $"appendMessageChunkToChat('{messageBase64}', true, true);";
         await webView2Chat1.CoreWebView2.ExecuteScriptAsync(script).ConfigureAwait(true);
@@ -231,6 +193,7 @@ public partial class
         bool isFirstChunk = true;
         await foreach (var chatResult in _chatInstance.AddToConversationAsync(message))
         {
+            //string contentChunkEscaped = HttpUtility.HtmlEncode(chatResult.ContentChunk);
             string contentChunkBase64 = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(chatResult.ContentChunk)); // So it doesn't remove the new line characters.
             fullConversation += chatResult.ContentChunk;
             fullEscapedConversation += contentChunkBase64;
@@ -239,22 +202,18 @@ public partial class
             string replyScript = $"appendMessageChunkToChat('{contentChunkBase64}', false, {isFirstChunk.ToString().ToLower()})";
             isFirstChunk = false;
             await webView2Chat1.CoreWebView2.ExecuteScriptAsync(replyScript).ConfigureAwait(true);
-
             lastChatResult = chatResult;
-
             SetFinishReason(chatResult.FinishReason);
         }
-
         Debug.WriteLine(fullConversation);
         Debug.WriteLine(fullEscapedConversation);
 
+
+
         // TODO: Nogen gange kaldes addMetaDataTolatestMessage to gange pr. besked.
-        string metadataReplyScript = $"addMetaDataTolatestMessage('{lastChatResult.TokenCostLatestMessage}', '{lastChatResult.CreatedLocalDateTime}')";
+        string metadataReplyScript = $"addTimeAndTokenCostTolatestMessage('{lastChatResult.TokenCostLatestMessage}', '{lastChatResult.CreatedLocalDateTime}')";
         await webView2Chat1.CoreWebView2.ExecuteScriptAsync(metadataReplyScript).ConfigureAwait(true);
-
-
         SetReplyingStatus(false);
-
         SetTokenCostFullConversation(lastChatResult.TokenCostFullConversation.ToString());
     }
     #endregion
@@ -264,37 +223,30 @@ public partial class
     {
         _userSettingsGlobalInstance.SetOpenAiOrganizationGlobal(txtOpenAiOrganization.Text);
     }
-
     private void TxtOpenAiKeyChanged()
     {
         _userSettingsGlobalInstance.SetOpenAiApiKeyGlobal(txtOpenAiKey.Text);
     }
-
     private void TxtUsernameChanged()
     {
         _userSettingsGlobalInstance.SetOpenAiApiUserNameGlobal(txtUsername.Text);
     }
-
     private void TxtModelIdChanged()
     {
         _userSettingsGlobalInstance.SetModelIdGlobal(txtModelId.Text);
     }
-
     private void TxtMaxResponseTokensChanged()
     {
         _userSettingsGlobalInstance.SetMaxResponseTokensGlobal(int.Parse(txtMaxResponseTokens.Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
-
     private void TxtTokenLimitChanged()
     {
         _userSettingsGlobalInstance.SetTokenLimitGlobal(int.Parse(txtTokenLimit.Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
-
     private void TxtTemperatureChanged()
     {
         _userSettingsGlobalInstance.SetTemperatureGlobal(int.Parse(txtTemperature.Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
-
     private void TxtTopPChanged()
     {
         _userSettingsGlobalInstance.SetTopP(int.Parse(txtTopP.Text)); // TODO: Brug regex til at slette forkerte inputs.
@@ -303,17 +255,14 @@ public partial class
     {
         _userSettingsGlobalInstance.SetNGlobal(int.Parse(txtN.Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
-
     private void TxtFrequencyPenaltyChanged()
     {
         _userSettingsGlobalInstance.SetFrequencyPenalty(int.Parse(txtFrequencyPenalty.Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
-
     private void TxtPresencePenaltyChanged()
     {
         _userSettingsGlobalInstance.SetPresencePenaltyGlobal(int.Parse(txtPresencePenalty.Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
-
     private void TxtStopChanged()
     {
         _userSettingsGlobalInstance.SetStopGlobal(txtStop.Text);
@@ -329,7 +278,6 @@ public partial class
         _isReplying = replying;
         btnSendMessage.Enabled = !replying;
     }
-
     private void InitializeTextBoxes()
     {
         txtOpenAiOrganization.Text = _userSettingsGlobalInstance.GetOpenAiOrganizationGlobal();
@@ -346,14 +294,65 @@ public partial class
         txtStop.Text = _userSettingsGlobalInstance.GetStopGlobal();
         txtLogitBias.Text = _userSettingsGlobalInstance.GetLogitBiasGlobal();
     }
-
     private void SetFinishReason(string finishReason)
     {
         lblFinishReason.Text = "&Finish Reason: " + finishReason;
     }
-
     private void SetTokenCostFullConversation(string tokenCostFullConversation)
     {
         lblTokenCostFullConversation.Text = "&Token Cost Full Conversation: " + tokenCostFullConversation;
+    }
+
+    /// <summary>
+    /// Finds the name of the chat with the highest number in the name
+    /// </summary>
+    /// <returns></returns>
+    private int GetNextTabNumber()
+    {
+        int highestNumber = 0;
+        IEnumerator tabs = tabCtrlChats.Controls.GetEnumerator();
+        while (tabs.MoveNext())
+        {
+            if (tabs.Current is TabPage tab)
+            {
+                if (tab.Text.StartsWith("Chat"))
+                {
+                    string[] split = tab.Text.Split(' ');
+                    if (int.TryParse(split[^1], out var number))
+                    {
+                        if (number > highestNumber)
+                        {
+                            highestNumber = number;
+                        }
+                    }
+                    else
+                    {
+                        highestNumber = 0;
+                    }
+                }
+            }
+        }
+        if (highestNumber == 0)
+        {
+            highestNumber = tabCtrlChats.TabCount;
+        }
+        return highestNumber;
+    }
+
+    /// <summary>
+    /// TODO: Slet
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void JavaMethod_ClickAsync(object sender, EventArgs e)
+    {
+        txtBoxInput.Text = "Show me a Java method";
+        SendAndReceiveMessageAsync();
+    }
+
+    private void btnTable_Click(object sender, EventArgs e)
+    {
+        txtBoxInput.Text = "Show me a made up data table of spam prices";
+        SendAndReceiveMessageAsync();
     }
 }
