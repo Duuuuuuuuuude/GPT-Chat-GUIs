@@ -19,18 +19,19 @@ class Chat:
 
         #self.__update_total_num_tokens()
         
-    def add_to_conversation(self, prompt):
+    async def add_to_conversation_async(self, prompt: str):
         """ Time is yielded as a Unix timestamp """
 
         self._conversation.append({'role': 'user', 'content': prompt, 'name': env["USER_NAME"]}) # Add the user's input to the _conversation.
 
-        response = self.__send_chat_gpt_request()
 
         # Deletes the oldest message in the _conversation until the _conversation is within the token limit.
-        conv_history_tokens = self.__num_tokens_from_messages(env["model_id"])
+        conv_history_tokens = self.__num_tokens_in_current_conversation(env["model_id"])
         while (conv_history_tokens + int(env['MAX_RESPONSE_TOKENS']) >= int(env['TOKEN_LIMIT'])):
             del self._conversation[1] 
             conv_history_tokens = self.num_tokens_from_messages(self._conversation)
+
+        
 
         role = None
         full_content = ""
@@ -40,8 +41,11 @@ class Chat:
                            # null: API response still in progress or incomplete
 
         created_local_time = None
+
         # Yield the response in chunks.
-        for i, chunk in enumerate(response):
+        i = 0
+        response = await self.__send_chat_gpt_request_async()
+        async for chunk in response:
             if i == 0:
                 role = chunk['choices'][0]['delta']['role']
             else:
@@ -52,22 +56,8 @@ class Chat:
                 finish_reason = chunk['choices'][0]['finish_reason']
                 created_local_time = chunk['created']
 
-                print(created_local_time)
-
                 yield content, finish_reason, created_local_time, None, None # TODO: Returner en klasse i stedet.
-
-            #if i == 0:
-            #    role = chunk['choices'][0]['delta']['role']
-            #else:
-            #    content = chunk['choices'][0]['delta'].get('content', '')
-            #    if self.headline == None:
-            #        self.headline = content.split('\r\n')[0] # The first line of the content should be the headline.
-            #        yield None, None, None, None, None, self.headline
-            #    else:
-            #        full_content += content
-            #        finish_reason = chunk['choices'][0]['finish_reason']
-            #        created_local_time = chunk['created']
-            #        yield content, finish_reason, created_local_time, None, None, None
+            i += 1
 
         self._conversation.append({'role': role, 'content': full_content}) # Add the response to the _conversation.
 
@@ -75,7 +65,7 @@ class Chat:
 
         yield "", finish_reason, created_local_time, self._token_cost_latest_message, self._token_cost_full_conversation # , None
 
-    def __send_chat_gpt_request(self):
+    async def __send_chat_gpt_request_async(self):
         User_Settings_Global.is_required_invironment_variables_set()
 
         openai.organization = env['OPENAI_ORGANIZATION']
@@ -134,20 +124,22 @@ class Chat:
         if env['stop'].lower() != 'none' or "null" or "": # Defaults to ""
             params['stop'] = env['stop']                  # Up to 4 sequences where the API will stop generating further tokens.
             
-        #response = openai.ChatCompletion.create(**params)
-        response = openai.ChatCompletion.acreate(**params)
+        #response = await openai.ChatCompletion.acreate(**params)
+        #return response
+
+        response = await openai.ChatCompletion.acreate(**params)
 
         return response
 
     def __update_total_num_tokens(self):
-        num_tokens_latest_conversation = self.__num_tokens_from_messages(model=env["MODEL_ID"])
+        num_tokens_latest_conversation = self.__num_tokens_in_current_conversation(model=env["MODEL_ID"])
 
         self._token_cost_latest_message = num_tokens_latest_conversation - self._token_cost_full_conversation
 
         self._token_cost_full_conversation = num_tokens_latest_conversation
 
 
-    def __num_tokens_from_messages(self, model="gpt-3.5-turbo-0301"): # TODO: Tokens bliver ikke beregnet korrekt.
+    def __num_tokens_in_current_conversation(self, model="gpt-3.5-turbo-0301"): # TODO: Tokens bliver ikke beregnet korrekt, den er altid 5 for høj.
         """Returns the number of tokens used by a list of messages.
           Currently only works for these models gpt-3.5-turbo-0301, gpt-4-0314 and maybe also gpt-3.5-turbo and gpt-4 as long as they don't change and still use the same encoding as the -0301 and -0314 models.
           If model not found, cl100k_base encoding is assumed.
@@ -166,13 +158,13 @@ class Chat:
             print()
             print()
             print("Warning: gpt-3.5-turbo may change over time. Returning num tokens assuming gpt-3.5-turbo-0301.")
-            return self.__num_tokens_from_messages(model="gpt-3.5-turbo-0301")
+            return self.__num_tokens_in_current_conversation(model="gpt-3.5-turbo-0301")
     
         elif model == "gpt-4":
             print()
             print()
             print("Warning: gpt-4 may change over time. Returning num tokens assuming gpt-4-0314.")
-            return self.__num_tokens_from_messages(model="gpt-4-0314")
+            return self.__num_tokens_in_current_conversation(model="gpt-4-0314")
         ###
 
         elif model == "gpt-3.5-turbo-0301":
