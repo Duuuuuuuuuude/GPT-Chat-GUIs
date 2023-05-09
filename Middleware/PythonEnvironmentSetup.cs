@@ -13,7 +13,7 @@ namespace Middleware;
 ///     <code>
 ///     using (PythonEnvironmentSetup.getPythonEnvironmentSetupInstance())
 ///     {
-///         new ChatsForm(new Chat();
+///         new ChatsForm(new Chat());
 ///         new UserSettingsGlobal();
 ///     }
 ///     </code>
