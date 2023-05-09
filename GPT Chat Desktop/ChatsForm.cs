@@ -1,4 +1,7 @@
 ﻿using Middleware;
+using Middleware.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Diagnostics;
 
@@ -8,8 +11,9 @@ public partial class
     ChatsForm : Form
 {
     private readonly IGPTChat _chatInstance;
-    private IUserSettingsGlobal _userSettingsGlobalInstance;
+    private readonly IUserSettingsGlobal _userSettingsGlobalInstance;
     private bool _isReplying = false;
+    private const string HighlightjsLanguagesSelectedJson = @"Assets\highlights-languages-settings\highlightjs-languages-selected.json";
 
     public ChatsForm(IGPTChat chat, IUserSettingsGlobal userSettingsGlobal)
     {
@@ -20,10 +24,14 @@ public partial class
         _userSettingsGlobalInstance = userSettingsGlobal;
 
         NewTabClicked();
+
+        AddLanguageCheckboxesToMenuStrip();
     }
 
     #region Event handlers
+
     #region Button event handlers
+
     private void BtnNewTab_Click(object sender, EventArgs e)
     {
         NewTabClicked();
@@ -48,7 +56,8 @@ public partial class
         InitializeTextBoxes();
     }
 
-    private void WebView2Chat1_NavigationCompleted(object? sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
+    private void WebView2Chat1_NavigationCompleted(object? sender,
+        Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
     {
         throw new NotImplementedException();
     }
@@ -70,9 +79,11 @@ public partial class
             }
         }
     }
+
     #endregion
 
     #region TextBox event handlers
+
     private void txtOpenAiOrganization_TextChanged(object sender, EventArgs e)
     {
         TxtOpenAiOrganizationChanged();
@@ -137,6 +148,7 @@ public partial class
     {
         TxtLogitBiasChanged();
     }
+
     #endregion
 
     #region Other event handlers
@@ -144,6 +156,7 @@ public partial class
     #endregion
 
     #region Event handlers for checkboxes
+
     private void chkShowOrganization_CheckedChanged(object sender, EventArgs e)
     {
         txtOpenAiOrganization.UseSystemPasswordChar = !chkShowOrganization.Checked;
@@ -153,10 +166,17 @@ public partial class
     {
         txtOpenAiKey.UseSystemPasswordChar = !chkShowKey.Checked;
     }
+
+    private void menuItem_CheckedChanged(object sender, EventArgs e)
+    {
+        CheckedChanged(sender);
+    }
     #endregion
+
     #endregion
 
     #region Button functionality
+
     private void NewTabClicked()
     {
         var newTabPage = new TabPage("Chat " + (GetNextTabNumber() + 1));
@@ -178,98 +198,181 @@ public partial class
         string message = txtBoxInput.Text;
         txtBoxInput.Clear();
 
+        await SetProgrammingLanguagesToHighlightAsync();
+
         //string messageEscaped = HttpUtility.HtmlEncode(message);
-        string messageBase64 = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(message)); // So it doesn't remove the new line characters.
+        string messageBase64 =
+            Convert.ToBase64String(
+                System.Text.Encoding.UTF8.GetBytes(message)); // So it doesn't remove the new line characters.
         string script = $"appendMessageChunkToChat('{messageBase64}', true, true);";
-        await webView2Chat1.CoreWebView2.ExecuteScriptAsync(script).ConfigureAwait(true);
+        await webView2Chat1.CoreWebView2.ExecuteScriptAsync(script);
 
         string metadataRequestScript = $"addTimestampToLatestMessage('{DateTimeOffset.Now}')";
-        await webView2Chat1.CoreWebView2.ExecuteScriptAsync(metadataRequestScript).ConfigureAwait(true);
+        await webView2Chat1.CoreWebView2.ExecuteScriptAsync(metadataRequestScript);
 
         string fullConversation = string.Empty;
         string fullEscapedConversation = string.Empty;
 
         ChatResult? lastChatResult = null;
         bool isFirstChunk = true;
-        await foreach (var chatResult in _chatInstance.AddToConversationAsync(message))
+        await foreach (var chatResult in _chatInstance.AddToConversation(message))
         {
             //string contentChunkEscaped = HttpUtility.HtmlEncode(chatResult.ContentChunk);
-            string contentChunkBase64 = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(chatResult.ContentChunk)); // So it doesn't remove the new line characters.
+            string contentChunkBase64 =
+                Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(chatResult.ContentChunk)); // So it doesn't remove the new line characters.
             fullConversation += chatResult.ContentChunk;
             fullEscapedConversation += contentChunkBase64;
 
 
-            string replyScript = $"appendMessageChunkToChat('{contentChunkBase64}', false, {isFirstChunk.ToString().ToLower()})";
+            string replyScript =
+                $"appendMessageChunkToChat('{contentChunkBase64}', false, {isFirstChunk.ToString().ToLower()})";
             isFirstChunk = false;
-            await webView2Chat1.CoreWebView2.ExecuteScriptAsync(replyScript).ConfigureAwait(true);
+            await webView2Chat1.CoreWebView2.ExecuteScriptAsync(replyScript);
             lastChatResult = chatResult;
             SetFinishReason(chatResult.FinishReason);
         }
-        Debug.WriteLine(fullConversation);
-        Debug.WriteLine(fullEscapedConversation);
-
-
 
         // TODO: Nogen gange kaldes addMetaDataTolatestMessage to gange pr. besked.
-        string metadataReplyScript = $"addTimeAndTokenCostTolatestMessage('{lastChatResult.TokenCostLatestMessage}', '{lastChatResult.CreatedLocalDateTime}')";
-        await webView2Chat1.CoreWebView2.ExecuteScriptAsync(metadataReplyScript).ConfigureAwait(true);
+        string metadataReplyScript =
+            $"addTimeAndTokenCostTolatestMessage('{lastChatResult.TokenCostLatestMessage}', '{lastChatResult.CreatedLocalDateTime}')";
+        await webView2Chat1.CoreWebView2.ExecuteScriptAsync(metadataReplyScript);
         SetReplyingStatus(false);
         SetTokenCostFullConversation(lastChatResult.TokenCostFullConversation.ToString());
+    }
+
+    #endregion
+
+    #region Checkbox functionality
+    private static void CheckedChanged(object sender)
+    {
+        bool isChecked = ((ToolStripMenuItem)sender).Checked;
+
+        // Read the JSON file
+        string jsonString = File.ReadAllText(HighlightjsLanguagesSelectedJson);
+
+        // Parse the JSON string into a JObject
+        JObject jsonObject = JObject.Parse(jsonString);
+
+        // Set the boolean value
+        string language = ((ToolStripMenuItem)sender).Text;
+
+        jsonObject[language] = isChecked;
+
+        // Save the updated JSON to the file
+        File.WriteAllText(HighlightjsLanguagesSelectedJson, jsonObject.ToString());
     }
     #endregion
 
     #region Textbox changed
+
     private void TxtOpenAiOrganizationChanged()
     {
         _userSettingsGlobalInstance.SetOpenAiOrganizationGlobal(txtOpenAiOrganization.Text);
     }
+
     private void TxtOpenAiKeyChanged()
     {
         _userSettingsGlobalInstance.SetOpenAiApiKeyGlobal(txtOpenAiKey.Text);
     }
+
     private void TxtUsernameChanged()
     {
         _userSettingsGlobalInstance.SetOpenAiApiUserNameGlobal(txtUsername.Text);
     }
+
     private void TxtModelIdChanged()
     {
         _userSettingsGlobalInstance.SetModelIdGlobal(txtModelId.Text);
     }
+
     private void TxtMaxResponseTokensChanged()
     {
-        _userSettingsGlobalInstance.SetMaxResponseTokensGlobal(int.Parse(txtMaxResponseTokens.Text)); // TODO: Brug regex til at slette forkerte inputs.
+        _userSettingsGlobalInstance.SetMaxResponseTokensGlobal(
+            int.Parse(txtMaxResponseTokens.Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
+
     private void TxtTokenLimitChanged()
     {
-        _userSettingsGlobalInstance.SetTokenLimitGlobal(int.Parse(txtTokenLimit.Text)); // TODO: Brug regex til at slette forkerte inputs.
+        _userSettingsGlobalInstance.SetTokenLimitGlobal(
+            int.Parse(txtTokenLimit.Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
+
     private void TxtTemperatureChanged()
     {
-        _userSettingsGlobalInstance.SetTemperatureGlobal(int.Parse(txtTemperature.Text)); // TODO: Brug regex til at slette forkerte inputs.
+        _userSettingsGlobalInstance.SetTemperatureGlobal(
+            int.Parse(txtTemperature.Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
+
     private void TxtTopPChanged()
     {
         _userSettingsGlobalInstance.SetTopP(int.Parse(txtTopP.Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
+
     private void TxtNChanged()
     {
         _userSettingsGlobalInstance.SetNGlobal(int.Parse(txtN.Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
+
     private void TxtFrequencyPenaltyChanged()
     {
-        _userSettingsGlobalInstance.SetFrequencyPenalty(int.Parse(txtFrequencyPenalty.Text)); // TODO: Brug regex til at slette forkerte inputs.
+        _userSettingsGlobalInstance.SetFrequencyPenalty(int.Parse(txtFrequencyPenalty
+            .Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
+
     private void TxtPresencePenaltyChanged()
     {
-        _userSettingsGlobalInstance.SetPresencePenaltyGlobal(int.Parse(txtPresencePenalty.Text)); // TODO: Brug regex til at slette forkerte inputs.
+        _userSettingsGlobalInstance.SetPresencePenaltyGlobal(
+            int.Parse(txtPresencePenalty.Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
+
     private void TxtStopChanged()
     {
         _userSettingsGlobalInstance.SetStopGlobal(txtStop.Text);
     }
+
     private void TxtLogitBiasChanged()
     {
         _userSettingsGlobalInstance.SetLogitBias(txtLogitBias.Text);
+    }
+
+    #endregion
+
+    #region MenuStrip
+    private void AddLanguageCheckboxesToMenuStrip()
+    {
+        Dictionary<string, bool>? allLanguagesDict = GetAllLanguagesDict();
+
+        ToolStripMenuItem languagesMenuItem = new ToolStripMenuItem("Languages");
+
+        menuStrip1.Items.Add(languagesMenuItem);
+
+        foreach (var language in allLanguagesDict)
+        {
+            ToolStripMenuItem menuItem = new ToolStripMenuItem
+            {
+                Text = language.Key,
+                CheckOnClick = true,
+                Checked = language.Value
+            };
+            menuItem.CheckedChanged += menuItem_CheckedChanged;
+
+            //menuItems.Add(menuItem);
+            languagesMenuItem.DropDownItems.Add(menuItem);
+        }
+    }
+
+    private static Dictionary<string, bool>? GetAllLanguagesDict()
+    {
+        JsonSerializer serializer = new JsonSerializer();
+        Dictionary<string, bool> allLanguagesDict = new();
+
+        using (StreamReader file =
+               File.OpenText(HighlightjsLanguagesSelectedJson))
+        {
+            allLanguagesDict = (Dictionary<string, bool>)serializer.Deserialize(file, typeof(Dictionary<string, bool>));
+        }
+
+        return allLanguagesDict;
     }
     #endregion
 
@@ -278,6 +381,7 @@ public partial class
         _isReplying = replying;
         btnSendMessage.Enabled = !replying;
     }
+
     private void InitializeTextBoxes()
     {
         txtOpenAiOrganization.Text = _userSettingsGlobalInstance.GetOpenAiOrganizationGlobal();
@@ -294,10 +398,12 @@ public partial class
         txtStop.Text = _userSettingsGlobalInstance.GetStopGlobal();
         txtLogitBias.Text = _userSettingsGlobalInstance.GetLogitBiasGlobal();
     }
+
     private void SetFinishReason(string finishReason)
     {
         lblFinishReason.Text = "&Finish Reason: " + finishReason;
     }
+
     private void SetTokenCostFullConversation(string tokenCostFullConversation)
     {
         lblTokenCostFullConversation.Text = "&Token Cost Full Conversation: " + tokenCostFullConversation;
@@ -332,10 +438,12 @@ public partial class
                 }
             }
         }
+
         if (highestNumber == 0)
         {
             highestNumber = tabCtrlChats.TabCount;
         }
+
         return highestNumber;
     }
 
@@ -347,12 +455,34 @@ public partial class
     private async void JavaMethod_ClickAsync(object sender, EventArgs e)
     {
         txtBoxInput.Text = "Show me a Java method";
-        SendAndReceiveMessageAsync();
+        await SendAndReceiveMessageAsync();
     }
 
-    private void btnTable_Click(object sender, EventArgs e)
+    private async void btnTable_Click(object sender, EventArgs e)
     {
         txtBoxInput.Text = "Show me a made up data table of spam prices";
-        SendAndReceiveMessageAsync();
+        await SendAndReceiveMessageAsync();
+    }
+
+    private Task SetProgrammingLanguagesToHighlightAsync()
+    {
+        JsonSerializer serializer = new JsonSerializer();
+        Dictionary<string, bool> allLanguagesDict = new();
+
+        using (StreamReader file = File.OpenText(@"Assets\highlights-languages-settings\highlightjs-languages-selected.json"))
+        {
+            allLanguagesDict = (Dictionary<string, bool>)serializer.Deserialize(file, typeof(Dictionary<string, bool>));
+        }
+
+        List<string> languagesToHighlight = allLanguagesDict
+            .Where(kv => kv.Value)
+            .Select(kv => kv.Key)
+            .ToList();
+
+        string languagesToHighlightJsonArray = JsonConvert.SerializeObject(languagesToHighlight);
+
+        Debug.WriteLine("languagesToHighlightJsonArray: " + languagesToHighlightJsonArray);
+
+        return webView2Chat1.CoreWebView2.ExecuteScriptAsync($"setProgrammingLanguagesToHighlight('{languagesToHighlightJsonArray}')");
     }
 }

@@ -134,7 +134,8 @@ class Chat:
         if env['stop'].lower() != 'none' or "null" or "": # Defaults to ""
             params['stop'] = env['stop']                  # Up to 4 sequences where the API will stop generating further tokens.
             
-        response = openai.ChatCompletion.create(**params)
+        #response = openai.ChatCompletion.create(**params)
+        response = openai.ChatCompletion.acreate(**params)
 
         return response
 

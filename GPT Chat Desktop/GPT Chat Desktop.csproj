@@ -40,6 +40,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets\highlights-languages-settings\highlightjs-languages-selected.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="lib\css\highlightjs\material-darker.min.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -62,7 +65,6 @@
 
   <ItemGroup>
     <Folder Include="lib\js\clipboard\" />
-    <Folder Include="Assets\" />
   </ItemGroup>
 
 </Project>

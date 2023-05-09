@@ -31,6 +31,7 @@ namespace GPT_Chat_Desktop
         private void InitializeComponent()
         {
             splitContainerContentAndSettings = new SplitContainer();
+            btnTable = new Button();
             JavaMethod = new Button();
             chkShowKey = new CheckBox();
             chkShowOrganization = new CheckBox();
@@ -70,7 +71,7 @@ namespace GPT_Chat_Desktop
             webView2Chat1 = new Microsoft.Web.WebView2.WinForms.WebView2();
             txtBoxInput = new TextBox();
             btnSendMessage = new Button();
-            btnTable = new Button();
+            menuStrip1 = new MenuStrip();
             ((System.ComponentModel.ISupportInitialize)splitContainerContentAndSettings).BeginInit();
             splitContainerContentAndSettings.Panel1.SuspendLayout();
             splitContainerContentAndSettings.Panel2.SuspendLayout();
@@ -87,7 +88,7 @@ namespace GPT_Chat_Desktop
             // splitContainerContentAndSettings
             // 
             splitContainerContentAndSettings.Dock = DockStyle.Fill;
-            splitContainerContentAndSettings.Location = new Point(0, 0);
+            splitContainerContentAndSettings.Location = new Point(0, 24);
             splitContainerContentAndSettings.Name = "splitContainerContentAndSettings";
             // 
             // splitContainerContentAndSettings.Panel1
@@ -130,9 +131,19 @@ namespace GPT_Chat_Desktop
             // splitContainerContentAndSettings.Panel2
             // 
             splitContainerContentAndSettings.Panel2.Controls.Add(tabCtrlChats);
-            splitContainerContentAndSettings.Size = new Size(1230, 916);
+            splitContainerContentAndSettings.Size = new Size(1230, 892);
             splitContainerContentAndSettings.SplitterDistance = 307;
             splitContainerContentAndSettings.TabIndex = 0;
+            // 
+            // btnTable
+            // 
+            btnTable.Location = new Point(23, 847);
+            btnTable.Name = "btnTable";
+            btnTable.Size = new Size(94, 29);
+            btnTable.TabIndex = 33;
+            btnTable.Text = "&Table";
+            btnTable.UseVisualStyleBackColor = true;
+            btnTable.Click += btnTable_Click;
             // 
             // JavaMethod
             // 
@@ -481,7 +492,7 @@ namespace GPT_Chat_Desktop
             tabCtrlChats.Location = new Point(0, 0);
             tabCtrlChats.Name = "tabCtrlChats";
             tabCtrlChats.SelectedIndex = 0;
-            tabCtrlChats.Size = new Size(919, 916);
+            tabCtrlChats.Size = new Size(919, 892);
             tabCtrlChats.TabIndex = 0;
             // 
             // tabPageChat1
@@ -491,7 +502,7 @@ namespace GPT_Chat_Desktop
             tabPageChat1.Location = new Point(4, 29);
             tabPageChat1.Name = "tabPageChat1";
             tabPageChat1.Padding = new Padding(3);
-            tabPageChat1.Size = new Size(911, 883);
+            tabPageChat1.Size = new Size(911, 859);
             tabPageChat1.TabIndex = 0;
             tabPageChat1.Text = "Chat 1";
             // 
@@ -510,8 +521,8 @@ namespace GPT_Chat_Desktop
             // 
             splitContainerChat1.Panel2.Controls.Add(txtBoxInput);
             splitContainerChat1.Panel2.Controls.Add(btnSendMessage);
-            splitContainerChat1.Size = new Size(905, 877);
-            splitContainerChat1.SplitterDistance = 820;
+            splitContainerChat1.Size = new Size(905, 853);
+            splitContainerChat1.SplitterDistance = 796;
             splitContainerChat1.TabIndex = 0;
             // 
             // webView2Chat1
@@ -522,7 +533,7 @@ namespace GPT_Chat_Desktop
             webView2Chat1.Dock = DockStyle.Fill;
             webView2Chat1.Location = new Point(0, 0);
             webView2Chat1.Name = "webView2Chat1";
-            webView2Chat1.Size = new Size(905, 820);
+            webView2Chat1.Size = new Size(905, 796);
             webView2Chat1.TabIndex = 0;
             webView2Chat1.ZoomFactor = 1D;
             // 
@@ -548,15 +559,14 @@ namespace GPT_Chat_Desktop
             btnSendMessage.UseVisualStyleBackColor = true;
             btnSendMessage.Click += btnSendMessage_Click_Async;
             // 
-            // btnTable
+            // menuStrip1
             // 
-            btnTable.Location = new Point(23, 847);
-            btnTable.Name = "btnTable";
-            btnTable.Size = new Size(94, 29);
-            btnTable.TabIndex = 33;
-            btnTable.Text = "&Table";
-            btnTable.UseVisualStyleBackColor = true;
-            btnTable.Click += btnTable_Click;
+            menuStrip1.ImageScalingSize = new Size(20, 20);
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(1230, 24);
+            menuStrip1.TabIndex = 3;
+            menuStrip1.Text = "menuStrip1";
             // 
             // ChatsForm
             // 
@@ -565,6 +575,8 @@ namespace GPT_Chat_Desktop
             BackColor = Color.FromArgb(34, 34, 34);
             ClientSize = new Size(1230, 916);
             Controls.Add(splitContainerContentAndSettings);
+            Controls.Add(menuStrip1);
+            MainMenuStrip = menuStrip1;
             Name = "ChatsForm";
             Text = "GPT Chats";
             WindowState = FormWindowState.Maximized;
@@ -583,6 +595,7 @@ namespace GPT_Chat_Desktop
             splitContainerChat1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)webView2Chat1).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -639,5 +652,6 @@ namespace GPT_Chat_Desktop
         private CheckBox chkShowOrganization;
         private Button JavaMethod;
         private Button btnTable;
+        private MenuStrip menuStrip1;
     }
 }

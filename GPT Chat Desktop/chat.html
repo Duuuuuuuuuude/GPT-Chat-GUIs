@@ -7,7 +7,7 @@
     <title>Chat</title>
 
     <!--ClipBoard-->
-<script src="lib/js/clipboard/clipboard.min.js"></script>
+    <script src="lib/js/clipboard/clipboard.min.js"></script>
 
     <!--Markdown-it-->
     <script src="lib/js/markdown/markdown-it.min.js"></script>
@@ -19,6 +19,7 @@
     <!--https://highlightjs.org/download/-->
     <link rel="stylesheet" href="lib/css/highlightjs/material-darker.min.css">
     <script src="lib/js/highlightjs/highlight.min.js"></script>
+<!--https://github.com/highlightjs/highlight.js/blob/main/SUPPORTED_LANGUAGES.md TODO: Tilføj manglende sprog.-->
 
     <!--Highlight.js line numbers-->
     <script src="lib/js/highlightjs-line-numbers/highlightjs-line-numbers.min.js"></script>
@@ -239,7 +240,7 @@
     <script>
         let currentMessage = '';
         let messageWrapper;
-        var messageContainer;
+        let messageContainer;
         const chat = document.getElementById('chat');
 
         const clipboard = new ClipboardJS('.copy-button');
@@ -299,27 +300,33 @@
                 let result;
 
                 try {
-                    result = hljs.highlightAuto(code, {});
+                    result = hljs.highlightAuto(code);
                 } catch (__) {
                     result = md.utils.escapeHtml(code);
                 }
 
                 return `<div class="code-block">
-                                              <div class="code-header">
-                                                <span class="language-label">${result.language}</span>
-                                                <button class="copy-button" data-clipboard-target="pre" data-clipboard-action="copy">
-                                                  Copy code
-                                                </button>
-                                              </div>
-                                              <pre><code class="hljs" data-line-numbers>${result.value}</code></pre>
-                                            </div>`;
+                                                      <div class="code-header">
+                                                        <span class="language-label">${result.language}</span>
+                                                        <button class="copy-button" data-clipboard-target="pre" data-clipboard-action="copy">
+                                                          Copy code
+                                                        </button>
+                                                      </div>
+                                                      <pre><code class="hljs" data-line-numbers>${result.value}</code></pre>
+                                                    </div>`;
             }
         });
 
-        // Languages
-        languagesElement = document.createElement('div');
-        languagesElement.innerHTML = hljs.listLanguages();
-        chat.appendChild(languagesElement);
+        function setProgrammingLanguagesToHighlight(languagesToHighlightJsonArray) {
+            //hljs.configure({
+            //    languages: languagesToHighlightJsonArray,
+            //}); // TODO: Burde virke, men gør ikke.
+        }
+
+        //// Languages
+        //test = document.createElement('div');
+        //test.innerHTML = hljs.listLanguages();
+        //chat.appendChild(test);
 
         function appendMessageChunkToChat(encodedContent, isSender, isFirstChunk) {
             // Decode the Base64 encoded content. The content is encoded to avoid issues with new line characters
