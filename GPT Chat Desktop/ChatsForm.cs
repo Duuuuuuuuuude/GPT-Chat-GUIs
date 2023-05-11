@@ -190,15 +190,9 @@ public partial class
             bool isFirstChunk = true;
             await foreach (var chatResult in _chatInstance.SendMessageAsync(txtBoxInputMessage))
             {
-                //string contentChunkEscaped = HttpUtility.HtmlEncode(chatResult.ContentChunk);
-                string contentChunkBase64 =
-                    Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(chatResult.ContentChunk)); // So it doesn't remove the new line characters.
-                                                                                                         //fullConversation += chatResult.ContentChunk;
-                                                                                                         //fullEscapedConversation += contentChunkBase64;
                 await ExecuteJavascriptAppendMessageChunkToChatAsync(chatResult.ContentChunk, false, isFirstChunk);
-                //string replyScript = $"appendMessageChunkToChat('{contentChunkBase64}', false, {isFirstChunk.ToString().ToLower()})";
+
                 isFirstChunk = false;
-                //await webView2Chat.CoreWebView2.ExecuteScriptAsync(replyScript);
                 lastChatResult = chatResult;
 
                 SetFinishReason(chatResult.FinishReason);
