@@ -44,24 +44,24 @@ public partial class
 
     private async void ChatsForm_Load(object sender, EventArgs e)
     {
-        await webView2Chat1.EnsureCoreWebView2Async(null);
+        await webView2Chat.EnsureCoreWebView2Async(null);
 
         // Load the chat.html file into the WebView2 control
-        webView2Chat1.CoreWebView2.Navigate(new Uri(Path.GetFullPath("chat.html")).ToString());
+        webView2Chat.CoreWebView2.Navigate(new Uri(Path.GetFullPath("chat.html")).ToString());
 
         // Opens the WebView2 Developer Tools window.
 #if DEBUG
-        webView2Chat1.CoreWebView2.OpenDevToolsWindow();
+        webView2Chat.CoreWebView2.OpenDevToolsWindow();
 #endif
         InitializeTextBoxes();
     }
 
-    private async Task btnSendMessage_Click_Async(object sender, EventArgs e)
+    private async void btnSendMessage_Click_Async(object sender, EventArgs e) // TODO: async Task kan ikke bruges til event handlers, men async void kan give problemer. Find løsning.
     {
         await SendAndReceiveMessageAsync(txtBoxInput.Text);
     }
 
-    private async Task TxtBoxInput_KeyDown_Async(object sender, KeyEventArgs e)
+    private async void TxtBoxInput_KeyDown_Async(object sender, KeyEventArgs e) // TODO: async Task kan ikke bruges til event handlers, men async void kan give problemer. Find løsning.
     {
         if (e.KeyCode == Keys.Enter)
         {
@@ -170,20 +170,6 @@ public partial class
     #endregion
 
     #region Button functionality
-
-    private void NewTabClicked()
-    {
-        var newTabPage = new TabPage("Chat " + (GetNextTabNumber() + 1));
-
-        //_chatInstances.Add(newTabPage, GetNewChatInstance()); // TODO: Det ser ikke ud til at være muligt at oprette flere Chats på denne måde. Det giver problemer på linje 30 i 'PythonEnvironmentSetup'. Overvejer at lave om på Chat.py, og gøre det muligt at have flere conversations der.
-    }
-
-    private void CloseSelectedTabClicked()
-    {
-        // TODO: Save chat history.
-        tabCtrlChats.Controls.Remove(tabCtrlChats.SelectedTab);
-    }
-
     private async Task SendAndReceiveMessageAsync(string txtBoxInputMessage)
     {
         string latestInputMessage = txtBoxInputMessage; // Saved outside of the try scope in case of recursive retries in the catch block.
@@ -196,15 +182,9 @@ public partial class
 
             await SetProgrammingLanguagesToHighlightAsync();
 
-            //string messageEscaped = HttpUtility.HtmlEncode(latestInputMessage);
-            string messageBase64 =
-                Convert.ToBase64String( // TODO: Flyt i sin egen metode for at undgå gentagelser.
-                    System.Text.Encoding.UTF8.GetBytes(txtBoxInputMessage)); // So it doesn't remove the new line characters.
-            string script = $"appendMessageChunkToChat('{messageBase64}', true, true);";
-            await webView2Chat1.CoreWebView2.ExecuteScriptAsync(script);
+            await ExecuteJavascriptAppendMessageChunkToChatAsync(txtBoxInputMessage, true, true);
 
-            string metadataRequestScript = $"addTimestampToLatestMessage('{DateTimeOffset.Now}')";
-            await webView2Chat1.CoreWebView2.ExecuteScriptAsync(metadataRequestScript);
+            await ExecuteJavascriptAddTimestampToLatestMessageAsync();
 
             ChatResult? lastChatResult = null;
             bool isFirstChunk = true;
@@ -215,19 +195,17 @@ public partial class
                     Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(chatResult.ContentChunk)); // So it doesn't remove the new line characters.
                                                                                                          //fullConversation += chatResult.ContentChunk;
                                                                                                          //fullEscapedConversation += contentChunkBase64;
-
-                string replyScript =
-                    $"appendMessageChunkToChat('{contentChunkBase64}', false, {isFirstChunk.ToString().ToLower()})";
+                await ExecuteJavascriptAppendMessageChunkToChatAsync(chatResult.ContentChunk, false, isFirstChunk);
+                //string replyScript = $"appendMessageChunkToChat('{contentChunkBase64}', false, {isFirstChunk.ToString().ToLower()})";
                 isFirstChunk = false;
-                await webView2Chat1.CoreWebView2.ExecuteScriptAsync(replyScript);
+                //await webView2Chat.CoreWebView2.ExecuteScriptAsync(replyScript);
                 lastChatResult = chatResult;
+
                 SetFinishReason(chatResult.FinishReason);
             }
 
-            // TODO: Nogen gange kaldes addMetaDataTolatestMessage to gange pr. besked.
-            string metadataReplyScript =
-                $"addTimeAndTokenCostTolatestMessage('{lastChatResult.TokenCostLatestMessage}', '{lastChatResult.CreatedLocalDateTime}')";
-            await webView2Chat1.CoreWebView2.ExecuteScriptAsync(metadataReplyScript);
+            await ExecuteJavascriptAddTimeAndTokenCostToLatestMessageAsync(lastChatResult.TokenCostLatestMessage, lastChatResult.CreatedLocalDateTime);
+
             SetReplyingStatus(false);
             SetTokenCostFullConversation(lastChatResult.TokenCostFullConversation.ToString());
         }
@@ -244,6 +222,18 @@ public partial class
         }
     }
 
+    private void NewTabClicked()
+    {
+        var newTabPage = new TabPage("Chat " + (GetNextTabNumber() + 1));
+
+        //_chatInstances.Add(newTabPage, GetNewChatInstance()); // TODO: Det ser ikke ud til at være muligt at oprette flere Chats på denne måde. Det giver problemer på linje 30 i 'PythonEnvironmentSetup'. Overvejer at lave om på Chat.py, og gøre det muligt at have flere conversations der.
+    }
+
+    private void CloseSelectedTabClicked()
+    {
+        // TODO: Save chat history.
+        tabCtrlChats.Controls.Remove(tabCtrlChats.SelectedTab);
+    }
     #endregion
 
     #region Checkbox functionality
@@ -380,6 +370,54 @@ public partial class
     }
     #endregion
 
+    #region Execution of javascript code
+    private async Task ExecuteJavascriptAppendMessageChunkToChatAsync(string message, bool isSender, bool isFirstChunk)
+    {
+        //string messageEscaped = HttpUtility.HtmlEncode(message);
+
+        message = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(message)); // So it doesn't remove the new line characters and cause problems.
+
+        string script = $"appendMessageChunkToChat('{message}', {isSender.ToString().ToLower()}, {isFirstChunk.ToString().ToLower()})";
+        await webView2Chat.CoreWebView2.ExecuteScriptAsync(script);
+    }
+
+    private async Task ExecuteJavascriptAddTimestampToLatestMessageAsync()
+    {
+        string timestampRequestScript = $"addTimestampToLatestMessage('{DateTimeOffset.Now}')";
+        await webView2Chat.CoreWebView2.ExecuteScriptAsync(timestampRequestScript);
+    }
+
+    private async Task ExecuteJavascriptAddTimeAndTokenCostToLatestMessageAsync(int? tokenCostLatestMessage, DateTimeOffset? createdLocalDateTime)
+    {
+        // TODO: Nogen gange kaldes addMetaDataTolatestMessage to gange pr. besked. Eller det gjorde den, måske ikke længere.
+        string metadataReplyScript = $"addTimeAndTokenCostTolatestMessage('{tokenCostLatestMessage}', '{createdLocalDateTime}')";
+        await webView2Chat.CoreWebView2.ExecuteScriptAsync(metadataReplyScript);
+    }
+
+    private Task SetProgrammingLanguagesToHighlightAsync()
+    {
+        JsonSerializer serializer = new JsonSerializer();
+        Dictionary<string, bool> allLanguagesDict = new();
+
+        using (StreamReader file = File.OpenText(@"Assets\highlights-languages-settings\highlightjs-languages-selected.json"))
+        {
+            allLanguagesDict = (Dictionary<string, bool>)serializer.Deserialize(file, typeof(Dictionary<string, bool>));
+        }
+
+        List<string> languagesToHighlight = allLanguagesDict
+            .Where(kv => kv.Value)
+            .Select(kv => kv.Key)
+            .ToList();
+
+        string languagesToHighlightJsonArray = JsonConvert.SerializeObject(languagesToHighlight);
+
+        Debug.WriteLine("languagesToHighlightJsonArray: " + languagesToHighlightJsonArray);
+
+        return webView2Chat.CoreWebView2.ExecuteScriptAsync($"setProgrammingLanguagesToHighlight('{languagesToHighlightJsonArray}')");
+    }
+    #endregion
+
+    #region Other
     private void SetReplyingStatus(bool replying)
     {
         _isReplying = replying;
@@ -451,37 +489,16 @@ public partial class
         return highestNumber;
     }
 
-    private async Task JavaMethod_ClickAsync(object sender, EventArgs e) // TODO: Slet
+    private async void JavaMethod_ClickAsync(object sender, EventArgs e) // TODO: Slet
     {
         txtBoxInput.Text = "Show me a Java method";
         await SendAndReceiveMessageAsync(txtBoxInput.Text);
     }
 
-    private async Task btnTable_Click(object sender, EventArgs e) // TODO: Slet
+    private async void btnTable_Click(object sender, EventArgs e) // TODO: Slet
     {
         txtBoxInput.Text = "Show me a made up data table of spam prices";
         await SendAndReceiveMessageAsync(txtBoxInput.Text);
     }
-
-    private Task SetProgrammingLanguagesToHighlightAsync()
-    {
-        JsonSerializer serializer = new JsonSerializer();
-        Dictionary<string, bool> allLanguagesDict = new();
-
-        using (StreamReader file = File.OpenText(@"Assets\highlights-languages-settings\highlightjs-languages-selected.json"))
-        {
-            allLanguagesDict = (Dictionary<string, bool>)serializer.Deserialize(file, typeof(Dictionary<string, bool>));
-        }
-
-        List<string> languagesToHighlight = allLanguagesDict
-            .Where(kv => kv.Value)
-            .Select(kv => kv.Key)
-            .ToList();
-
-        string languagesToHighlightJsonArray = JsonConvert.SerializeObject(languagesToHighlight);
-
-        Debug.WriteLine("languagesToHighlightJsonArray: " + languagesToHighlightJsonArray);
-
-        return webView2Chat1.CoreWebView2.ExecuteScriptAsync($"setProgrammingLanguagesToHighlight('{languagesToHighlightJsonArray}')");
-    }
+    #endregion
 }

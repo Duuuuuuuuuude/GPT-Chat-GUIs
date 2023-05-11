@@ -68,7 +68,7 @@ namespace GPT_Chat_Desktop
             tabCtrlChats = new TabControl();
             tabPageChat1 = new TabPage();
             splitContainerChat1 = new SplitContainer();
-            webView2Chat1 = new Microsoft.Web.WebView2.WinForms.WebView2();
+            webView2Chat = new Microsoft.Web.WebView2.WinForms.WebView2();
             txtBoxInput = new TextBox();
             btnSendMessage = new Button();
             menuStrip1 = new MenuStrip();
@@ -82,7 +82,7 @@ namespace GPT_Chat_Desktop
             splitContainerChat1.Panel1.SuspendLayout();
             splitContainerChat1.Panel2.SuspendLayout();
             splitContainerChat1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)webView2Chat1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)webView2Chat).BeginInit();
             SuspendLayout();
             // 
             // splitContainerContentAndSettings
@@ -515,7 +515,7 @@ namespace GPT_Chat_Desktop
             // 
             // splitContainerChat1.Panel1
             // 
-            splitContainerChat1.Panel1.Controls.Add(webView2Chat1);
+            splitContainerChat1.Panel1.Controls.Add(webView2Chat);
             // 
             // splitContainerChat1.Panel2
             // 
@@ -525,17 +525,17 @@ namespace GPT_Chat_Desktop
             splitContainerChat1.SplitterDistance = 796;
             splitContainerChat1.TabIndex = 0;
             // 
-            // webView2Chat1
+            // webView2Chat
             // 
-            webView2Chat1.AllowExternalDrop = true;
-            webView2Chat1.CreationProperties = null;
-            webView2Chat1.DefaultBackgroundColor = Color.White;
-            webView2Chat1.Dock = DockStyle.Fill;
-            webView2Chat1.Location = new Point(0, 0);
-            webView2Chat1.Name = "webView2Chat1";
-            webView2Chat1.Size = new Size(905, 796);
-            webView2Chat1.TabIndex = 0;
-            webView2Chat1.ZoomFactor = 1D;
+            webView2Chat.AllowExternalDrop = true;
+            webView2Chat.CreationProperties = null;
+            webView2Chat.DefaultBackgroundColor = Color.White;
+            webView2Chat.Dock = DockStyle.Fill;
+            webView2Chat.Location = new Point(0, 0);
+            webView2Chat.Name = "webView2Chat";
+            webView2Chat.Size = new Size(905, 796);
+            webView2Chat.TabIndex = 0;
+            webView2Chat.ZoomFactor = 1D;
             // 
             // txtBoxInput
             // 
@@ -593,7 +593,7 @@ namespace GPT_Chat_Desktop
             splitContainerChat1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainerChat1).EndInit();
             splitContainerChat1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)webView2Chat1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)webView2Chat).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -606,7 +606,7 @@ namespace GPT_Chat_Desktop
         private SplitContainer splitContainerChat1;
         private TextBox txtBoxInput;
         private Button btnSendMessage;
-        private Microsoft.Web.WebView2.WinForms.WebView2 webView2Chat1;
+        private Microsoft.Web.WebView2.WinForms.WebView2 webView2Chat;
         private TextBox textBox10;
         private Label lblLogitBias;
         private TextBox txtLogitBias;
