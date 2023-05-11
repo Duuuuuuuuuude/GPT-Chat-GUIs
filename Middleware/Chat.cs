@@ -1,177 +1,75 @@
-﻿//using Middleware.Models;
-//using Python.Runtime;
-
-//namespace Middleware;
-
-//public sealed class Chat : IGPTChat
-//{
-//    private readonly dynamic _chatInstance;
-
-//    public Chat()
-//    {
-//        using (Py.GIL())
-//        {
-//            // Import the Chat module and create an instance
-//            dynamic chatModule = Py.Import("Chat");
-//            _chatInstance = chatModule.Chat();
-//        }
-//    }
-
-//    // TODO: Make the Python Code use async/await.
-//    public IEnumerable<ChatResult> AddToConversation(string prompt)
-//    {
-//        dynamic? conversationGenerator = null;
-//        try
-//        {
-//            using (Py.GIL())
-//            {
-//                // TODO: Første chunk af hver response er nogengange væk. Problemet opstår også når koden kaldes direkte udenom Pythonnet.
-//                conversationGenerator = _chatInstance.add_to_conversation(prompt);
-//            }
-//        }
-//        catch (PythonException ex)
-//        {
-//            Console.WriteLine("Python Exception:");
-//            Console.WriteLine($"Message: {ex.Message}");
-//            Console.WriteLine("Python StackTrace:");
-
-//            using (Py.GIL())
-//            {
-//                dynamic traceback = Py.Import("traceback");
-//                Console.WriteLine(traceback.format_exc());
-//            }
-//        }
-//        IEnumerable<ChatResult> chatResults = ProcessConversation(conversationGenerator);
-
-//        foreach (var chatResult in chatResults)
-//        {
-//            yield return chatResult;
-//        }
-//    }
-
-//    private static IEnumerable<ChatResult> ProcessConversation(dynamic conversationGenerator)
-//    {
-//        using (Py.GIL())
-//        {
-//            ChatResult chatResult = new();
-
-//            foreach (var result in conversationGenerator)
-//            {
-//                chatResult.ContentChunk = result[0];
-
-//                chatResult.FinishReason = result[1];
-
-//                var unixTimestamp = (long)result[2];
-//                chatResult.CreatedLocalDateTime = DateTimeOffset.FromUnixTimeSeconds(unixTimestamp).LocalDateTime;
-
-//                if (int.TryParse(result[3].ToString(), out int tempTokenCostLatestMessage))
-//                {
-//                    chatResult.TokenCostLatestMessage = tempTokenCostLatestMessage;
-//                }
-
-//                if (int.TryParse(result[4].ToString(), out int tempTokenCostFullConversation))
-//                {
-//                    chatResult.TokenCostFullConversation = tempTokenCostFullConversation;
-//                }
-
-//                yield return chatResult;
-//            }
-//        }
-//    }
-//}
-
-
-using Middleware.Models;
+﻿using Middleware.Models;
 using Python.Runtime;
+using System.Diagnostics;
 using System.Threading.Channels;
 
-namespace Middleware
+namespace Middleware;
+
+public sealed class Chat : IGptChat
 {
-    public sealed class Chat : IGPTChat
+    private readonly dynamic _chatInstance;
+
+    public Chat()
     {
-        private readonly dynamic _chatInstance;
-
-        public Chat()
+        using (Py.GIL())
         {
-            using (Py.GIL())
-            {
-                // Import the Chat module and create an instance
-                dynamic chatModule = Py.Import("Chat");
-                _chatInstance = chatModule.Chat();
-            }
+            dynamic chatModule = Py.Import("Chat");
+            _chatInstance = chatModule.Chat();
         }
+    }
 
-        // TODO: Make the Python Code as
-        public async IAsyncEnumerable<ChatResult> AddToConversation(string prompt)
+    public async IAsyncEnumerable<ChatResult> SendMessageAsync(string prompt)
+    {
+        var channel = Channel.CreateUnbounded<ChatResult>();
+        _ = Task.Run(() =>
         {
-            dynamic? conversationGenerator = null;
             try
             {
                 using (Py.GIL())
                 {
-                    // TODO: Første chunk af hver response er nogengange væk. Problemet opstår også når koden kaldes direkte udenom Pythonnet.
-                    conversationGenerator = _chatInstance.add_to_conversation(prompt);
+                    dynamic conversationGenerator = _chatInstance.send_message(prompt);
+
+                    foreach (var result in conversationGenerator)
+                    {
+                        var chatResult = ConvertPyObjectToChatResult(result);
+
+                        channel.Writer.TryWrite(chatResult);
+                    }
                 }
             }
             catch (PythonException ex)
             {
-                Console.WriteLine("Python Exception:");
-                Console.WriteLine($"Message: {ex.Message}");
-                Console.WriteLine("Python StackTrace:");
+                Debug.WriteLine("Python Exception:");
+                Debug.WriteLine($"Message: {ex.Message}");
+                Debug.WriteLine("Python StackTrace:");
 
                 using (Py.GIL())
                 {
                     dynamic traceback = Py.Import("traceback");
-                    Console.WriteLine(traceback.format_exc());
+                    Debug.WriteLine(traceback.format_exc());
                 }
             }
-
-            var channel = Channel.CreateUnbounded<ChatResult>();
-            _ = Task.Run(() => ProcessConversationAsync(channel.Writer, conversationGenerator));
-
-            await foreach (var chatResult in channel.Reader.ReadAllAsync())
+            finally
             {
-                yield return chatResult;
+                channel.Writer.Complete();
             }
-        }
+        });
 
-        private static async Task ProcessConversationAsync(ChannelWriter<ChatResult> channelWriter, dynamic conversationGenerator)
+        await foreach (var chatResult in channel.Reader.ReadAllAsync())
         {
-            using (Py.GIL())
-            {
-                ChatResult chatResult = new();
-
-                foreach (var result in conversationGenerator)
-                {
-                    //chatResult.ContentChunk = result[0];
-                    string contentChunk = result[0];
-                    //chatResult.FinishReason = result[1];
-                    string finishReason = result[1];
-
-                    var unixTimestamp = (long)result[2];
-                    //chatResult.CreatedLocalDateTime = DateTimeOffset.FromUnixTimeSeconds(unixTimestamp).LocalDateTime;
-                    DateTimeOffset createdLocalDateTime = DateTimeOffset.FromUnixTimeSeconds(unixTimestamp).LocalDateTime;
-
-
-                    int? tokenCostLatestMessage = null;
-                    int? tokenCostFullConversation = null;
-
-                    if (int.TryParse(result[3].ToString(), out int tempTokenCostLatestMessage))
-                    {
-                        tokenCostLatestMessage = tempTokenCostLatestMessage;
-                        //chatResult.TokenCostLatestMessage = tempTokenCostLatestMessage;
-                    }
-
-                    if (int.TryParse(result[4].ToString(), out int tempTokenCostFullConversation))
-                    {
-                        tokenCostFullConversation = tempTokenCostFullConversation;
-                        //chatResult.TokenCostFullConversation = tempTokenCostFullConversation;
-                    }
-
-                    await channelWriter.WriteAsync(chatResult).ConfigureAwait(false);
-                }
-            }
-            channelWriter.Complete();
+            yield return chatResult;
         }
+    }
+
+    private ChatResult ConvertPyObjectToChatResult(dynamic result)
+    {
+        return new ChatResult
+        {
+            ContentChunk = (string)result.content_chunk,
+            FinishReason = (string)result.finish_reason,
+            CreatedLocalDateTime = DateTimeOffset.FromUnixTimeSeconds((long)result.created_local_date_time),
+            TokenCostLatestMessage = result.token_cost_latest_message == null ? (int?)null : (int)result.token_cost_latest_message,
+            TokenCostFullConversation = result.token_cost_full_conversation == null ? (int?)null : (int)result.token_cost_full_conversation
+        };
     }
 }

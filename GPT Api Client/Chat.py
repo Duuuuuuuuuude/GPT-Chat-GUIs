@@ -2,6 +2,7 @@ from os import environ as env
 import openai
 import tiktoken
 from Persistent_Data.User_Settings_Global import User_Settings_Global
+from ChatResult import ChatResult
 
 class Chat:
 
@@ -10,7 +11,6 @@ class Chat:
         self._token_cost_full_conversation = 0
 
         self._conversation = []
-        #self._conversation.append({"role": "system", "content": "You are a helpfule assistent. Always include a short headline followed by \r\n.", "name": "system"})
         self._conversation.append({"role": "system", "content": "You are a helpfule assistent.", "name": "system"})
 
         User_Settings_Global().load_User_Settings()
@@ -19,11 +19,10 @@ class Chat:
 
         #self.__update_total_num_tokens()
         
-    async def add_to_conversation_async(self, prompt: str):
+    def send_Message(self, prompt: str):
         """ Time is yielded as a Unix timestamp """
 
-        self._conversation.append({'role': 'user', 'content': prompt, 'name': env["USER_NAME"]}) # Add the user's input to the _conversation.
-
+        self._conversation.append({'role': 'user', 'content': prompt, 'name': env["USER_NAME"]}) # Adds the user's input to the _conversation.
 
         # Deletes the oldest message in the _conversation until the _conversation is within the token limit.
         conv_history_tokens = self.__num_tokens_in_current_conversation(env["model_id"])
@@ -31,41 +30,39 @@ class Chat:
             del self._conversation[1] 
             conv_history_tokens = self.num_tokens_from_messages(self._conversation)
 
-        
-
         role = None
         full_content = ""
-        finish_reason = "" # stop: API returned complete model output
-                           # length: Incomplete model output due to max_tokens parameter or token limit
-                           # content_filter: Omitted content due to a flag from our content filters
-                           # null: API response still in progress or incomplete
 
-        created_local_time = None
+        chat_result = ChatResult()
 
         # Yield the response in chunks.
-        i = 0
-        response = await self.__send_chat_gpt_request_async()
-        async for chunk in response:
+        response =  self.__send_chat_gpt_request()
+        #i = 0
+        for i, chunk in enumerate(response):
             if i == 0:
                 role = chunk['choices'][0]['delta']['role']
             else:
                 content = chunk['choices'][0]['delta'].get('content', '')
 
+                chat_result.content_chunk = content
+
                 full_content += content
 
-                finish_reason = chunk['choices'][0]['finish_reason']
-                created_local_time = chunk['created']
+                chat_result.finish_reason = chunk['choices'][0]['finish_reason']
+                chat_result.created_local_date_time = chunk['created']
 
-                yield content, finish_reason, created_local_time, None, None # TODO: Returner en klasse i stedet.
-            i += 1
-
+                yield chat_result
+            #i += 1
         self._conversation.append({'role': role, 'content': full_content}) # Add the response to the _conversation.
 
         self.__update_total_num_tokens()
 
-        yield "", finish_reason, created_local_time, self._token_cost_latest_message, self._token_cost_full_conversation # , None
+        chat_result.token_cost_latest_message = self._token_cost_latest_message
+        chat_result.token_cost_full_conversation = self._token_cost_full_conversation
 
-    async def __send_chat_gpt_request_async(self):
+        yield chat_result
+
+    def __send_chat_gpt_request(self):    
         User_Settings_Global.is_required_invironment_variables_set()
 
         openai.organization = env['OPENAI_ORGANIZATION']
@@ -124,10 +121,7 @@ class Chat:
         if env['stop'].lower() != 'none' or "null" or "": # Defaults to ""
             params['stop'] = env['stop']                  # Up to 4 sequences where the API will stop generating further tokens.
             
-        #response = await openai.ChatCompletion.acreate(**params)
-        #return response
-
-        response = await openai.ChatCompletion.acreate(**params)
+        response = openai.ChatCompletion.create(**params)
 
         return response
 

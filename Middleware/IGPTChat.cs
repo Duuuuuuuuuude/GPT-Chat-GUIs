@@ -2,9 +2,8 @@
 
 namespace Middleware
 {
-    public interface IGPTChat
+    public interface IGptChat
     {
-        //IEnumerable<ChatResult> AddToConversation(string prompt);
-        IAsyncEnumerable<ChatResult> AddToConversation(string prompt);
+        IAsyncEnumerable<ChatResult> SendMessageAsync(string prompt);
     }
 }

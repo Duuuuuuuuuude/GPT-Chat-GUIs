@@ -11,7 +11,7 @@
 //            {
 //                using (Chat chat = new())
 //                {
-//                    IAsyncEnumerable<ChatResult> chatResults = chat.AddToConversation("Count to a 20 and seperate each digit by a comma.");
+//                    IAsyncEnumerable<ChatResult> chatResults = chat.SendMessageAsync("Count to a 20 and seperate each digit by a comma.");
 
 //                    ChatResult? lastResult = null;
 

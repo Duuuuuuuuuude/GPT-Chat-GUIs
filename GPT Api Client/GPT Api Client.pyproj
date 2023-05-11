@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>651b0e0e-0b71-4fa9-a9ba-9a986c917f68</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Run_Conversation.py</StartupFile>
+    <StartupFile>Run_Chat.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -24,8 +24,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Chat.py" />
+    <Compile Include="ChatResult.py" />
     <Compile Include="Persistent_Data\User_Settings_Global.py" />
-    <Compile Include="Run_Conversation.py" />
+    <Compile Include="Run_Chat.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Persistent_Data\.env" />

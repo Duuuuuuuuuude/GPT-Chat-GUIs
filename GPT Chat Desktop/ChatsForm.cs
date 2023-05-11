@@ -10,12 +10,12 @@ namespace GPT_Chat_Desktop;
 public partial class
     ChatsForm : Form
 {
-    private readonly IGPTChat _chatInstance;
+    private readonly IGptChat _chatInstance;
     private readonly IUserSettingsGlobal _userSettingsGlobalInstance;
     private bool _isReplying = false;
     private const string HighlightjsLanguagesSelectedJson = @"Assets\highlights-languages-settings\highlightjs-languages-selected.json";
 
-    public ChatsForm(IGPTChat chat, IUserSettingsGlobal userSettingsGlobal)
+    public ChatsForm(IGptChat chat, IUserSettingsGlobal userSettingsGlobal)
     {
         // TODO: Load chat history.
         InitializeComponent();
@@ -191,7 +191,6 @@ public partial class
     }
 
     private async Task SendAndReceiveMessageAsync()
-    // TODO: highlight.js og alt styling i chat.html virker ikke.
     {
         SetReplyingStatus(true);
 
@@ -210,19 +209,18 @@ public partial class
         string metadataRequestScript = $"addTimestampToLatestMessage('{DateTimeOffset.Now}')";
         await webView2Chat1.CoreWebView2.ExecuteScriptAsync(metadataRequestScript);
 
-        string fullConversation = string.Empty;
-        string fullEscapedConversation = string.Empty;
+        //string fullConversation = string.Empty;
+        //string fullEscapedConversation = string.Empty;
 
         ChatResult? lastChatResult = null;
         bool isFirstChunk = true;
-        await foreach (var chatResult in _chatInstance.AddToConversation(message))
+        await foreach (var chatResult in _chatInstance.SendMessageAsync(message))
         {
             //string contentChunkEscaped = HttpUtility.HtmlEncode(chatResult.ContentChunk);
             string contentChunkBase64 =
                 Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(chatResult.ContentChunk)); // So it doesn't remove the new line characters.
-            fullConversation += chatResult.ContentChunk;
-            fullEscapedConversation += contentChunkBase64;
-
+            //fullConversation += chatResult.ContentChunk;
+            //fullEscapedConversation += contentChunkBase64;
 
             string replyScript =
                 $"appendMessageChunkToChat('{contentChunkBase64}', false, {isFirstChunk.ToString().ToLower()})";
