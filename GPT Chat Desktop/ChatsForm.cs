@@ -56,18 +56,12 @@ public partial class
         InitializeTextBoxes();
     }
 
-    private void WebView2Chat1_NavigationCompleted(object? sender,
-        Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
+    private async Task btnSendMessage_Click_Async(object sender, EventArgs e)
     {
-        throw new NotImplementedException();
+        await SendAndReceiveMessageAsync(txtBoxInput.Text);
     }
 
-    private async void btnSendMessage_Click_Async(object sender, EventArgs e)
-    {
-        await SendAndReceiveMessageAsync();
-    }
-
-    private async void TxtBoxInput_KeyDown_Async(object sender, KeyEventArgs e)
+    private async Task TxtBoxInput_KeyDown_Async(object sender, KeyEventArgs e)
     {
         if (e.KeyCode == Keys.Enter)
         {
@@ -75,7 +69,7 @@ public partial class
             e.SuppressKeyPress = true;
             if (!_isReplying)
             {
-                await SendAndReceiveMessageAsync();
+                await SendAndReceiveMessageAsync(txtBoxInput.Text);
             }
         }
     }
@@ -190,52 +184,64 @@ public partial class
         tabCtrlChats.Controls.Remove(tabCtrlChats.SelectedTab);
     }
 
-    private async Task SendAndReceiveMessageAsync()
+    private async Task SendAndReceiveMessageAsync(string txtBoxInputMessage)
     {
-        SetReplyingStatus(true);
+        string latestInputMessage = txtBoxInputMessage; // Saved outside of the try scope in case of recursive retries in the catch block.
 
-        string message = txtBoxInput.Text;
-        txtBoxInput.Clear();
-
-        await SetProgrammingLanguagesToHighlightAsync();
-
-        //string messageEscaped = HttpUtility.HtmlEncode(message);
-        string messageBase64 =
-            Convert.ToBase64String(
-                System.Text.Encoding.UTF8.GetBytes(message)); // So it doesn't remove the new line characters.
-        string script = $"appendMessageChunkToChat('{messageBase64}', true, true);";
-        await webView2Chat1.CoreWebView2.ExecuteScriptAsync(script);
-
-        string metadataRequestScript = $"addTimestampToLatestMessage('{DateTimeOffset.Now}')";
-        await webView2Chat1.CoreWebView2.ExecuteScriptAsync(metadataRequestScript);
-
-        //string fullConversation = string.Empty;
-        //string fullEscapedConversation = string.Empty;
-
-        ChatResult? lastChatResult = null;
-        bool isFirstChunk = true;
-        await foreach (var chatResult in _chatInstance.SendMessageAsync(message))
+        try
         {
-            //string contentChunkEscaped = HttpUtility.HtmlEncode(chatResult.ContentChunk);
-            string contentChunkBase64 =
-                Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(chatResult.ContentChunk)); // So it doesn't remove the new line characters.
-            //fullConversation += chatResult.ContentChunk;
-            //fullEscapedConversation += contentChunkBase64;
+            SetReplyingStatus(true);
 
-            string replyScript =
-                $"appendMessageChunkToChat('{contentChunkBase64}', false, {isFirstChunk.ToString().ToLower()})";
-            isFirstChunk = false;
-            await webView2Chat1.CoreWebView2.ExecuteScriptAsync(replyScript);
-            lastChatResult = chatResult;
-            SetFinishReason(chatResult.FinishReason);
+            txtBoxInput.Clear();
+
+            await SetProgrammingLanguagesToHighlightAsync();
+
+            //string messageEscaped = HttpUtility.HtmlEncode(latestInputMessage);
+            string messageBase64 =
+                Convert.ToBase64String( // TODO: Flyt i sin egen metode for at undgå gentagelser.
+                    System.Text.Encoding.UTF8.GetBytes(txtBoxInputMessage)); // So it doesn't remove the new line characters.
+            string script = $"appendMessageChunkToChat('{messageBase64}', true, true);";
+            await webView2Chat1.CoreWebView2.ExecuteScriptAsync(script);
+
+            string metadataRequestScript = $"addTimestampToLatestMessage('{DateTimeOffset.Now}')";
+            await webView2Chat1.CoreWebView2.ExecuteScriptAsync(metadataRequestScript);
+
+            ChatResult? lastChatResult = null;
+            bool isFirstChunk = true;
+            await foreach (var chatResult in _chatInstance.SendMessageAsync(txtBoxInputMessage))
+            {
+                //string contentChunkEscaped = HttpUtility.HtmlEncode(chatResult.ContentChunk);
+                string contentChunkBase64 =
+                    Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(chatResult.ContentChunk)); // So it doesn't remove the new line characters.
+                                                                                                         //fullConversation += chatResult.ContentChunk;
+                                                                                                         //fullEscapedConversation += contentChunkBase64;
+
+                string replyScript =
+                    $"appendMessageChunkToChat('{contentChunkBase64}', false, {isFirstChunk.ToString().ToLower()})";
+                isFirstChunk = false;
+                await webView2Chat1.CoreWebView2.ExecuteScriptAsync(replyScript);
+                lastChatResult = chatResult;
+                SetFinishReason(chatResult.FinishReason);
+            }
+
+            // TODO: Nogen gange kaldes addMetaDataTolatestMessage to gange pr. besked.
+            string metadataReplyScript =
+                $"addTimeAndTokenCostTolatestMessage('{lastChatResult.TokenCostLatestMessage}', '{lastChatResult.CreatedLocalDateTime}')";
+            await webView2Chat1.CoreWebView2.ExecuteScriptAsync(metadataReplyScript);
+            SetReplyingStatus(false);
+            SetTokenCostFullConversation(lastChatResult.TokenCostFullConversation.ToString());
         }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Exception in SendMessageAsync:\nMessage: {ex.Message}\nStackTrace: {ex.StackTrace}\nInnerException: {ex.InnerException}");
 
-        // TODO: Nogen gange kaldes addMetaDataTolatestMessage to gange pr. besked.
-        string metadataReplyScript =
-            $"addTimeAndTokenCostTolatestMessage('{lastChatResult.TokenCostLatestMessage}', '{lastChatResult.CreatedLocalDateTime}')";
-        await webView2Chat1.CoreWebView2.ExecuteScriptAsync(metadataReplyScript);
-        SetReplyingStatus(false);
-        SetTokenCostFullConversation(lastChatResult.TokenCostFullConversation.ToString());
+            DialogResult dialogResult = MessageBox.Show($"There was a problem sending or recieving latestInputMessage.\n\n{ex.Message}", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+
+            if (dialogResult == DialogResult.Retry)
+            {
+                await SendAndReceiveMessageAsync(latestInputMessage);
+            }
+        }
     }
 
     #endregion
@@ -445,21 +451,16 @@ public partial class
         return highestNumber;
     }
 
-    /// <summary>
-    /// TODO: Slet
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private async void JavaMethod_ClickAsync(object sender, EventArgs e)
+    private async Task JavaMethod_ClickAsync(object sender, EventArgs e) // TODO: Slet
     {
         txtBoxInput.Text = "Show me a Java method";
-        await SendAndReceiveMessageAsync();
+        await SendAndReceiveMessageAsync(txtBoxInput.Text);
     }
 
-    private async void btnTable_Click(object sender, EventArgs e)
+    private async Task btnTable_Click(object sender, EventArgs e) // TODO: Slet
     {
         txtBoxInput.Text = "Show me a made up data table of spam prices";
-        await SendAndReceiveMessageAsync();
+        await SendAndReceiveMessageAsync(txtBoxInput.Text);
     }
 
     private Task SetProgrammingLanguagesToHighlightAsync()

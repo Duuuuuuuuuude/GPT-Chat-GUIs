@@ -39,15 +39,17 @@ public sealed class Chat : IGptChat
             }
             catch (PythonException ex)
             {
-                Debug.WriteLine("Python Exception:");
-                Debug.WriteLine($"Message: {ex.Message}");
-                Debug.WriteLine("Python StackTrace:");
+                string detailedErroMessage;
 
                 using (Py.GIL())
                 {
                     dynamic traceback = Py.Import("traceback");
-                    Debug.WriteLine(traceback.format_exc());
+                    var pythonTraceback = traceback.format_exc();
+                    detailedErroMessage = $"Python Exception:\n\tMessage: {ex.Message}\nPython StackTrace:\n\t{pythonTraceback}";
                 }
+
+                Debug.WriteLine(detailedErroMessage); // TODO: Virker nok ikke. Test.
+                throw new Exception("There was an error executing the Python code.", ex);
             }
             finally
             {

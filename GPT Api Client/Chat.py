@@ -2,7 +2,7 @@ from os import environ as env
 import openai
 import tiktoken
 from Persistent_Data.User_Settings_Global import User_Settings_Global
-from ChatResult import ChatResult
+from Models.ChatResult import ChatResult
 
 class Chat:
 
@@ -19,7 +19,7 @@ class Chat:
 
         #self.__update_total_num_tokens()
         
-    def send_Message(self, prompt: str):
+    def send_message(self, prompt: str):
         """ Time is yielded as a Unix timestamp """
 
         self._conversation.append({'role': 'user', 'content': prompt, 'name': env["USER_NAME"]}) # Adds the user's input to the _conversation.
