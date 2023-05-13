@@ -1,5 +1,12 @@
 # Still under construction.
 
+I wish the ChatGPT website had more features, like being able to change the messages doing a conversation to better adjust the context it is receiving and being able to adjust the parameters the in the API request.
+
+It also seems like the API is actually cheaper to use than ChatGPT Plus, especially because you are only paying when you are actually using it and not just the same very high monthly amount.
+
+Because of those reasons and because I wanted to practice programming after studying Computer Science, I decided to have some fun making this.
+
+
 To Run this:
    1) 'GPT-Chat-GUIs/GPT' Api Client/requirements.txt has to be installed in the 'GPT Api Client' project.
    2) An .env file has to be present in the 'GPT-Chat-GUIs/GPT Api Client/Persistent_Data/' directory, with the following variables set:
