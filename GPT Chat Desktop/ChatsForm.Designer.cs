@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 
+
 namespace GPT_Chat_Desktop
 {
     partial class ChatsForm
@@ -607,7 +608,6 @@ namespace GPT_Chat_Desktop
         private TextBox txtBoxInput;
         private Button btnSendMessage;
         private Microsoft.Web.WebView2.WinForms.WebView2 webView2Chat;
-        private TextBox textBox10;
         private Label lblLogitBias;
         private TextBox txtLogitBias;
         private TextBox txtStop;
@@ -638,16 +638,6 @@ namespace GPT_Chat_Desktop
         private Label lblFinishReason;
         private Button BtnCloseSelectedTab;
         private Button BtnNewTab;
-        private TextBox textBox11;
-        private Label label11;
-        private TextBox textBox12;
-        private Label label12;
-        private Label label13;
-        private TextBox textBox14;
-        private Label label14;
-        private TextBox textBox5;
-        private Label label5;
-        private TextBox textBox6;
         private CheckBox chkShowKey;
         private CheckBox chkShowOrganization;
         private Button JavaMethod;

@@ -48,7 +48,7 @@ public sealed class Chat : IGptChat
                     detailedErroMessage = $"Python Exception:\n\tMessage: {ex.Message}\nPython StackTrace:\n\t{pythonTraceback}";
                 }
 
-                Debug.WriteLine(detailedErroMessage); // TODO: Virker nok ikke. Test.
+                Debug.WriteLine(detailedErroMessage);
                 throw new Exception("There was an error executing the Python code.", ex);
             }
             finally

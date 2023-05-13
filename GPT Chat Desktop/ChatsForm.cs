@@ -207,7 +207,7 @@ public partial class
         {
             Debug.WriteLine($"Exception in SendMessageAsync:\nMessage: {ex.Message}\nStackTrace: {ex.StackTrace}\nInnerException: {ex.InnerException}");
 
-            DialogResult dialogResult = MessageBox.Show($"There was a problem sending or recieving latestInputMessage.\n\n{ex.Message}", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+            DialogResult dialogResult = MessageBox.Show($"There was a problem sending latest input message or recieving reply.\n\n{ex.Message}", "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
 
             if (dialogResult == DialogResult.Retry)
             {
@@ -365,6 +365,7 @@ public partial class
     #endregion
 
     #region Execution of javascript code
+#pragma warning disable AsyncFixer01
     private async Task ExecuteJavascriptAppendMessageChunkToChatAsync(string message, bool isSender, bool isFirstChunk)
     {
         //string messageEscaped = HttpUtility.HtmlEncode(message);
@@ -372,21 +373,28 @@ public partial class
         message = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(message)); // So it doesn't remove the new line characters and cause problems.
 
         string script = $"appendMessageChunkToChat('{message}', {isSender.ToString().ToLower()}, {isFirstChunk.ToString().ToLower()})";
+        // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
         await webView2Chat.CoreWebView2.ExecuteScriptAsync(script);
     }
+#pragma warning restore AsyncFixer01
 
+#pragma warning disable AsyncFixer01
     private async Task ExecuteJavascriptAddTimestampToLatestMessageAsync()
     {
         string timestampRequestScript = $"addTimestampToLatestMessage('{DateTimeOffset.Now}')";
         await webView2Chat.CoreWebView2.ExecuteScriptAsync(timestampRequestScript);
     }
+#pragma warning restore AsyncFixer01
 
+#pragma warning disable AsyncFixer01
     private async Task ExecuteJavascriptAddTimeAndTokenCostToLatestMessageAsync(int? tokenCostLatestMessage, DateTimeOffset? createdLocalDateTime)
     {
         // TODO: Nogen gange kaldes addMetaDataTolatestMessage to gange pr. besked. Eller det gjorde den, måske ikke længere.
         string metadataReplyScript = $"addTimeAndTokenCostTolatestMessage('{tokenCostLatestMessage}', '{createdLocalDateTime}')";
+        // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
         await webView2Chat.CoreWebView2.ExecuteScriptAsync(metadataReplyScript);
     }
+#pragma warning restore AsyncFixer01
 
     private Task SetProgrammingLanguagesToHighlightAsync()
     {
