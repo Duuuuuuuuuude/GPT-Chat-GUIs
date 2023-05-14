@@ -39,6 +39,10 @@ class Chat:
         response =  self.__send_chat_gpt_request()
         #i = 0
         for i, chunk in enumerate(response):
+            # TODO
+            #if(cancelled):
+            #    break
+                
             if i == 0:
                 role = chunk['choices'][0]['delta']['role']
             else:

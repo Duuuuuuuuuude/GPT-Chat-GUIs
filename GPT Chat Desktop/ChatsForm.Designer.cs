@@ -67,23 +67,11 @@ namespace GPT_Chat_Desktop
             BtnCloseSelectedTab = new Button();
             BtnNewTab = new Button();
             tabCtrlChats = new TabControl();
-            tabPageChat1 = new TabPage();
-            splitContainerChat1 = new SplitContainer();
-            webView2Chat = new Microsoft.Web.WebView2.WinForms.WebView2();
-            txtBoxInput = new TextBox();
-            btnSendMessage = new Button();
             menuStrip1 = new MenuStrip();
             ((System.ComponentModel.ISupportInitialize)splitContainerContentAndSettings).BeginInit();
             splitContainerContentAndSettings.Panel1.SuspendLayout();
             splitContainerContentAndSettings.Panel2.SuspendLayout();
             splitContainerContentAndSettings.SuspendLayout();
-            tabCtrlChats.SuspendLayout();
-            tabPageChat1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)splitContainerChat1).BeginInit();
-            splitContainerChat1.Panel1.SuspendLayout();
-            splitContainerChat1.Panel2.SuspendLayout();
-            splitContainerChat1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)webView2Chat).BeginInit();
             SuspendLayout();
             // 
             // splitContainerContentAndSettings
@@ -484,81 +472,16 @@ namespace GPT_Chat_Desktop
             BtnNewTab.TabIndex = 0;
             BtnNewTab.Text = "&New Tab";
             BtnNewTab.UseVisualStyleBackColor = false;
-            BtnNewTab.Click += BtnNewTab_Click;
+            BtnNewTab.Click += BtnNewTab_ClickASync;
             // 
             // tabCtrlChats
             // 
-            tabCtrlChats.Controls.Add(tabPageChat1);
             tabCtrlChats.Dock = DockStyle.Fill;
             tabCtrlChats.Location = new Point(0, 0);
             tabCtrlChats.Name = "tabCtrlChats";
             tabCtrlChats.SelectedIndex = 0;
             tabCtrlChats.Size = new Size(919, 892);
             tabCtrlChats.TabIndex = 0;
-            // 
-            // tabPageChat1
-            // 
-            tabPageChat1.BackColor = Color.FromArgb(34, 34, 34);
-            tabPageChat1.Controls.Add(splitContainerChat1);
-            tabPageChat1.Location = new Point(4, 29);
-            tabPageChat1.Name = "tabPageChat1";
-            tabPageChat1.Padding = new Padding(3);
-            tabPageChat1.Size = new Size(911, 859);
-            tabPageChat1.TabIndex = 0;
-            tabPageChat1.Text = "Chat 1";
-            // 
-            // splitContainerChat1
-            // 
-            splitContainerChat1.Dock = DockStyle.Fill;
-            splitContainerChat1.Location = new Point(3, 3);
-            splitContainerChat1.Name = "splitContainerChat1";
-            splitContainerChat1.Orientation = Orientation.Horizontal;
-            // 
-            // splitContainerChat1.Panel1
-            // 
-            splitContainerChat1.Panel1.Controls.Add(webView2Chat);
-            // 
-            // splitContainerChat1.Panel2
-            // 
-            splitContainerChat1.Panel2.Controls.Add(txtBoxInput);
-            splitContainerChat1.Panel2.Controls.Add(btnSendMessage);
-            splitContainerChat1.Size = new Size(905, 853);
-            splitContainerChat1.SplitterDistance = 796;
-            splitContainerChat1.TabIndex = 0;
-            // 
-            // webView2Chat
-            // 
-            webView2Chat.AllowExternalDrop = true;
-            webView2Chat.CreationProperties = null;
-            webView2Chat.DefaultBackgroundColor = Color.White;
-            webView2Chat.Dock = DockStyle.Fill;
-            webView2Chat.Location = new Point(0, 0);
-            webView2Chat.Name = "webView2Chat";
-            webView2Chat.Size = new Size(905, 796);
-            webView2Chat.TabIndex = 0;
-            webView2Chat.ZoomFactor = 1D;
-            // 
-            // txtBoxInput
-            // 
-            txtBoxInput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            txtBoxInput.Location = new Point(3, 5);
-            txtBoxInput.MaxLength = 0;
-            txtBoxInput.Multiline = true;
-            txtBoxInput.Name = "txtBoxInput";
-            txtBoxInput.Size = new Size(796, 45);
-            txtBoxInput.TabIndex = 1;
-            txtBoxInput.KeyDown += TxtBoxInput_KeyDown_Async;
-            // 
-            // btnSendMessage
-            // 
-            btnSendMessage.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            btnSendMessage.Location = new Point(805, 4);
-            btnSendMessage.Name = "btnSendMessage";
-            btnSendMessage.Size = new Size(94, 45);
-            btnSendMessage.TabIndex = 0;
-            btnSendMessage.Text = "&Send";
-            btnSendMessage.UseVisualStyleBackColor = true;
-            btnSendMessage.Click += btnSendMessage_Click_Async;
             // 
             // menuStrip1
             // 
@@ -581,20 +504,11 @@ namespace GPT_Chat_Desktop
             Name = "ChatsForm";
             Text = "GPT Chats";
             WindowState = FormWindowState.Maximized;
-            Load += ChatsForm_Load;
             splitContainerContentAndSettings.Panel1.ResumeLayout(false);
             splitContainerContentAndSettings.Panel1.PerformLayout();
             splitContainerContentAndSettings.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainerContentAndSettings).EndInit();
             splitContainerContentAndSettings.ResumeLayout(false);
-            tabCtrlChats.ResumeLayout(false);
-            tabPageChat1.ResumeLayout(false);
-            splitContainerChat1.Panel1.ResumeLayout(false);
-            splitContainerChat1.Panel2.ResumeLayout(false);
-            splitContainerChat1.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)splitContainerChat1).EndInit();
-            splitContainerChat1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)webView2Chat).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -602,12 +516,6 @@ namespace GPT_Chat_Desktop
         #endregion
 
         private SplitContainer splitContainerContentAndSettings;
-        private TabControl tabCtrlChats;
-        private TabPage tabPageChat1;
-        private SplitContainer splitContainerChat1;
-        private TextBox txtBoxInput;
-        private Button btnSendMessage;
-        private Microsoft.Web.WebView2.WinForms.WebView2 webView2Chat;
         private Label lblLogitBias;
         private TextBox txtLogitBias;
         private TextBox txtStop;
@@ -643,5 +551,6 @@ namespace GPT_Chat_Desktop
         private Button JavaMethod;
         private Button btnTable;
         private MenuStrip menuStrip1;
+        private TabControl tabCtrlChats;
     }
 }

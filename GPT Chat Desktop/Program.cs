@@ -19,7 +19,7 @@ internal static class Program
         {
             using (PythonEnvironmentSetup.PythonEnvironmentSetupSingletonInstance)
             {
-                Application.Run(new ChatsForm(new Chat(), new UserSettingsGlobal()));
+                Application.Run(new ChatsForm(new UserSettingsGlobal(), typeof(Chat)));
             }
 
         }
@@ -31,7 +31,7 @@ internal static class Program
                 {
                     using (PythonEnvironmentSetup.PythonEnvironmentSetupSingletonInstance)
                     {
-                        Application.Run(new ChatsForm(new Chat(), new UserSettingsGlobal()));
+                        Application.Run(new ChatsForm(new UserSettingsGlobal(), typeof(Chat)));
                     }
                 }
             }

@@ -25,104 +25,104 @@
 
     <style>
         body {
-        background-color: #222;
-        color: #f1f1f1;
-        margin-top: 17px;
-        margin-left: 12px;
-        margin-right: 12px;
+            background-color: #222;
+            color: #f1f1f1;
+            margin-top: 17px;
+            margin-left: 12px;
+            margin-right: 12px;
         }
 
         p {
-        margin: 0;
-        /*margin: 10px 10px;*/
+            margin: 0;
+            /*margin: 10px 10px;*/
         }
 
         /*Message styling*/
         .sent-message,
         .received-message {
-        /*display: inline-block;*/
-        border-radius: 10px;
-        /*padding: 7px 10px 3px 10px;*/
-        /*word-wrap: break-word;*/
-        /*margin-top: 7px;*/
-        font-size: 14px;
-        margin-bottom: 2px;
+            /*display: inline-block;*/
+            border-radius: 10px;
+            /*padding: 7px 10px 3px 10px;*/
+            /*word-wrap: break-word;*/
+            /*margin-top: 7px;*/
+            font-size: 14px;
+            margin-bottom: 2px;
         }
 
         .sent-message-wrapper {
-        text-align: right;
-        /*margin-bottom: 5px;*/
-        padding-left: 25%;
+            text-align: right;
+            /*margin-bottom: 5px;*/
+            padding-left: 25%;
         }
 
         .received-message-wrapper {
-        text-align: left;
-        padding-right: 25%;
-        margin-bottom: 10px;
+            text-align: left;
+            padding-right: 25%;
+            margin-bottom: 10px;
         }
 
         .metadata {
-        font-size: 12px;
-        color: #777;
-        font-style: italic;
-        display: block;
-        /*margin-top: 2px;*/
-        margin-right: 3px;
-        margin-left: 3px;
+            font-size: 12px;
+            color: #777;
+            font-style: italic;
+            display: block;
+            /*margin-top: 2px;*/
+            margin-right: 3px;
+            margin-left: 3px;
         }
 
         .sent-message-wrapper .metadata {
-        text-align: right;
-        /*padding: 0px 4px;*/
+            text-align: right;
+            /*padding: 0px 4px;*/
         }
 
         .received-message-wrapper .metadata {
-        text-align: left;
-        /*padding: 0px 4px;*/
+            text-align: left;
+            /*padding: 0px 4px;*/
         }
 
         /*table styling*/
         table {
-        border-collapse: collapse;
-        width: auto;
-        border: 1px solid #555;
-        /*margin-top: 10px;*/
-        /*margin-bottom: 10px;*/
-        white-space: nowrap;
-        max-width: 100%;
-        overflow: auto;
+            border-collapse: collapse;
+            width: auto;
+            border: 1px solid #555;
+            /*margin-top: 10px;*/
+            /*margin-bottom: 10px;*/
+            white-space: nowrap;
+            max-width: 100%;
+            overflow: auto;
         }
 
         tr {
-        transition: background-color 0.2s ease-in-out;
+            transition: background-color 0.2s ease-in-out;
         }
 
-        tr:hover {
-        background-color: #444;
-        }
+            tr:hover {
+                background-color: #444;
+            }
 
-        tr:nth-child(odd) {
-        background-color: #333;
-        }
+            tr:nth-child(odd) {
+                background-color: #333;
+            }
 
-        tr:nth-child(even) {
-        background-color: #2a2a2a;
-        }
+            tr:nth-child(even) {
+                background-color: #2a2a2a;
+            }
 
         th {
-        font-weight: bold;
-        background-color: #1e1e1e;
-        /*padding: 8px;*/
-        text-align: left;
-        border-bottom: 2px solid #555;
-        color: #f1f1f1;
+            font-weight: bold;
+            background-color: #1e1e1e;
+            /*padding: 8px;*/
+            text-align: left;
+            border-bottom: 2px solid #555;
+            color: #f1f1f1;
         }
 
         td {
-        /*padding: 8px;*/
-        text-align: left;
-        border-bottom: 1px solid #555;
-        color: #f1f1f1;
+            /*padding: 8px;*/
+            text-align: left;
+            border-bottom: 1px solid #555;
+            color: #f1f1f1;
         }
 
         /*th {
@@ -131,105 +131,105 @@
 
         /*Line numbers styling*/
         .hljs-ln-numbers {
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        text-align: center;
-        color: #ccc;
-        border-right: 1px solid rgba(204, 204, 204, 0.514);
-        vertical-align: top;
-        word-break: normal; /* Avoid a line break on large line numbers */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            text-align: center;
+            color: #ccc;
+            border-right: 1px solid rgba(204, 204, 204, 0.514);
+            vertical-align: top;
+            word-break: normal; /* Avoid a line break on large line numbers */
         }
 
         .hljs-ln td:nth-child(1) {
-        padding-right: 5px;
+            padding-right: 5px;
         }
 
         .hljs-ln td:nth-child(2) {
-        padding-left: 5px;
+            padding-left: 5px;
         }
 
         /*code table/block styling*/
 
         pre {
-        margin-top: 0px;
-        margin-bottom: 0px;
+            margin-top: 0px;
+            margin-bottom: 0px;
         }
 
         .code-block {
-        display: inline-block;
-        max-width: 100%;
+            display: inline-block;
+            max-width: 100%;
         }
 
-        .code-block pre {
-        display: inline-block;
-        }
+            .code-block pre {
+                display: inline-block;
+            }
 
-        .code-block table {
-        border: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        }
+            .code-block table {
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
 
-        .code-block table {
-        /*padding: 0;*/
-        /*margin: 0;*/
-        background-color: transparent;
-        }
+            .code-block table {
+                /*padding: 0;*/
+                /*margin: 0;*/
+                background-color: transparent;
+            }
 
-        .code-block table tr,
-        .code-block table th,
-        .code-block table td {
-        /*padding: 0;*/
-        /*margin: 0;*/
-        background-color: transparent;
-        border: none;
-        }
+                .code-block table tr,
+                .code-block table th,
+                .code-block table td {
+                    /*padding: 0;*/
+                    /*margin: 0;*/
+                    background-color: transparent;
+                    border: none;
+                }
 
-        .copy-button {
-        font: inherit;
-        cursor: pointer;
-        outline: none;
-        background: none;
-        border: none;
-        /*display: inline;*/
-        color: white;
-        max-width: 14px;
+        .copy-button { /* TODO: Knappen er for stor i venstre side og sidder forkert.*/
+            font: inherit;
+            cursor: pointer;
+            outline: none;
+            background: none;
+            border: none;
+            /*display: inline;*/
+            color: white;
+            max-width: 14px;
         }
 
         .copy.button:focus {
-        outline: none;
+            outline: none;
         }
 
         .copy-button:active {
-        color: #ccc;
+            color: #ccc;
         }
 
         .text-button:hover {
-        text-decoration: underline;
+            text-decoration: underline;
         }
 
         .copy-button,
         .language-label {
-        font-size: 14px;
+            font-size: 14px;
         }
 
         .code-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 5px 8px;
-        background-color: #1e1e1e;
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 8px;
+            background-color: #1e1e1e;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
         }
 
         .language-label {
-        color: white;
-        font-weight: bold;
+            color: white;
+            font-weight: bold;
         }
     </style>
 
@@ -245,81 +245,81 @@
         const clipboard = new ClipboardJS('.copy-button');
 
         clipboard.on('success', function (e) {
-        e.trigger.textContent = 'Copied';
-        setTimeout(function () {
-        e.trigger.textContent = 'Copy code';
-        }, 2000);
+            e.trigger.textContent = 'Copied';
+            setTimeout(function () {
+                e.trigger.textContent = 'Copy code';
+            }, 2000);
 
-        e.clearSelection();
+            e.clearSelection();
         });
 
         clipboard.on('error', function (e) {
-        e.trigger.textContent = 'Error';
-        setTimeout(function () {
-        e.trigger.textContent = 'Copy code';
-        }, 2000);
+            e.trigger.textContent = 'Error';
+            setTimeout(function () {
+                e.trigger.textContent = 'Copy code';
+            }, 2000);
         });
 
         const md = window.markdownit({
-        // Defaults to false
-        // Enable HTML tags in source
-        html: false,
+            // Defaults to false
+            // Enable HTML tags in source
+            html: false,
 
-        // Defaults to false
-        // Use '/' to close single tags (<br />).
-        // This is only for full CommonMark compatibility.
-        xhtmlOut: false,
+            // Defaults to false
+            // Use '/' to close single tags (<br />).
+            // This is only for full CommonMark compatibility.
+            xhtmlOut: false,
 
-        // Defaults to false
-        // Convert '\n' in paragraphs into <br>
-        breaks: false,
+            // Defaults to false
+            // Convert '\n' in paragraphs into <br>
+            breaks: false,
 
-        // Defaults to 'language-'
-        // CSS language prefix for fenced blocks. Can be
-        // useful for external highlighters.
-        langPrefix: 'language-',
+            // Defaults to 'language-'
+            // CSS language prefix for fenced blocks. Can be
+            // useful for external highlighters.
+            langPrefix: 'language-',
 
-        // Defaults to false
-        // Autoconvert URL-like text to links
-        linkify: true,
+            // Defaults to false
+            // Autoconvert URL-like text to links
+            linkify: true,
 
-        // Defaults to false
-        // Enable some language-neutral replacement + quotes beautification
-        // For the full list of replacements, see https://github.com/markdown-it/markdown-it/blob/master/lib/rules_core/replacements.js
-        typographer: true,
+            // Defaults to false
+            // Enable some language-neutral replacement + quotes beautification
+            // For the full list of replacements, see https://github.com/markdown-it/markdown-it/blob/master/lib/rules_core/replacements.js
+            typographer: true,
 
-        // Defaults to '“”‘’'
-        // Double + single quotes replacement pairs, when typographer enabled,
-        // and smartquotes on. Could be either a String or an Array.
-        // For example, you can use '«»„“' for Russian, '„“‚‘' for German,
-        // and ['«\xA0', '\xA0»', '‹\xA0', '\xA0›'] for French (including nbsp).
-        quotes: '“”‘’',
+            // Defaults to '“”‘’'
+            // Double + single quotes replacement pairs, when typographer enabled,
+            // and smartquotes on. Could be either a String or an Array.
+            // For example, you can use '«»„“' for Russian, '„“‚‘' for German,
+            // and ['«\xA0', '\xA0»', '‹\xA0', '\xA0›'] for French (including nbsp).
+            quotes: '“”‘’',
 
-        highlight: function (code, lang) {
-        let result;
+            highlight: function (code, lang) {
+                let result;
 
-        try {
-        result = hljs.highlightAuto(code);
-        } catch (__) {
-        result = md.utils.escapeHtml(code);
-        }
+                try {
+                    result = hljs.highlightAuto(code);
+                } catch (__) {
+                    result = md.utils.escapeHtml(code);
+                }
 
-        return `<div class="code-block">
-        <div class="code-header">
-        <span class="language-label">${result.language}</span>
-        <button class="copy-button" data-clipboard-target="pre" data-clipboard-action="copy">
-        Copy code
-        </button>
-        </div>
-        <pre><code class="hljs" data-line-numbers>${result.value}</code></pre>
-        </div>`;
-        }
+                return `<div class="code-block">
+            <div class="code-header">
+            <span class="language-label">${result.language}</span>
+            <button class="copy-button" data-clipboard-target="pre" data-clipboard-action="copy">
+            Copy code
+            </button>
+            </div>
+            <pre><code class="hljs" data-line-numbers>${result.value}</code></pre>
+            </div>`;
+            }
         });
 
         function setProgrammingLanguagesToHighlight(languagesToHighlightJsonArray) {
-        //hljs.configure({
-        //    languages: languagesToHighlightJsonArray,
-        //}); // TODO: Burde virke, men gør ikke.
+            //hljs.configure({
+            //    languages: languagesToHighlightJsonArray,
+            //}); // TODO: Burde virke, men gør ikke.
         }
 
         //// Languages
@@ -328,95 +328,97 @@
         //chat.appendChild(test);
 
         function appendMessageChunkToChat(encodedContent, isSender, isFirstChunk) {
-        // Decode the Base64 encoded content. The content is encoded to avoid issues with new line characters
-        const content = atob(encodedContent);
+            // Decode the Base64 encoded content. The content is encoded to avoid issues with new line characters
+            const content = atob(encodedContent);
 
-        if (isFirstChunk) {
-        // Clear the accumulated content for a new message
-        currentMessage = '';
+            if (isFirstChunk) {
+                // Clear the accumulated content for a new message
+                currentMessage = '';
 
-        // Create a new wrapper for the new message
-        messageWrapper = document.createElement('div');
-        messageWrapper.className = isSender ? 'sent-message-wrapper' : 'received-message-wrapper';
-        chat.appendChild(messageWrapper);
-        }
+                // Create a new wrapper for the new message
+                messageWrapper = document.createElement('div');
+                messageWrapper.className = isSender ? 'sent-message-wrapper' : 'received-message-wrapper';
+                chat.appendChild(messageWrapper);
+            }
 
-        // Accumulate the content
-        currentMessage += content;
+            // Accumulate the content
+            currentMessage += content;
 
-        const markedDownContent = md.render(currentMessage);
+            const markedDownContent = md.render(currentMessage);
 
-        // Create a temporary container to hold the content
-        const tempContainer = document.createElement('div');
-        tempContainer.innerHTML = markedDownContent;
+            // Create a temporary container to hold the content
+            const tempContainer = document.createElement('div');
+            tempContainer.innerHTML = markedDownContent;
 
-        // Clear the current message container
-        messageWrapper.innerHTML = '';
+            // Clear the current message container
+            messageWrapper.innerHTML = '';
 
-        let currentItemContainer;
+            let currentItemContainer;
 
-        tempContainer.childNodes.forEach((node) => {
-        if (node.tagName === 'TABLE') {
-        // If the current node is a table, wrap it with a container and append it to the messageWrapper
-        currentItemContainer = document.createElement('div');
-        currentItemContainer.className = isSender ? 'sent-message' : 'received-message';
-        currentItemContainer.appendChild(node.cloneNode(true));
-        messageWrapper.appendChild(currentItemContainer);
-        } else {
-        // If the current node is not a table, create a new container, append the node, and add it to the messageWrapper
-        currentItemContainer = document.createElement('div');
-        currentItemContainer.className = isSender ? 'sent-message' : 'received-message';
-        currentItemContainer.appendChild(node.cloneNode(true));
-        messageWrapper.appendChild(currentItemContainer);
-        }
-        });
+            tempContainer.childNodes.forEach((node) => {
+                if (node.tagName === 'TABLE') {
+                    // If the current node is a table, wrap it with a container and append it to the messageWrapper
+                    currentItemContainer = document.createElement('div');
+                    currentItemContainer.className = isSender ? 'sent-message' : 'received-message';
+                    currentItemContainer.appendChild(node.cloneNode(true));
+                    messageWrapper.appendChild(currentItemContainer);
+                } else {
+                    // If the current node is not a table, create a new container, append the node, and add it to the messageWrapper
+                    currentItemContainer = document.createElement('div');
+                    currentItemContainer.className = isSender ? 'sent-message' : 'received-message';
+                    currentItemContainer.appendChild(node.cloneNode(true));
+                    messageWrapper.appendChild(currentItemContainer);
+                }
+            });
 
-        const codeBlocks = messageWrapper.querySelectorAll('pre > code.hljs[data-line-numbers]');
-        codeBlocks.forEach(codeBlock => {
-        hljs.lineNumbersBlock(codeBlock);
-        });
+            const codeBlocks = messageWrapper.querySelectorAll('pre > code.hljs[data-line-numbers]');
+            codeBlocks.forEach(codeBlock => {
+                hljs.lineNumbersBlock(codeBlock);
+            });
         }
 
         function addTimeAndTokenCostTolatestMessage(tokenCostLatestMessage, datetimeOffsetString) {
-        addTimestampToLatestMessage(datetimeOffsetString);
-        addTokenCostToLatestMessage(tokenCostLatestMessage);
+            addTimestampToLatestMessage(datetimeOffsetString);
+            addTokenCostToLatestMessage(tokenCostLatestMessage);
         }
 
         function addTokenCostToLatestMessage(tokenCostLatestMessage) {
-        const tokenCostElement = document.createElement('span');
-        tokenCostElement.className = 'metadata';
-        tokenCostElement.textContent = `Token cost (prompt + completion): ${tokenCostLatestMessage}`;
+            const tokenCostElement = document.createElement('span');
+            tokenCostElement.className = 'metadata';
+            tokenCostElement.textContent = `Token cost (prompt + completion): ${tokenCostLatestMessage}`;
 
-        // Append
-        if (messageWrapper) {
-        messageWrapper.appendChild(tokenCostElement);
-        }
+            // Append
+            if (messageWrapper) {
+                messageWrapper.appendChild(tokenCostElement);
+            }
         }
 
-        function addTimestampToLatestMessage(datetimeOffsetString) {
-        // Timestamp
-        const timestampElement = document.createElement('span');
-        timestampElement.className = 'metadata';
-        timestampElement.textContent = formatTimestamp(datetimeOffsetString);
+        function addTimestampToLatestMessage(datetimeOffsetString) { // TODO: Virker pludselig ikke fordi dato formattet er forkert.
 
-        // Append
-        if (messageWrapper) {
-        messageWrapper.appendChild(timestampElement);
-        }
+            console.log(datetimeOffsetString); // TODO: Remove
+            // Timestamp
+            const timestampElement = document.createElement('span');
+            timestampElement.className = 'metadata';
+            timestampElement.textContent = formatTimestamp(datetimeOffsetString);
+
+            // Append
+            if (messageWrapper) {
+                messageWrapper.appendChild(timestampElement);
+            }
         }
 
         function formatTimestamp(datetimeOffsetString) {
-        const date = new Date(datetimeOffsetString);
+            const date = new Date(datetimeOffsetString);
 
-        const day = String(date.getDay()).padStart(2, '0');
-        const month = String(date.getMonth()).padStart(2, '0');
-        const year = String(date.getFullYear()).padStart(2, '0');
+            const day = String(date.getDay()).padStart(2, '0');
+            const month = String(date.getMonth()).padStart(2, '0');
+            const year = String(date.getFullYear()).padStart(2, '0');
 
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        const seconds = String(date.getSeconds()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
 
-        return `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
+            return `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
         }
     </script>
 </body>

@@ -8,6 +8,12 @@ namespace Middleware;
 public sealed class Chat : IGptChat
 {
     private readonly dynamic _chatInstance;
+    private volatile bool _isReplying; // TODO: Volatile?
+
+    public bool IsReplying
+    {
+        get => _isReplying;
+    }
 
     public Chat()
     {
@@ -20,6 +26,13 @@ public sealed class Chat : IGptChat
 
     public async IAsyncEnumerable<ChatResult> SendMessageAsync(string prompt)
     {
+        if (IsReplying)
+        {
+            throw new InvalidOperationException("Can't send a new message while receiving or sending a message.");
+        }
+
+        _isReplying = true;
+
         var channel = Channel.CreateUnbounded<ChatResult>();
         _ = Task.Run(() =>
         {
@@ -53,6 +66,7 @@ public sealed class Chat : IGptChat
             }
             finally
             {
+                _isReplying = false;
                 channel.Writer.Complete();
             }
         });
