@@ -32,6 +32,8 @@
 
         void SetLogitBias(string logitBias = "None");
 
+        void SetFirstSystemMessage(string firstSystemMessage = "You are ChatGPT, a large language model trained by OpenAI, based on the GPT-4 architecture. Knowledge cutoff: {cutoff_date}, Current date: {current_date}");
+
         string GetOpenAiOrganizationGlobal();
 
         string GetOpenAiApiKeyGlobal();
@@ -57,5 +59,7 @@
         string GetStopGlobal();
 
         string GetLogitBiasGlobal();
+
+        string GetFirstSystemMessage();
     }
 }

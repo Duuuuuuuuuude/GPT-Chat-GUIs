@@ -32,35 +32,37 @@ namespace GPT_Chat_Desktop
         private void InitializeComponent()
         {
             splitContainerContentAndSettings = new SplitContainer();
+            txtBoxFirstSystemMessage = new TextBox();
+            lblFirstSystemMessage = new Label();
             btnTable = new Button();
             JavaMethod = new Button();
             chkShowKey = new CheckBox();
             chkShowOrganization = new CheckBox();
-            txtLogitBias = new TextBox();
+            txtBoxLogitBias = new TextBox();
             lblLogitBias = new Label();
-            txtStop = new TextBox();
+            txtBoxStop = new TextBox();
             lblStop = new Label();
-            txtPresencePenalty = new TextBox();
+            txtBoxPresencePenalty = new TextBox();
             lblPresencePenalty = new Label();
-            txtFrequencyPenalty = new TextBox();
+            txtBoxFrequencyPenalty = new TextBox();
             lblFrequencyPenalty = new Label();
-            txtN = new TextBox();
+            txtBoxN = new TextBox();
             lblN = new Label();
-            txtTopP = new TextBox();
+            txtBoxTopP = new TextBox();
             lblTopP = new Label();
-            txtTemperature = new TextBox();
+            txtBoxTemperature = new TextBox();
             lblTemperature = new Label();
-            txtTokenLimit = new TextBox();
+            txtBoxTokenLimit = new TextBox();
             lblTokenLimit = new Label();
-            txtMaxResponseTokens = new TextBox();
+            txtBoxMaxResponseTokens = new TextBox();
             lblMaxResponseTokens = new Label();
-            txtModelId = new TextBox();
+            txtBoxModelId = new TextBox();
             lblModelId = new Label();
-            txtUsername = new TextBox();
+            txtBoxUsername = new TextBox();
             lblUserName = new Label();
-            txtOpenAiKey = new TextBox();
+            txtBoxOpenAiKey = new TextBox();
             lblOpenAiKey = new Label();
-            txtOpenAiOrganization = new TextBox();
+            txtBoxOpenAiOrganization = new TextBox();
             lblOpenAiOrganization = new Label();
             lblTokenCostFullConversation = new Label();
             lblFinishReason = new Label();
@@ -82,35 +84,37 @@ namespace GPT_Chat_Desktop
             // 
             // splitContainerContentAndSettings.Panel1
             // 
+            splitContainerContentAndSettings.Panel1.Controls.Add(txtBoxFirstSystemMessage);
+            splitContainerContentAndSettings.Panel1.Controls.Add(lblFirstSystemMessage);
             splitContainerContentAndSettings.Panel1.Controls.Add(btnTable);
             splitContainerContentAndSettings.Panel1.Controls.Add(JavaMethod);
             splitContainerContentAndSettings.Panel1.Controls.Add(chkShowKey);
             splitContainerContentAndSettings.Panel1.Controls.Add(chkShowOrganization);
-            splitContainerContentAndSettings.Panel1.Controls.Add(txtLogitBias);
+            splitContainerContentAndSettings.Panel1.Controls.Add(txtBoxLogitBias);
             splitContainerContentAndSettings.Panel1.Controls.Add(lblLogitBias);
-            splitContainerContentAndSettings.Panel1.Controls.Add(txtStop);
+            splitContainerContentAndSettings.Panel1.Controls.Add(txtBoxStop);
             splitContainerContentAndSettings.Panel1.Controls.Add(lblStop);
-            splitContainerContentAndSettings.Panel1.Controls.Add(txtPresencePenalty);
+            splitContainerContentAndSettings.Panel1.Controls.Add(txtBoxPresencePenalty);
             splitContainerContentAndSettings.Panel1.Controls.Add(lblPresencePenalty);
-            splitContainerContentAndSettings.Panel1.Controls.Add(txtFrequencyPenalty);
+            splitContainerContentAndSettings.Panel1.Controls.Add(txtBoxFrequencyPenalty);
             splitContainerContentAndSettings.Panel1.Controls.Add(lblFrequencyPenalty);
-            splitContainerContentAndSettings.Panel1.Controls.Add(txtN);
+            splitContainerContentAndSettings.Panel1.Controls.Add(txtBoxN);
             splitContainerContentAndSettings.Panel1.Controls.Add(lblN);
-            splitContainerContentAndSettings.Panel1.Controls.Add(txtTopP);
+            splitContainerContentAndSettings.Panel1.Controls.Add(txtBoxTopP);
             splitContainerContentAndSettings.Panel1.Controls.Add(lblTopP);
-            splitContainerContentAndSettings.Panel1.Controls.Add(txtTemperature);
+            splitContainerContentAndSettings.Panel1.Controls.Add(txtBoxTemperature);
             splitContainerContentAndSettings.Panel1.Controls.Add(lblTemperature);
-            splitContainerContentAndSettings.Panel1.Controls.Add(txtTokenLimit);
+            splitContainerContentAndSettings.Panel1.Controls.Add(txtBoxTokenLimit);
             splitContainerContentAndSettings.Panel1.Controls.Add(lblTokenLimit);
-            splitContainerContentAndSettings.Panel1.Controls.Add(txtMaxResponseTokens);
+            splitContainerContentAndSettings.Panel1.Controls.Add(txtBoxMaxResponseTokens);
             splitContainerContentAndSettings.Panel1.Controls.Add(lblMaxResponseTokens);
-            splitContainerContentAndSettings.Panel1.Controls.Add(txtModelId);
+            splitContainerContentAndSettings.Panel1.Controls.Add(txtBoxModelId);
             splitContainerContentAndSettings.Panel1.Controls.Add(lblModelId);
-            splitContainerContentAndSettings.Panel1.Controls.Add(txtUsername);
+            splitContainerContentAndSettings.Panel1.Controls.Add(txtBoxUsername);
             splitContainerContentAndSettings.Panel1.Controls.Add(lblUserName);
-            splitContainerContentAndSettings.Panel1.Controls.Add(txtOpenAiKey);
+            splitContainerContentAndSettings.Panel1.Controls.Add(txtBoxOpenAiKey);
             splitContainerContentAndSettings.Panel1.Controls.Add(lblOpenAiKey);
-            splitContainerContentAndSettings.Panel1.Controls.Add(txtOpenAiOrganization);
+            splitContainerContentAndSettings.Panel1.Controls.Add(txtBoxOpenAiOrganization);
             splitContainerContentAndSettings.Panel1.Controls.Add(lblOpenAiOrganization);
             splitContainerContentAndSettings.Panel1.Controls.Add(lblTokenCostFullConversation);
             splitContainerContentAndSettings.Panel1.Controls.Add(lblFinishReason);
@@ -120,13 +124,33 @@ namespace GPT_Chat_Desktop
             // splitContainerContentAndSettings.Panel2
             // 
             splitContainerContentAndSettings.Panel2.Controls.Add(tabCtrlChats);
-            splitContainerContentAndSettings.Size = new Size(1230, 892);
+            splitContainerContentAndSettings.Size = new Size(1234, 944);
             splitContainerContentAndSettings.SplitterDistance = 307;
             splitContainerContentAndSettings.TabIndex = 0;
             // 
+            // txtBoxFirstSystemMessage
+            // 
+            txtBoxFirstSystemMessage.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtBoxFirstSystemMessage.BackColor = Color.FromArgb(224, 224, 224);
+            txtBoxFirstSystemMessage.Location = new Point(13, 817);
+            txtBoxFirstSystemMessage.Name = "txtBoxFirstSystemMessage";
+            txtBoxFirstSystemMessage.Size = new Size(286, 27);
+            txtBoxFirstSystemMessage.TabIndex = 35;
+            txtBoxFirstSystemMessage.TextChanged += txtBoxFirstSystemMessage_TextChanged;
+            // 
+            // lblFirstSystemMessage
+            // 
+            lblFirstSystemMessage.AutoSize = true;
+            lblFirstSystemMessage.ForeColor = Color.White;
+            lblFirstSystemMessage.Location = new Point(13, 794);
+            lblFirstSystemMessage.Name = "lblFirstSystemMessage";
+            lblFirstSystemMessage.Size = new Size(149, 20);
+            lblFirstSystemMessage.TabIndex = 34;
+            lblFirstSystemMessage.Text = "First System Message";
+            // 
             // btnTable
             // 
-            btnTable.Location = new Point(23, 847);
+            btnTable.Location = new Point(18, 897);
             btnTable.Name = "btnTable";
             btnTable.Size = new Size(94, 29);
             btnTable.TabIndex = 33;
@@ -136,7 +160,7 @@ namespace GPT_Chat_Desktop
             // 
             // JavaMethod
             // 
-            JavaMethod.Location = new Point(23, 812);
+            JavaMethod.Location = new Point(18, 862);
             JavaMethod.Name = "JavaMethod";
             JavaMethod.Size = new Size(117, 29);
             JavaMethod.TabIndex = 32;
@@ -168,15 +192,15 @@ namespace GPT_Chat_Desktop
             chkShowOrganization.UseVisualStyleBackColor = true;
             chkShowOrganization.CheckedChanged += chkShowOrganization_CheckedChanged;
             // 
-            // txtLogitBias
+            // txtBoxLogitBias
             // 
-            txtLogitBias.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtLogitBias.BackColor = Color.FromArgb(224, 224, 224);
-            txtLogitBias.Location = new Point(13, 761);
-            txtLogitBias.Name = "txtLogitBias";
-            txtLogitBias.Size = new Size(286, 27);
-            txtLogitBias.TabIndex = 29;
-            txtLogitBias.TextChanged += txtLogitBias_TextChanged;
+            txtBoxLogitBias.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtBoxLogitBias.BackColor = Color.FromArgb(224, 224, 224);
+            txtBoxLogitBias.Location = new Point(13, 761);
+            txtBoxLogitBias.Name = "txtBoxLogitBias";
+            txtBoxLogitBias.Size = new Size(286, 27);
+            txtBoxLogitBias.TabIndex = 29;
+            txtBoxLogitBias.TextChanged += TxtBoxLogitBiasTextChanged;
             // 
             // lblLogitBias
             // 
@@ -188,15 +212,15 @@ namespace GPT_Chat_Desktop
             lblLogitBias.TabIndex = 28;
             lblLogitBias.Text = "Logit Bias";
             // 
-            // txtStop
+            // txtBoxStop
             // 
-            txtStop.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtStop.BackColor = Color.FromArgb(224, 224, 224);
-            txtStop.Location = new Point(12, 708);
-            txtStop.Name = "txtStop";
-            txtStop.Size = new Size(287, 27);
-            txtStop.TabIndex = 27;
-            txtStop.TextChanged += txtStop_TextChanged;
+            txtBoxStop.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtBoxStop.BackColor = Color.FromArgb(224, 224, 224);
+            txtBoxStop.Location = new Point(12, 708);
+            txtBoxStop.Name = "txtBoxStop";
+            txtBoxStop.Size = new Size(287, 27);
+            txtBoxStop.TabIndex = 27;
+            txtBoxStop.TextChanged += TxtBoxStopTextChanged;
             // 
             // lblStop
             // 
@@ -208,15 +232,15 @@ namespace GPT_Chat_Desktop
             lblStop.TabIndex = 26;
             lblStop.Text = "Stop";
             // 
-            // txtPresencePenalty
+            // txtBoxPresencePenalty
             // 
-            txtPresencePenalty.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtPresencePenalty.BackColor = Color.FromArgb(224, 224, 224);
-            txtPresencePenalty.Location = new Point(12, 655);
-            txtPresencePenalty.Name = "txtPresencePenalty";
-            txtPresencePenalty.Size = new Size(287, 27);
-            txtPresencePenalty.TabIndex = 25;
-            txtPresencePenalty.TextChanged += txtPresencePenalty_TextChanged;
+            txtBoxPresencePenalty.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtBoxPresencePenalty.BackColor = Color.FromArgb(224, 224, 224);
+            txtBoxPresencePenalty.Location = new Point(12, 655);
+            txtBoxPresencePenalty.Name = "txtBoxPresencePenalty";
+            txtBoxPresencePenalty.Size = new Size(287, 27);
+            txtBoxPresencePenalty.TabIndex = 25;
+            txtBoxPresencePenalty.TextChanged += TxtBoxPresencePenaltyTextChanged;
             // 
             // lblPresencePenalty
             // 
@@ -228,15 +252,15 @@ namespace GPT_Chat_Desktop
             lblPresencePenalty.TabIndex = 24;
             lblPresencePenalty.Text = "Presence Penalty";
             // 
-            // txtFrequencyPenalty
+            // txtBoxFrequencyPenalty
             // 
-            txtFrequencyPenalty.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtFrequencyPenalty.BackColor = Color.FromArgb(224, 224, 224);
-            txtFrequencyPenalty.Location = new Point(12, 602);
-            txtFrequencyPenalty.Name = "txtFrequencyPenalty";
-            txtFrequencyPenalty.Size = new Size(287, 27);
-            txtFrequencyPenalty.TabIndex = 23;
-            txtFrequencyPenalty.TextChanged += txtFrequencyPenalty_TextChanged;
+            txtBoxFrequencyPenalty.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtBoxFrequencyPenalty.BackColor = Color.FromArgb(224, 224, 224);
+            txtBoxFrequencyPenalty.Location = new Point(12, 602);
+            txtBoxFrequencyPenalty.Name = "txtBoxFrequencyPenalty";
+            txtBoxFrequencyPenalty.Size = new Size(287, 27);
+            txtBoxFrequencyPenalty.TabIndex = 23;
+            txtBoxFrequencyPenalty.TextChanged += TxtBoxFrequencyPenaltyTextChanged;
             // 
             // lblFrequencyPenalty
             // 
@@ -248,15 +272,15 @@ namespace GPT_Chat_Desktop
             lblFrequencyPenalty.TabIndex = 22;
             lblFrequencyPenalty.Text = "Frequency Penalty";
             // 
-            // txtN
+            // txtBoxN
             // 
-            txtN.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtN.BackColor = Color.FromArgb(224, 224, 224);
-            txtN.Location = new Point(12, 549);
-            txtN.Name = "txtN";
-            txtN.Size = new Size(287, 27);
-            txtN.TabIndex = 21;
-            txtN.TextChanged += txtN_TextChanged;
+            txtBoxN.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtBoxN.BackColor = Color.FromArgb(224, 224, 224);
+            txtBoxN.Location = new Point(12, 549);
+            txtBoxN.Name = "txtBoxN";
+            txtBoxN.Size = new Size(287, 27);
+            txtBoxN.TabIndex = 21;
+            txtBoxN.TextChanged += TxtBoxNTextChanged;
             // 
             // lblN
             // 
@@ -268,15 +292,15 @@ namespace GPT_Chat_Desktop
             lblN.TabIndex = 20;
             lblN.Text = "N";
             // 
-            // txtTopP
+            // txtBoxTopP
             // 
-            txtTopP.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtTopP.BackColor = Color.FromArgb(224, 224, 224);
-            txtTopP.Location = new Point(12, 496);
-            txtTopP.Name = "txtTopP";
-            txtTopP.Size = new Size(287, 27);
-            txtTopP.TabIndex = 19;
-            txtTopP.TextChanged += txtTopP_TextChanged;
+            txtBoxTopP.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtBoxTopP.BackColor = Color.FromArgb(224, 224, 224);
+            txtBoxTopP.Location = new Point(12, 496);
+            txtBoxTopP.Name = "txtBoxTopP";
+            txtBoxTopP.Size = new Size(287, 27);
+            txtBoxTopP.TabIndex = 19;
+            txtBoxTopP.TextChanged += TxtBoxTopPTextChanged;
             // 
             // lblTopP
             // 
@@ -288,15 +312,15 @@ namespace GPT_Chat_Desktop
             lblTopP.TabIndex = 18;
             lblTopP.Text = "Top P";
             // 
-            // txtTemperature
+            // txtBoxTemperature
             // 
-            txtTemperature.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtTemperature.BackColor = Color.FromArgb(224, 224, 224);
-            txtTemperature.Location = new Point(12, 443);
-            txtTemperature.Name = "txtTemperature";
-            txtTemperature.Size = new Size(287, 27);
-            txtTemperature.TabIndex = 17;
-            txtTemperature.TextChanged += txtTemperature_TextChanged;
+            txtBoxTemperature.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtBoxTemperature.BackColor = Color.FromArgb(224, 224, 224);
+            txtBoxTemperature.Location = new Point(12, 443);
+            txtBoxTemperature.Name = "txtBoxTemperature";
+            txtBoxTemperature.Size = new Size(287, 27);
+            txtBoxTemperature.TabIndex = 17;
+            txtBoxTemperature.TextChanged += TxtBoxTemperatureTextChanged;
             // 
             // lblTemperature
             // 
@@ -308,15 +332,15 @@ namespace GPT_Chat_Desktop
             lblTemperature.TabIndex = 16;
             lblTemperature.Text = "Temperature";
             // 
-            // txtTokenLimit
+            // txtBoxTokenLimit
             // 
-            txtTokenLimit.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtTokenLimit.BackColor = Color.FromArgb(224, 224, 224);
-            txtTokenLimit.Location = new Point(12, 390);
-            txtTokenLimit.Name = "txtTokenLimit";
-            txtTokenLimit.Size = new Size(287, 27);
-            txtTokenLimit.TabIndex = 15;
-            txtTokenLimit.TextChanged += txtTokenLimit_TextChanged;
+            txtBoxTokenLimit.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtBoxTokenLimit.BackColor = Color.FromArgb(224, 224, 224);
+            txtBoxTokenLimit.Location = new Point(12, 390);
+            txtBoxTokenLimit.Name = "txtBoxTokenLimit";
+            txtBoxTokenLimit.Size = new Size(287, 27);
+            txtBoxTokenLimit.TabIndex = 15;
+            txtBoxTokenLimit.TextChanged += TxtBoxTokenLimitTextChanged;
             // 
             // lblTokenLimit
             // 
@@ -328,15 +352,15 @@ namespace GPT_Chat_Desktop
             lblTokenLimit.TabIndex = 14;
             lblTokenLimit.Text = "Token Limit";
             // 
-            // txtMaxResponseTokens
+            // txtBoxMaxResponseTokens
             // 
-            txtMaxResponseTokens.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtMaxResponseTokens.BackColor = Color.FromArgb(224, 224, 224);
-            txtMaxResponseTokens.Location = new Point(12, 337);
-            txtMaxResponseTokens.Name = "txtMaxResponseTokens";
-            txtMaxResponseTokens.Size = new Size(287, 27);
-            txtMaxResponseTokens.TabIndex = 13;
-            txtMaxResponseTokens.TextChanged += txtMaxResponseTokens_TextChanged;
+            txtBoxMaxResponseTokens.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtBoxMaxResponseTokens.BackColor = Color.FromArgb(224, 224, 224);
+            txtBoxMaxResponseTokens.Location = new Point(12, 337);
+            txtBoxMaxResponseTokens.Name = "txtBoxMaxResponseTokens";
+            txtBoxMaxResponseTokens.Size = new Size(287, 27);
+            txtBoxMaxResponseTokens.TabIndex = 13;
+            txtBoxMaxResponseTokens.TextChanged += TxtBoxMaxResponseTokensTextChanged;
             // 
             // lblMaxResponseTokens
             // 
@@ -348,15 +372,15 @@ namespace GPT_Chat_Desktop
             lblMaxResponseTokens.TabIndex = 12;
             lblMaxResponseTokens.Text = "Max Response Tokens";
             // 
-            // txtModelId
+            // txtBoxModelId
             // 
-            txtModelId.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtModelId.BackColor = Color.FromArgb(224, 224, 224);
-            txtModelId.Location = new Point(12, 284);
-            txtModelId.Name = "txtModelId";
-            txtModelId.Size = new Size(287, 27);
-            txtModelId.TabIndex = 11;
-            txtModelId.TextChanged += txtModelId_TextChanged;
+            txtBoxModelId.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtBoxModelId.BackColor = Color.FromArgb(224, 224, 224);
+            txtBoxModelId.Location = new Point(12, 284);
+            txtBoxModelId.Name = "txtBoxModelId";
+            txtBoxModelId.Size = new Size(287, 27);
+            txtBoxModelId.TabIndex = 11;
+            txtBoxModelId.TextChanged += TxtBoxModelIdTextChanged;
             // 
             // lblModelId
             // 
@@ -368,15 +392,15 @@ namespace GPT_Chat_Desktop
             lblModelId.TabIndex = 10;
             lblModelId.Text = "Model Id";
             // 
-            // txtUsername
+            // txtBoxUsername
             // 
-            txtUsername.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtUsername.BackColor = Color.FromArgb(224, 224, 224);
-            txtUsername.Location = new Point(12, 231);
-            txtUsername.Name = "txtUsername";
-            txtUsername.Size = new Size(287, 27);
-            txtUsername.TabIndex = 9;
-            txtUsername.TextChanged += txtUsername_TextChanged;
+            txtBoxUsername.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtBoxUsername.BackColor = Color.FromArgb(224, 224, 224);
+            txtBoxUsername.Location = new Point(12, 231);
+            txtBoxUsername.Name = "txtBoxUsername";
+            txtBoxUsername.Size = new Size(287, 27);
+            txtBoxUsername.TabIndex = 9;
+            txtBoxUsername.TextChanged += TxtBoxUsernameTextChanged;
             // 
             // lblUserName
             // 
@@ -388,16 +412,16 @@ namespace GPT_Chat_Desktop
             lblUserName.TabIndex = 8;
             lblUserName.Text = "Username";
             // 
-            // txtOpenAiKey
+            // txtBoxOpenAiKey
             // 
-            txtOpenAiKey.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtOpenAiKey.BackColor = Color.FromArgb(224, 224, 224);
-            txtOpenAiKey.Location = new Point(12, 178);
-            txtOpenAiKey.Name = "txtOpenAiKey";
-            txtOpenAiKey.Size = new Size(287, 27);
-            txtOpenAiKey.TabIndex = 7;
-            txtOpenAiKey.UseSystemPasswordChar = true;
-            txtOpenAiKey.TextChanged += txtOpenAiKey_TextChanged;
+            txtBoxOpenAiKey.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtBoxOpenAiKey.BackColor = Color.FromArgb(224, 224, 224);
+            txtBoxOpenAiKey.Location = new Point(12, 178);
+            txtBoxOpenAiKey.Name = "txtBoxOpenAiKey";
+            txtBoxOpenAiKey.Size = new Size(287, 27);
+            txtBoxOpenAiKey.TabIndex = 7;
+            txtBoxOpenAiKey.UseSystemPasswordChar = true;
+            txtBoxOpenAiKey.TextChanged += TxtBoxOpenAiKeyTextChanged;
             // 
             // lblOpenAiKey
             // 
@@ -409,16 +433,16 @@ namespace GPT_Chat_Desktop
             lblOpenAiKey.TabIndex = 6;
             lblOpenAiKey.Text = "OpenAi Key";
             // 
-            // txtOpenAiOrganization
+            // txtBoxOpenAiOrganization
             // 
-            txtOpenAiOrganization.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtOpenAiOrganization.BackColor = Color.FromArgb(224, 224, 224);
-            txtOpenAiOrganization.Location = new Point(12, 125);
-            txtOpenAiOrganization.Name = "txtOpenAiOrganization";
-            txtOpenAiOrganization.Size = new Size(287, 27);
-            txtOpenAiOrganization.TabIndex = 5;
-            txtOpenAiOrganization.UseSystemPasswordChar = true;
-            txtOpenAiOrganization.TextChanged += txtOpenAiOrganization_TextChanged;
+            txtBoxOpenAiOrganization.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtBoxOpenAiOrganization.BackColor = Color.FromArgb(224, 224, 224);
+            txtBoxOpenAiOrganization.Location = new Point(12, 125);
+            txtBoxOpenAiOrganization.Name = "txtBoxOpenAiOrganization";
+            txtBoxOpenAiOrganization.Size = new Size(287, 27);
+            txtBoxOpenAiOrganization.TabIndex = 5;
+            txtBoxOpenAiOrganization.UseSystemPasswordChar = true;
+            txtBoxOpenAiOrganization.TextChanged += TxtBoxOpenAiOrganizationTextChanged;
             // 
             // lblOpenAiOrganization
             // 
@@ -472,7 +496,7 @@ namespace GPT_Chat_Desktop
             BtnNewTab.TabIndex = 0;
             BtnNewTab.Text = "&New Tab";
             BtnNewTab.UseVisualStyleBackColor = false;
-            BtnNewTab.Click += BtnNewTab_ClickASync;
+            BtnNewTab.Click += BtnNewTab_Click;
             // 
             // tabCtrlChats
             // 
@@ -480,7 +504,7 @@ namespace GPT_Chat_Desktop
             tabCtrlChats.Location = new Point(0, 0);
             tabCtrlChats.Name = "tabCtrlChats";
             tabCtrlChats.SelectedIndex = 0;
-            tabCtrlChats.Size = new Size(919, 892);
+            tabCtrlChats.Size = new Size(923, 944);
             tabCtrlChats.TabIndex = 0;
             // 
             // menuStrip1
@@ -488,7 +512,7 @@ namespace GPT_Chat_Desktop
             menuStrip1.ImageScalingSize = new Size(20, 20);
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1230, 24);
+            menuStrip1.Size = new Size(1234, 24);
             menuStrip1.TabIndex = 3;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -497,7 +521,7 @@ namespace GPT_Chat_Desktop
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(34, 34, 34);
-            ClientSize = new Size(1230, 916);
+            ClientSize = new Size(1234, 968);
             Controls.Add(splitContainerContentAndSettings);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
@@ -517,30 +541,30 @@ namespace GPT_Chat_Desktop
 
         private SplitContainer splitContainerContentAndSettings;
         private Label lblLogitBias;
-        private TextBox txtLogitBias;
-        private TextBox txtStop;
+        private TextBox txtBoxLogitBias;
+        private TextBox txtBoxStop;
         private Label lblStop;
-        private TextBox txtPresencePenalty;
+        private TextBox txtBoxPresencePenalty;
         private Label lblPresencePenalty;
-        private TextBox txtFrequencyPenalty;
+        private TextBox txtBoxFrequencyPenalty;
         private Label lblFrequencyPenalty;
-        private TextBox txtN;
+        private TextBox txtBoxN;
         private Label lblN;
-        private TextBox txtTopP;
+        private TextBox txtBoxTopP;
         private Label lblTopP;
-        private TextBox txtTemperature;
+        private TextBox txtBoxTemperature;
         private Label lblTemperature;
-        private TextBox txtTokenLimit;
+        private TextBox txtBoxTokenLimit;
         private Label lblTokenLimit;
-        private TextBox txtMaxResponseTokens;
+        private TextBox txtBoxMaxResponseTokens;
         private Label lblMaxResponseTokens;
-        private TextBox txtModelId;
+        private TextBox txtBoxModelId;
         private Label lblModelId;
-        private TextBox txtUsername;
+        private TextBox txtBoxUsername;
         private Label lblUserName;
-        private TextBox txtOpenAiKey;
+        private TextBox txtBoxOpenAiKey;
         private Label lblOpenAiKey;
-        private TextBox txtOpenAiOrganization;
+        private TextBox txtBoxOpenAiOrganization;
         private Label lblOpenAiOrganization;
         private Label lblTokenCostFullConversation;
         private Label lblFinishReason;
@@ -552,5 +576,7 @@ namespace GPT_Chat_Desktop
         private Button btnTable;
         private MenuStrip menuStrip1;
         private TabControl tabCtrlChats;
+        private TextBox txtBoxFirstSystemMessage;
+        private Label lblFirstSystemMessage;
     }
 }

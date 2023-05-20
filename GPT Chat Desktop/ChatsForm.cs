@@ -103,69 +103,74 @@ public partial class ChatsForm : Form
 
     #region TextBox event handlers
 
-    private void txtOpenAiOrganization_TextChanged(object sender, EventArgs e)
+    private void TxtBoxOpenAiOrganizationTextChanged(object sender, EventArgs e)
     {
         TxtOpenAiOrganizationChanged();
     }
 
-    private void txtOpenAiKey_TextChanged(object sender, EventArgs e)
+    private void TxtBoxOpenAiKeyTextChanged(object sender, EventArgs e)
     {
         TxtOpenAiKeyChanged();
     }
 
-    private void txtUsername_TextChanged(object sender, EventArgs e)
+    private void TxtBoxUsernameTextChanged(object sender, EventArgs e)
     {
         TxtUsernameChanged();
     }
 
-    private void txtModelId_TextChanged(object sender, EventArgs e)
+    private void TxtBoxModelIdTextChanged(object sender, EventArgs e)
     {
         TxtModelIdChanged();
     }
 
-    private void txtMaxResponseTokens_TextChanged(object sender, EventArgs e)
+    private void TxtBoxMaxResponseTokensTextChanged(object sender, EventArgs e)
     {
         TxtMaxResponseTokensChanged();
     }
 
-    private void txtTokenLimit_TextChanged(object sender, EventArgs e)
+    private void TxtBoxTokenLimitTextChanged(object sender, EventArgs e)
     {
         TxtTokenLimitChanged();
     }
 
-    private void txtTemperature_TextChanged(object sender, EventArgs e)
+    private void TxtBoxTemperatureTextChanged(object sender, EventArgs e)
     {
         TxtTemperatureChanged();
     }
 
-    private void txtTopP_TextChanged(object sender, EventArgs e)
+    private void TxtBoxTopPTextChanged(object sender, EventArgs e)
     {
         TxtTopPChanged();
     }
 
-    private void txtN_TextChanged(object sender, EventArgs e)
+    private void TxtBoxNTextChanged(object sender, EventArgs e)
     {
         TxtNChanged();
     }
 
-    private void txtFrequencyPenalty_TextChanged(object sender, EventArgs e)
+    private void TxtBoxFrequencyPenaltyTextChanged(object sender, EventArgs e)
     {
         TxtFrequencyPenaltyChanged();
     }
 
-    private void txtPresencePenalty_TextChanged(object sender, EventArgs e)
+    private void TxtBoxPresencePenaltyTextChanged(object sender, EventArgs e)
     {
         TxtPresencePenaltyChanged();
     }
 
-    private void txtStop_TextChanged(object sender, EventArgs e)
+    private void TxtBoxStopTextChanged(object sender, EventArgs e)
     {
         TxtStopChanged();
     }
 
-    private void txtLogitBias_TextChanged(object sender, EventArgs e)
+    private void TxtBoxLogitBiasTextChanged(object sender, EventArgs e)
     {
         TxtLogitBiasChanged();
+    }
+
+    private void txtBoxFirstSystemMessage_TextChanged(object sender, EventArgs e)
+    {
+        TxtFirstSystemMessageChanged();
     }
 
     #endregion
@@ -178,12 +183,12 @@ public partial class ChatsForm : Form
 
     private void chkShowOrganization_CheckedChanged(object sender, EventArgs e)
     {
-        txtOpenAiOrganization.UseSystemPasswordChar = !chkShowOrganization.Checked;
+        txtBoxOpenAiOrganization.UseSystemPasswordChar = !chkShowOrganization.Checked;
     }
 
     private void chkShowKey_CheckedChanged(object sender, EventArgs e)
     {
-        txtOpenAiKey.UseSystemPasswordChar = !chkShowKey.Checked;
+        txtBoxOpenAiKey.UseSystemPasswordChar = !chkShowKey.Checked;
     }
 
     private void menuItem_CheckedChanged(object sender, EventArgs e)
@@ -329,62 +334,67 @@ public partial class ChatsForm : Form
 
     private void TxtUsernameChanged()
     {
-        _userSettingsGlobalInstance.SetOpenAiApiUserNameGlobal(txtUsername.Text);
+        _userSettingsGlobalInstance.SetOpenAiApiUserNameGlobal(txtBoxUsername.Text);
     }
 
     private void TxtModelIdChanged()
     {
-        _userSettingsGlobalInstance.SetModelIdGlobal(txtModelId.Text);
+        _userSettingsGlobalInstance.SetModelIdGlobal(txtBoxModelId.Text);
     }
 
     private void TxtMaxResponseTokensChanged()
     {
         _userSettingsGlobalInstance.SetMaxResponseTokensGlobal(
-            int.Parse(txtMaxResponseTokens.Text)); // TODO: Brug regex til at slette forkerte inputs.
+            int.Parse(txtBoxMaxResponseTokens.Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
 
     private void TxtTokenLimitChanged()
     {
         _userSettingsGlobalInstance.SetTokenLimitGlobal(
-            int.Parse(txtTokenLimit.Text)); // TODO: Brug regex til at slette forkerte inputs.
+            int.Parse(txtBoxTokenLimit.Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
 
     private void TxtTemperatureChanged()
     {
         _userSettingsGlobalInstance.SetTemperatureGlobal(
-            int.Parse(txtTemperature.Text)); // TODO: Brug regex til at slette forkerte inputs.
+            int.Parse(txtBoxTemperature.Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
 
     private void TxtTopPChanged()
     {
-        _userSettingsGlobalInstance.SetTopP(int.Parse(txtTopP.Text)); // TODO: Brug regex til at slette forkerte inputs.
+        _userSettingsGlobalInstance.SetTopP(int.Parse(txtBoxTopP.Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
 
     private void TxtNChanged()
     {
-        _userSettingsGlobalInstance.SetNGlobal(int.Parse(txtN.Text)); // TODO: Brug regex til at slette forkerte inputs.
+        _userSettingsGlobalInstance.SetNGlobal(int.Parse(txtBoxN.Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
 
     private void TxtFrequencyPenaltyChanged()
     {
-        _userSettingsGlobalInstance.SetFrequencyPenalty(int.Parse(txtFrequencyPenalty
+        _userSettingsGlobalInstance.SetFrequencyPenalty(int.Parse(txtBoxFrequencyPenalty
             .Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
 
     private void TxtPresencePenaltyChanged()
     {
         _userSettingsGlobalInstance.SetPresencePenaltyGlobal(
-            int.Parse(txtPresencePenalty.Text)); // TODO: Brug regex til at slette forkerte inputs.
+            int.Parse(txtBoxPresencePenalty.Text)); // TODO: Brug regex til at slette forkerte inputs.
     }
 
     private void TxtStopChanged()
     {
-        _userSettingsGlobalInstance.SetStopGlobal(txtStop.Text);
+        _userSettingsGlobalInstance.SetStopGlobal(txtBoxStop.Text);
     }
 
     private void TxtLogitBiasChanged()
     {
-        _userSettingsGlobalInstance.SetLogitBias(txtLogitBias.Text);
+        _userSettingsGlobalInstance.SetLogitBias(txtBoxLogitBias.Text);
+    }
+
+    private void TxtFirstSystemMessageChanged()
+    {
+        _userSettingsGlobalInstance.SetFirstSystemMessage(txtBoxFirstSystemMessage.Text);
     }
 
     #endregion
@@ -491,19 +501,20 @@ public partial class ChatsForm : Form
 
     private void InitializeTextBoxes()
     {
-        txtOpenAiOrganization.Text = _userSettingsGlobalInstance.GetOpenAiOrganizationGlobal();
-        txtOpenAiKey.Text = _userSettingsGlobalInstance.GetOpenAiApiKeyGlobal();
-        txtUsername.Text = _userSettingsGlobalInstance.GetOpenAiApiUserNameGlobal();
-        txtModelId.Text = _userSettingsGlobalInstance.GetModelIdGlobal();
-        txtMaxResponseTokens.Text = _userSettingsGlobalInstance.GetMaxResponseTokensGlobal();
-        txtTokenLimit.Text = _userSettingsGlobalInstance.GetTokenLimitGlobal().ToString();
-        txtTemperature.Text = _userSettingsGlobalInstance.GetTemperatureGlobal().ToString();
-        txtTopP.Text = _userSettingsGlobalInstance.GetTopPGlobal().ToString();
-        txtN.Text = _userSettingsGlobalInstance.GetNGlobal().ToString();
-        txtFrequencyPenalty.Text = _userSettingsGlobalInstance.GetFrequencyPenaltyGlobal().ToString();
-        txtPresencePenalty.Text = _userSettingsGlobalInstance.GetPresencePenaltyGlobal().ToString();
-        txtStop.Text = _userSettingsGlobalInstance.GetStopGlobal();
-        txtLogitBias.Text = _userSettingsGlobalInstance.GetLogitBiasGlobal();
+        txtBoxOpenAiOrganization.Text = _userSettingsGlobalInstance.GetOpenAiOrganizationGlobal();
+        txtBoxOpenAiKey.Text = _userSettingsGlobalInstance.GetOpenAiApiKeyGlobal();
+        txtBoxUsername.Text = _userSettingsGlobalInstance.GetOpenAiApiUserNameGlobal();
+        txtBoxModelId.Text = _userSettingsGlobalInstance.GetModelIdGlobal();
+        txtBoxMaxResponseTokens.Text = _userSettingsGlobalInstance.GetMaxResponseTokensGlobal();
+        txtBoxTokenLimit.Text = _userSettingsGlobalInstance.GetTokenLimitGlobal().ToString();
+        txtBoxTemperature.Text = _userSettingsGlobalInstance.GetTemperatureGlobal().ToString();
+        txtBoxTopP.Text = _userSettingsGlobalInstance.GetTopPGlobal().ToString();
+        txtBoxN.Text = _userSettingsGlobalInstance.GetNGlobal().ToString();
+        txtBoxFrequencyPenalty.Text = _userSettingsGlobalInstance.GetFrequencyPenaltyGlobal().ToString();
+        txtBoxPresencePenalty.Text = _userSettingsGlobalInstance.GetPresencePenaltyGlobal().ToString();
+        txtBoxStop.Text = _userSettingsGlobalInstance.GetStopGlobal();
+        txtBoxLogitBias.Text = _userSettingsGlobalInstance.GetLogitBiasGlobal();
+        txtBoxFirstSystemMessage.Text = _userSettingsGlobalInstance.GetFirstSystemMessage();
     }
 
     private void SetFinishReason(string finishReason)

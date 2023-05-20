@@ -3,6 +3,7 @@ import openai
 import tiktoken
 from Persistent_Data.User_Settings_Global import User_Settings_Global
 from Models.ChatResult import ChatResult
+import datetime
 
 class Chat:
 
@@ -10,19 +11,28 @@ class Chat:
         self._token_cost_latest_message = 0
         self._token_cost_full_conversation = 0
 
-        self._conversation = []
-        self._conversation.append({"role": "system", "content": "You are a helpfule assistent.", "name": "system"})
-
         User_Settings_Global().load_User_Settings()
 
-        self.headline = None
+        self._conversation = []
+        self._first_system_base_message_static_part = "You are ChatGPT, a large language model trained by OpenAI, based on the GPT-4 architecture."
+        self._date_format = '%Y-%m-%d'
+        current_date = datetime.datetime.now().strftime('%Y-%m-%d')
+        self._conversation.append({
+                                   "role": "system", 
+                                   "content": env['FIRST_SYSTEM_MESSAGE'].format(cutoff_date=env['MODEL_CUTOFF_DATE'], current_date=current_date), 
+                                   "name": "system"})
+
+        self.cancelled = False
 
         #self.__update_total_num_tokens()
-        
+
     def send_message(self, prompt: str):
         """ Time is yielded as a Unix timestamp """
 
-        self._conversation.append({'role': 'user', 'content': prompt, 'name': env["USER_NAME"]}) # Adds the user's input to the _conversation.
+        self.__update_current_date_cutoff_date_and_system_message_in_conversation()
+        
+        # Adds the user's input to the _conversation.
+        self._conversation.append({'role': 'user', 'content': prompt, 'name': env["USER_NAME"]})
 
         # Deletes the oldest message in the _conversation until the _conversation is within the token limit.
         conv_history_tokens = self.__num_tokens_in_current_conversation(env["model_id"])
@@ -37,12 +47,9 @@ class Chat:
 
         # Yield the response in chunks.
         response =  self.__send_chat_gpt_request()
-        #i = 0
         for i, chunk in enumerate(response):
-            # TODO
-            #if(cancelled):
-            #    break
-                
+            if(self.cancelled):
+                break
             if i == 0:
                 role = chunk['choices'][0]['delta']['role']
             else:
@@ -56,7 +63,7 @@ class Chat:
                 chat_result.created_local_date_time = chunk['created']
 
                 yield chat_result
-            #i += 1
+
         self._conversation.append({'role': role, 'content': full_content}) # Add the response to the _conversation.
 
         self.__update_total_num_tokens()
@@ -65,6 +72,7 @@ class Chat:
         chat_result.token_cost_full_conversation = self._token_cost_full_conversation
 
         yield chat_result
+
 
     def __send_chat_gpt_request(self):    
         User_Settings_Global.is_required_invironment_variables_set()
@@ -129,6 +137,7 @@ class Chat:
 
         return response
 
+
     def __update_total_num_tokens(self):
         num_tokens_latest_conversation = self.__num_tokens_in_current_conversation(model=env["MODEL_ID"])
 
@@ -137,14 +146,21 @@ class Chat:
         self._token_cost_full_conversation = num_tokens_latest_conversation
 
 
+    def __update_current_date_cutoff_date_and_system_message_in_conversation(self):
+        # Check if the first message is a system message.
+        if self._conversation[0]['role'] == 'system' and self._conversation[0]['name'] == 'system':
+            # Replace the first message with the message, in case the user has changed it.
+            current_date = datetime.datetime.now().strftime('%Y-%m-%d')
+            self._conversation[0]['content'] = env['FIRST_SYSTEM_MESSAGE'].format(cutoff_date=env['MODEL_CUTOFF_DATE'], current_date=current_date)
+
+
     def __num_tokens_in_current_conversation(self, model="gpt-3.5-turbo-0301"): # TODO: Tokens bliver ikke beregnet korrekt, den er altid 5 for høj.
-        """Returns the number of tokens used by a list of messages.
+        """ Returns the number of tokens used by a list of messages.
           Currently only works for these models gpt-3.5-turbo-0301, gpt-4-0314 and maybe also gpt-3.5-turbo and gpt-4 as long as they don't change and still use the same encoding as the -0301 and -0314 models.
           If model not found, cl100k_base encoding is assumed.
           https://github.com/openai/openai-cookbook/blob/297c53430cad2d05ba763ab9dca64309cb5091e9/examples/How_to_count_tokens_with_tiktoken.ipynb
         """
 
-        
         try:
             encoding = tiktoken.encoding_for_model(model)
         except KeyError:

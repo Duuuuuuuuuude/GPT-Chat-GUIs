@@ -202,6 +202,12 @@ public class UserSettingsGlobal : IUserSettingsGlobal
     {
         SetUserSettingsGlobal("default settings", "logit_bias", logitBias);
     }
+
+    public void SetFirstSystemMessage(string firstSystemMessage = "You are ChatGPT, a large language model trained by OpenAI, based on the GPT-4 architecture. Knowledge cutoff: {cutoff_date}, Current date: {current_date}")
+    {
+        SetUserSettingsGlobal("default settings", "FIRST_SYSTEM_MESSAGE", firstSystemMessage);
+    }
+
     #endregion
 
     #region Getting user settings
@@ -331,5 +337,11 @@ public class UserSettingsGlobal : IUserSettingsGlobal
     {
         return GetUserSettingsGlobal("logit_bias");
     }
+
+    public string GetFirstSystemMessage()
+    {
+        return GetUserSettingsGlobal("FIRST_SYSTEM_MESSAGE");
+    }
+
     #endregion
 }
