@@ -4,7 +4,7 @@ I wish the ChatGPT website had more features, like being able to change the mess
 
 It also seems like the API is actually cheaper to use than ChatGPT Plus, especially because you are only paying when you are actually using it and not just the same very high monthly amount.
 
-Because of those reasons and because I wanted to practice programming after studying Computer Science, I decided to have some fun making this.
+Because of those reasons, but mostly because I wanted to practice programming after studying Computer Science, I decided to have some fun making this.
 
 
 To Run this:
