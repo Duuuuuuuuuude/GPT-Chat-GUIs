@@ -1,10 +1,8 @@
 # Still under construction.
 
-I wish the ChatGPT website had more features, like being able to change the messages doing a conversation to better adjust the context it is receiving and being able to adjust the parameters the in the API request.
+It  seems like the API is in some cases actually cheaper to use than ChatGPT Plus, especially because you are only paying when you are actually using it and not just the same very high monthly amount.
 
-It also seems like the API is actually cheaper to use than ChatGPT Plus, especially because you are only paying when you are actually using it and not just the same very high monthly amount.
-
-Because of those reasons and because I wanted to practice programming after studying Computer Science, I decided to have some fun making this.
+Because of that, but mostly because I wanted to practice programming after studying Computer Science, I decided to have some fun making this.
 
 
 To Run this:
