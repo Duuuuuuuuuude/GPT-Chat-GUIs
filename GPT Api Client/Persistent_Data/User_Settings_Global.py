@@ -36,8 +36,10 @@ class User_Settings_Global:
         user_config.read(User_Settings_Global.INI_FILE_PATH)
 
         for key in user_config["user settings"]:
-            value = user_config.get("user settings", key).lower()
-            is_path = os.path.isfile(User_Settings_Global.ENV_FILE_PATH)
+
+            #value = user_config.get("user settings", key).lower()
+            #is_path = os.path.isfile(User_Settings_Global.ENV_FILE_PATH)
+
             if user_config.get("user settings", key).lower() not in ["none", "null", ""]:
                 # Update the os.environ object with the user value from the Persistent_Data/User_Settings_Global.ini file if present.
                 os.environ[key] = user_config.get("user settings", key)

@@ -25,7 +25,7 @@ public sealed class PythonEnvironmentSetup : IDisposable
     /// <summary>
     /// Singleton
     /// </summary>
-    public static readonly PythonEnvironmentSetup PythonEnvironmentSetupSingletonInstance = new();
+    public static readonly PythonEnvironmentSetup GetSingletonInstance = new();
 
     private PythonEnvironmentSetup()
     {

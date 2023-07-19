@@ -38,7 +38,7 @@ while True:
     prompt = input('user prompt:')
     print()
 
-        
+     
     for chat_result in conversation_instance.send_message(prompt):
         print(chat_result.content_chunk, end='')
     print()

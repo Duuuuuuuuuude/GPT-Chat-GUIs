@@ -9,7 +9,7 @@ internal static class Program
     ///  The main entry point for the application.
     /// </summary>
     [STAThread]
-    static void Main()
+    static async Task Main()
     {
         // To customize application configuration such as set high DPI settings or default font,
         // see https://aka.ms/applicationconfiguration.
@@ -17,21 +17,20 @@ internal static class Program
 
         if (IsWebView2RuntimeInstalled())
         {
-            using (PythonEnvironmentSetup.PythonEnvironmentSetupSingletonInstance)
+            using (PythonEnvironmentSetup.GetSingletonInstance)
             {
-                Application.Run(new ChatsForm(new UserSettingsGlobal(), typeof(Chat)));
+                Application.Run(await ChatsForm.ChatsFormAsync(new UserSettingsGlobal(), typeof(Chat)));
             }
-
         }
         else
         {
-            using (WebView2InstallationForm installationForm = new WebView2InstallationForm())
+            using (WebView2InstallationForm installationForm = new())
             {
                 if (installationForm.ShowDialog() == DialogResult.OK)
                 {
-                    using (PythonEnvironmentSetup.PythonEnvironmentSetupSingletonInstance)
+                    using (PythonEnvironmentSetup.GetSingletonInstance)
                     {
-                        Application.Run(new ChatsForm(new UserSettingsGlobal(), typeof(Chat)));
+                        Application.Run(await ChatsForm.ChatsFormAsync(new UserSettingsGlobal(), typeof(Chat)));
                     }
                 }
             }

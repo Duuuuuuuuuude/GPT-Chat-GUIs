@@ -23,7 +23,7 @@ public partial class ChatsForm : Form
     /// </summary>
     private readonly Type _chatType;
 
-    public ChatsForm(IUserSettingsGlobal userSettingsGlobal, Type tChat)
+    private ChatsForm(IUserSettingsGlobal userSettingsGlobal, Type tChat)
     {
         if (typeof(IGptChat).IsAssignableFrom(tChat))
         {
@@ -31,26 +31,105 @@ public partial class ChatsForm : Form
         }
         else
         {
-            throw new ArgumentException("Invalid type. Must be a subclass of IChatGPT.", nameof(tChat));
+            throw new ArgumentException($"Invalid type. Chat type must be a subclass of IChatGPT, but was of type: {tChat}.", nameof(tChat));
         }
+
+        _userSettingsGlobalInstance = userSettingsGlobal;
 
         // TODO: Load chat history.
         InitializeComponent();
 
-        _userSettingsGlobalInstance = userSettingsGlobal;
+        //NewTabClicked();
+
+        //InitializeTextBoxes();
 
         AddLanguageCheckboxesToMenuStrip();
-
-        NewTabClickedAsync(); // TODO:
     }
+
+    /// <summary> // TODO: Fjern metode.
+    /// There is no public constructor, use this instead.
+    /// This method implements the 'asynchronous factory method' pattern.
+    /// </summary>
+    /// <param name="userSettingsGlobal"></param>
+    /// <param name="tChat">Type of the chat class. Must be a subclass of IGptChat.</param>
+    /// <returns></returns>
+    public static async Task<ChatsForm> ChatsFormAsync(IUserSettingsGlobal userSettingsGlobal, Type tChat) // TODO: Flyt til constructor.
+    {
+        var form = new ChatsForm(userSettingsGlobal, tChat);
+        await form.NewTabClickedAsync();
+        form.InitializeTextBoxes();
+        return form;
+    }
+
+
+    private async Task NewTabClickedAsync()
+    {
+        IGptChat newChat = GetNewChatInstance();  // Has to be outside the this.shown += block. TODO: Async problems.
+
+        TabPage newTabPage = InitializeNewTab();
+        _chatInstancesAndTabs.Add(newTabPage, newChat);
+
+        WebView2 currentWebView2 = GetWebView2FromCurrentTabPage(newTabPage);
+
+
+        var tcs = new TaskCompletionSource<bool>();
+
+        currentWebView2.HandleCreated += async (sender, args) =>
+        {
+            currentWebView2.Invoke((MethodInvoker)(async () =>
+            {
+                await currentWebView2.EnsureCoreWebView2Async(tcs.SetResult);
+            }));
+        };
+
+        await tcs.Task;
+
+        // Load the chat.html file into the WebView2 control
+
+        currentWebView2.CoreWebView2.Navigate(new Uri(Path.GetFullPath("chat.html")).ToString());
+
+#if DEBUG
+        // Open the WebView2 Developer Tools window.
+        GetWebView2FromCurrentTabPage(newTabPage).CoreWebView2.OpenDevToolsWindow();
+#endif
+
+
+
+
+
+        //        //// To avoid this problem: "System.InvalidOperationException
+        //        ////                         HResult = 0x80131509
+        //        ////                         Message = Invoke or BeginInvoke cannot be called on a control until the window handle has been created.
+        //        ////                         Source = System.Windows.Forms"
+        //        //this.Shown += ((sender, args) =>
+        //        //{
+        //        WebView2 currentWebView2 = GetWebView2FromCurrentTabPage(newTabPage);
+        //        //Invoke(new Action(async () => { 
+        //        await currentWebView2.EnsureCoreWebView2Async(null); // })); // TODO: Skulle den ikke være async.
+        //                                                             //await currentWebView2.EnsureCoreWebView2Async(null);
+        //                                                             // Load the chat.html file into the WebView2 control
+
+        //        currentWebView2.CoreWebView2.Navigate(new Uri(Path.GetFullPath("chat.html")).ToString());
+
+        //#if DEBUG
+        //        // Open the WebView2 Developer Tools window.
+        //        GetWebView2FromCurrentTabPage(newTabPage).CoreWebView2.OpenDevToolsWindow();
+        //#endif
+        //        //});
+    }
+
+
+
+
+
 
     #region Event handlers
 
     #region Button event handlers
 
-    private async void BtnNewTab_ClickASync(object sender, EventArgs e)  // TODO: async Task kan ikke bruges til event handlers, men async void kan give problemer. Find løsning.
+    private void BtnNewTab_Click(object sender, EventArgs e)  // TODO: async Task kan ikke bruges til event handlers, men async void kan give problemer. Find løsning.
     {
-        await NewTabClickedAsync();
+        NewTabClickedAsync();
     }
 
     private void BtnCloseTab_Click(object sender, EventArgs e)
@@ -65,6 +144,7 @@ public partial class ChatsForm : Form
         SetReplyingStatus(true, selectedTabPage);
 
         WebView2 currentWebView2 = GetWebView2FromCurrentTabPage(selectedTabPage);
+        //await currentWebView2.EnsureCoreWebView2Async(null);
 
         if (!_chatInstancesAndTabs[selectedTabPage].IsReplying)
         {
@@ -84,6 +164,7 @@ public partial class ChatsForm : Form
 
         WebView2 currentWebView2 = GetWebView2FromCurrentTabPage(selectedTabPage);
         TextBox currentTxtBox = GetTxtBoxInputFromCurrentTabPage(selectedTabPage);
+        //await currentWebView2.EnsureCoreWebView2Async(null);
 
         tabCtrlChats.Enabled = true;
         SetReplyingStatus(false, selectedTabPage);
@@ -267,23 +348,21 @@ public partial class ChatsForm : Form
         }
     }
 
-    private async Task NewTabClickedAsync()
-    {
-        IGptChat newChat = GetNewChatInstance();
-        TabPage newTabPage = InitializeNewTab();
-        _chatInstancesAndTabs.Add(newTabPage, newChat);
 
-        WebView2 currentWebView2 = GetWebView2FromCurrentTabPage(newTabPage);
-        await currentWebView2.EnsureCoreWebView2Async(null);
-        // Load the chat.html file into the WebView2 control
-        currentWebView2.CoreWebView2.Navigate(new Uri(Path.GetFullPath("chat.html")).ToString());
 
-        // Open the WebView2 Developer Tools window.
-#if DEBUG
-        GetWebView2FromCurrentTabPage(newTabPage).CoreWebView2.OpenDevToolsWindow();
-#endif
-        InitializeTextBoxes();
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private void CloseSelectedTabClicked()
     {
@@ -324,12 +403,24 @@ public partial class ChatsForm : Form
 
     private void TxtOpenAiOrganizationChanged()
     {
-        _userSettingsGlobalInstance.SetOpenAiOrganizationGlobal(txtOpenAiOrganization.Text);
+        string setOrganization = txtBoxOpenAiKey.Text;
+        List<string> nullStrings = new() { "none", "null", "" };
+        bool isNull = nullStrings.Contains(setOrganization.ToLower());
+        string organizationText = isNull ? "Not set" : setOrganization; // If the organization is not set, then set it to a default string instead of "None" or whatever it is set to in environment variables.
+        chkShowOrganization.Checked = isNull && !chkShowOrganization.Checked; // No reason to hide the organization if it is not set.
+
+        _userSettingsGlobalInstance.SetOpenAiOrganizationGlobal(organizationText);
     }
 
     private void TxtOpenAiKeyChanged()
     {
-        _userSettingsGlobalInstance.SetOpenAiApiKeyGlobal(txtOpenAiKey.Text);
+        string setApiKey = txtBoxOpenAiKey.Text;
+        List<string> nullStrings = new() { "none", "null", "" };
+        bool isNull = nullStrings.Contains(setApiKey.ToLower());
+        string apiKeyText = isNull ? "Not set" : setApiKey; // If the api key is not set, then set it to a default string instead of "None" or whatever it is set to in environment variables.
+        chkShowOrganization.Checked = !isNull && chkShowOrganization.Checked; // No reason to hide the appi keu if it is not set.
+
+        _userSettingsGlobalInstance.SetOpenAiApiKeyGlobal(apiKeyText);
     }
 
     private void TxtUsernameChanged()
@@ -713,7 +804,7 @@ public partial class ChatsForm : Form
 
     private IGptChat GetNewChatInstance()
     {
-        return (IGptChat)Activator.CreateInstance(_chatType!)!;
+        return (IGptChat)Activator.CreateInstance(_chatType);
     }
 
     #region Get controls under currently selected tab.

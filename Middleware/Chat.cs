@@ -8,7 +8,7 @@ namespace Middleware;
 public sealed class Chat : IGptChat
 {
     private readonly dynamic _chatInstance;
-    private volatile bool _isReplying; // TODO: Volatile?
+    private volatile bool _isReplying;
 
     public bool IsReplying
     {
